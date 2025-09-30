@@ -1,14 +1,18 @@
 import { Card } from "./ui/card";
 import { Button } from "./ui/button";
 import { Users, Shield, Trophy, Star } from "lucide-react";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const Sidebar = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const menuItems = [
-    { icon: "🏠", label: "My Feed", active: true },
-    { icon: "👥", label: "My Groups", active: false },
-    { icon: "💬", label: "Messages", active: false },
-    { icon: "🎮", label: "Games", active: false },
-    { icon: "🏆", label: "Achievements", active: false },
+    { icon: "🏠", label: "My Feed", path: "/" },
+    { icon: "👥", label: "My Groups", path: "/groups" },
+    { icon: "💬", label: "Messages", path: "/chat" },
+    { icon: "🎮", label: "Games", path: "/games" },
+    { icon: "🏆", label: "Achievements", path: "/" },
   ];
 
   return (
@@ -22,10 +26,11 @@ const Sidebar = () => {
           {menuItems.map((item, index) => (
             <Button
               key={index}
-              variant={item.active ? "default" : "ghost"}
+              variant={location.pathname === item.path ? "default" : "ghost"}
               className={`w-full justify-start gap-3 text-base ${
-                item.active ? "gradient-primary font-semibold" : ""
+                location.pathname === item.path ? "gradient-primary font-semibold" : ""
               }`}
+              onClick={() => navigate(item.path)}
             >
               <span className="text-xl">{item.icon}</span>
               {item.label}

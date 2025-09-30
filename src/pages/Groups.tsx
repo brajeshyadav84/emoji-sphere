@@ -1,0 +1,154 @@
+import Header from "@/components/Header";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Users, Plus, Lock, Globe } from "lucide-react";
+
+const Groups = () => {
+  const myGroups = [
+    {
+      id: 1,
+      name: "Art Lovers",
+      emoji: "🎨",
+      members: 45,
+      type: "public",
+      description: "Share your amazing artwork and get inspired!",
+    },
+    {
+      id: 2,
+      name: "Science Squad",
+      emoji: "🔬",
+      members: 38,
+      type: "public",
+      description: "Explore the wonders of science together!",
+    },
+    {
+      id: 3,
+      name: "Music Band",
+      emoji: "🎵",
+      members: 52,
+      type: "private",
+      description: "For music lovers and instrument learners!",
+    },
+  ];
+
+  const suggestedGroups = [
+    {
+      id: 4,
+      name: "Book Club",
+      emoji: "📚",
+      members: 67,
+      type: "public",
+      description: "Read and discuss amazing books!",
+    },
+    {
+      id: 5,
+      name: "Game Masters",
+      emoji: "🎮",
+      members: 89,
+      type: "public",
+      description: "Play games and share tips!",
+    },
+    {
+      id: 6,
+      name: "Nature Explorers",
+      emoji: "🌿",
+      members: 41,
+      type: "public",
+      description: "Learn about plants and animals!",
+    },
+    {
+      id: 7,
+      name: "Sports Stars",
+      emoji: "⚽",
+      members: 73,
+      type: "public",
+      description: "Talk about your favorite sports!",
+    },
+  ];
+
+  return (
+    <div className="min-h-screen bg-background">
+      <Header />
+      
+      <main className="container mx-auto px-4 py-6">
+        <div className="mb-8 flex items-center justify-between">
+          <div>
+            <h1 className="text-4xl font-bold mb-2 gradient-primary bg-clip-text text-transparent">
+              My Groups 👥
+            </h1>
+            <p className="text-lg text-muted-foreground">
+              Join groups and connect with friends who share your interests!
+            </p>
+          </div>
+          <Button className="gradient-secondary font-semibold gap-2">
+            <Plus className="h-5 w-5" />
+            Create Group
+          </Button>
+        </div>
+
+        <section className="mb-12">
+          <h2 className="text-2xl font-bold mb-4">Your Groups</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {myGroups.map((group) => (
+              <Card
+                key={group.id}
+                className="p-6 shadow-playful hover:shadow-hover transition-all duration-300"
+              >
+                <div className="flex items-start justify-between mb-4">
+                  <div className="text-5xl">{group.emoji}</div>
+                  {group.type === "private" ? (
+                    <Lock className="h-5 w-5 text-muted-foreground" />
+                  ) : (
+                    <Globe className="h-5 w-5 text-muted-foreground" />
+                  )}
+                </div>
+
+                <h3 className="text-xl font-bold mb-2">{group.name}</h3>
+                <p className="text-sm text-muted-foreground mb-4">{group.description}</p>
+
+                <div className="flex items-center gap-2 mb-4 text-sm text-muted-foreground">
+                  <Users className="h-4 w-4" />
+                  <span>{group.members} members</span>
+                </div>
+
+                <Button variant="outline" className="w-full">
+                  View Group
+                </Button>
+              </Card>
+            ))}
+          </div>
+        </section>
+
+        <section>
+          <h2 className="text-2xl font-bold mb-4">Suggested Groups</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {suggestedGroups.map((group) => (
+              <Card
+                key={group.id}
+                className="p-6 shadow-playful hover:shadow-hover transition-all duration-300"
+              >
+                <div className="text-5xl mb-3 text-center">{group.emoji}</div>
+
+                <h3 className="text-lg font-bold mb-2 text-center">{group.name}</h3>
+                <p className="text-sm text-muted-foreground mb-3 text-center line-clamp-2">
+                  {group.description}
+                </p>
+
+                <div className="flex items-center justify-center gap-2 mb-4 text-sm text-muted-foreground">
+                  <Users className="h-4 w-4" />
+                  <span>{group.members}</span>
+                </div>
+
+                <Button className="w-full gradient-primary font-semibold">
+                  Join Group
+                </Button>
+              </Card>
+            ))}
+          </div>
+        </section>
+      </main>
+    </div>
+  );
+};
+
+export default Groups;

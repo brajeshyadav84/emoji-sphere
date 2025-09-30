@@ -1,7 +1,13 @@
 import { Bell, Menu, User } from "lucide-react";
 import { Button } from "./ui/button";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const Header = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const isActive = (path: string) => location.pathname === path;
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between px-4">
@@ -18,16 +24,32 @@ const Header = () => {
         </div>
 
         <nav className="hidden md:flex items-center gap-2">
-          <Button variant="ghost" className="text-base font-medium">
+          <Button 
+            variant={isActive("/") ? "default" : "ghost"}
+            className={`text-base font-medium ${isActive("/") ? "gradient-primary" : ""}`}
+            onClick={() => navigate("/")}
+          >
             🏠 Feed
           </Button>
-          <Button variant="ghost" className="text-base font-medium">
+          <Button 
+            variant={isActive("/groups") ? "default" : "ghost"}
+            className={`text-base font-medium ${isActive("/groups") ? "gradient-primary" : ""}`}
+            onClick={() => navigate("/groups")}
+          >
             👥 Groups
           </Button>
-          <Button variant="ghost" className="text-base font-medium">
+          <Button 
+            variant={isActive("/chat") ? "default" : "ghost"}
+            className={`text-base font-medium ${isActive("/chat") ? "gradient-primary" : ""}`}
+            onClick={() => navigate("/chat")}
+          >
             💬 Chat
           </Button>
-          <Button variant="ghost" className="text-base font-medium">
+          <Button 
+            variant={isActive("/games") ? "default" : "ghost"}
+            className={`text-base font-medium ${isActive("/games") ? "gradient-primary" : ""}`}
+            onClick={() => navigate("/games")}
+          >
             🎮 Games
           </Button>
         </nav>
