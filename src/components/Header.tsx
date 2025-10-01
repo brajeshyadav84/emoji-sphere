@@ -52,6 +52,13 @@ const Header = () => {
           >
             🎮 Games
           </Button>
+          <Button 
+            variant={isActive("/admin") || location.pathname.startsWith("/admin/") ? "default" : "ghost"}
+            className={`text-base font-medium ${isActive("/admin") || location.pathname.startsWith("/admin/") ? "gradient-secondary" : ""}`}
+            onClick={() => navigate("/admin")}
+          >
+            👨‍💼 Admin
+          </Button>
         </nav>
 
         <div className="flex items-center gap-2">

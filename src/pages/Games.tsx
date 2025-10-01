@@ -2,8 +2,10 @@ import Header from "@/components/Header";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Play, Star, Users } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const Games = () => {
+  const navigate = useNavigate();
   const games = [
     {
       id: 1,
@@ -12,6 +14,7 @@ const Games = () => {
       description: "Create words and expand your vocabulary!",
       players: 234,
       rating: 5,
+      path: "/games/word-builder",
     },
     {
       id: 2,
@@ -20,6 +23,7 @@ const Games = () => {
       description: "Solve puzzles and become a math hero!",
       players: 456,
       rating: 5,
+      path: "/games/math-quest",
     },
     {
       id: 3,
@@ -28,6 +32,7 @@ const Games = () => {
       description: "Match colors and train your memory!",
       players: 189,
       rating: 4,
+      path: "/games/color-match",
     },
     {
       id: 4,
@@ -36,22 +41,61 @@ const Games = () => {
       description: "Learn fun facts about animals!",
       players: 312,
       rating: 5,
+      path: "/games/animal-quiz",
     },
     {
       id: 5,
-      title: "Music Maker",
-      emoji: "🎵",
-      description: "Create your own tunes and melodies!",
+      title: "Memory Match",
+      emoji: "🧠",
+      description: "Test your memory with this classic game!",
       players: 278,
       rating: 4,
+      path: "/games/memory-match",
     },
     {
       id: 6,
-      title: "Story Time",
-      emoji: "📚",
-      description: "Read and create amazing stories!",
+      title: "Puzzle Game",
+      emoji: "🧩",
+      description: "Solve sliding puzzles!",
       players: 401,
       rating: 5,
+      path: "/games/puzzle-game",
+    },
+    {
+      id: 7,
+      title: "Shape Sorter",
+      emoji: "🔷",
+      description: "Match the shapes correctly!",
+      players: 345,
+      rating: 5,
+      path: "/games/shape-sorter",
+    },
+    {
+      id: 8,
+      title: "Number Race",
+      emoji: "🔢",
+      description: "Race against time to find numbers!",
+      players: 289,
+      rating: 4,
+      path: "/games/number-race",
+    },
+    {
+      id: 9,
+      title: "Drawing Board",
+      emoji: "🎨",
+      description: "Create your own masterpieces!",
+      players: 512,
+      rating: 5,
+      path: "/games/drawing-board",
+    },
+    {
+      id: 10,
+      title: "Rhyme Time",
+      emoji: "🎵",
+      description: "Learn words that rhyme!",
+      players: 423,
+      rating: 5,
+      path: "/games/rhyme-time",
     },
   ];
 
@@ -94,7 +138,10 @@ const Games = () => {
                 </div>
               </div>
 
-              <Button className="w-full gradient-primary font-semibold gap-2">
+              <Button 
+                className="w-full gradient-primary font-semibold gap-2"
+                onClick={() => navigate(game.path)}
+              >
                 <Play className="h-4 w-4" />
                 Play Now
               </Button>
