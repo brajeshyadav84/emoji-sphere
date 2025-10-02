@@ -9,6 +9,11 @@ import Groups from "./pages/Groups";
 import Chat from "./pages/Chat";
 import NotFound from "./pages/NotFound";
 
+// Auth imports
+import Login from "./pages/auth/Login";
+import Register from "./pages/auth/Register";
+import ForgotPassword from "./pages/auth/ForgotPassword";
+
 // Game imports
 import WordBuilder from "./games/WordBuilder";
 import MathQuest from "./games/MathQuest";
@@ -42,6 +47,11 @@ const App = () => (
           <Route path="/games" element={<Games />} />
           <Route path="/groups" element={<Groups />} />
           <Route path="/chat" element={<Chat />} />
+          
+          {/* Auth routes */}
+          <Route path="/auth/login" element={<Login />} />
+          <Route path="/auth/register" element={<Register />} />
+          <Route path="/auth/forgot-password" element={<ForgotPassword />} />
           
           {/* Game routes */}
           <Route path="/games/word-builder" element={<WordBuilder />} />

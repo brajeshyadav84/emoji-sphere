@@ -1,12 +1,45 @@
-import { Bell, Menu, User, X } from "lucide-react";
+import { Bell, Menu, User, X, LogIn, LogOut } from "lucide-react";
 import { Button } from "./ui/button";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import type { User as SupabaseUser } from "@supabase/supabase-js";
+import { toast } from "./ui/use-toast";
 
 const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [user, setUser] = useState<SupabaseUser | null>(null);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const handleLogout = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      toast({
+        title: "Error",
+        description: "Failed to logout. Please try again.",
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: "Logged out",
+        description: "You have been successfully logged out.",
+      });
+      navigate("/auth/login");
+    }
+  };
 
   const isActive = (path: string) => location.pathname === path;
 
@@ -99,13 +132,36 @@ const Header = () => {
         </nav>
 
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon" className="relative">
-            <Bell className="h-5 w-5" />
-            <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-secondary" />
-          </Button>
-          <Button variant="default" size="icon" className="gradient-primary">
-            <User className="h-5 w-5" />
-          </Button>
+          {user ? (
+            <>
+              <Button variant="ghost" size="icon" className="relative">
+                <Bell className="h-5 w-5" />
+                <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-secondary" />
+              </Button>
+              <Button variant="default" size="icon" className="gradient-primary">
+                <User className="h-5 w-5" />
+              </Button>
+              <Button 
+                variant="ghost" 
+                size="sm"
+                onClick={handleLogout}
+                className="hidden md:flex"
+              >
+                <LogOut className="h-4 w-4 mr-2" />
+                Logout
+              </Button>
+            </>
+          ) : (
+            <Button 
+              variant="default" 
+              size="sm"
+              onClick={() => navigate("/auth/login")}
+              className="gradient-primary"
+            >
+              <LogIn className="h-4 w-4 mr-2" />
+              Login
+            </Button>
+          )}
         </div>
       </div>
       
@@ -193,6 +249,21 @@ const Header = () => {
                 👨‍💼 <span>Admin Dashboard</span>
               </span>
             </Button>
+            {user && (
+              <Button 
+                variant="ghost"
+                className="text-base font-medium justify-start w-full text-foreground hover:bg-accent hover:text-accent-foreground"
+                onClick={() => {
+                  handleLogout();
+                  setIsMobileMenuOpen(false);
+                }}
+              >
+                <span className="flex items-center gap-2">
+                  <LogOut className="h-5 w-5" />
+                  <span>Logout</span>
+                </span>
+              </Button>
+            )}
           </nav>
         </div>
       )}

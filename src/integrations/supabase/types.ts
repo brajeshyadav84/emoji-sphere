@@ -145,6 +145,42 @@ export type Database = {
         }
         Relationships: []
       }
+      profiles: {
+        Row: {
+          age: number
+          created_at: string
+          gender: string
+          id: string
+          is_verified: boolean
+          location: string
+          mobile: string
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          age: number
+          created_at?: string
+          gender: string
+          id: string
+          is_verified?: boolean
+          location: string
+          mobile: string
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          age?: number
+          created_at?: string
+          gender?: string
+          id?: string
+          is_verified?: boolean
+          location?: string
+          mobile?: string
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       quiz_questions: {
         Row: {
           correct_answer: string
