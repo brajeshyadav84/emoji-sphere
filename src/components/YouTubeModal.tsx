@@ -53,8 +53,8 @@ const YouTubeModal = ({ isOpen, onClose, videoId, title }: YouTubeModalProps) =>
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl w-full p-0 overflow-hidden bg-background">
-        <DialogHeader className="p-4 pb-0">
+      <DialogContent className="max-w-4xl w-full p-0 overflow-hidden bg-background [&>button]:hidden">
+        <DialogHeader className="p-4 pb-0 relative z-10">
           <div className="flex items-center justify-between">
             <DialogTitle className="text-lg font-semibold flex items-center gap-2">
               📺 {title || "Educational Video"}
@@ -63,13 +63,10 @@ const YouTubeModal = ({ isOpen, onClose, videoId, title }: YouTubeModalProps) =>
               variant="ghost"
               size="icon"
               onClick={onClose}
-              className="h-8 w-8 hover:bg-secondary"
+              className="h-8 w-8 hover:bg-secondary relative z-20 shrink-0"
             >
               <X className="h-4 w-4" />
             </Button>
-          </div>
-          <div className="mt-2 text-xs text-muted-foreground bg-blue-50 p-2 rounded-md">
-            🎮 <strong>Controls Available:</strong> Play/Pause, Fullscreen, Volume. YouTube branding hidden for distraction-free learning!
           </div>
         </DialogHeader>
         
@@ -91,16 +88,14 @@ const YouTubeModal = ({ isOpen, onClose, videoId, title }: YouTubeModalProps) =>
           />
         </div>
         
-        <div className="p-4 bg-muted/20 border-t">
+        <div className="p-4 bg-muted/20 border-t relative z-10">
           <div className="flex items-center justify-between">
-            <p className="text-sm text-muted-foreground">
-              � Clean viewing mode: Only play, pause & fullscreen controls shown. Press <kbd className="px-2 py-1 bg-muted rounded text-xs">Space</kbd> to play/pause or <kbd className="px-2 py-1 bg-muted rounded text-xs">ESC</kbd> to close.
-            </p>
+            <div className="flex-1"></div>
             <Button
               variant="outline"
               size="sm"
               onClick={onClose}
-              className="gap-2"
+              className="gap-2 relative z-20 shrink-0"
             >
               <X className="h-3 w-3" />
               Close
