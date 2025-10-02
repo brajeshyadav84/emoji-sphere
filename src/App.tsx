@@ -13,6 +13,7 @@ import NotFound from "./pages/NotFound";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import ForgotPassword from "./pages/auth/ForgotPassword";
+import VerifyOTP from "./pages/auth/VerifyOTP";
 
 // Game imports
 import WordBuilder from "./games/WordBuilder";
@@ -52,6 +53,7 @@ const App = () => (
           <Route path="/auth/login" element={<Login />} />
           <Route path="/auth/register" element={<Register />} />
           <Route path="/auth/forgot-password" element={<ForgotPassword />} />
+          <Route path="/auth/verify-otp" element={<VerifyOTP />} />
           
           {/* Game routes */}
           <Route path="/games/word-builder" element={<WordBuilder />} />

@@ -11,12 +11,12 @@ import { toast } from "@/components/ui/use-toast";
 import { Loader2, LogIn } from "lucide-react";
 
 const loginSchema = z.object({
-  email: z
+  mobile: z
     .string()
     .trim()
-    .min(1, "Email is required")
-    .email("Invalid email address")
-    .max(255, "Email must be less than 255 characters"),
+    .min(10, "Mobile number must be at least 10 digits")
+    .max(15, "Mobile number must be less than 15 digits")
+    .regex(/^[0-9+\-\s()]+$/, "Invalid mobile number format"),
   password: z
     .string()
     .min(6, "Password must be at least 6 characters")
@@ -32,7 +32,7 @@ export default function Login() {
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: "",
+      mobile: "",
       password: "",
     },
   });
@@ -50,25 +50,47 @@ export default function Login() {
   const onSubmit = async (values: LoginFormValues) => {
     setIsLoading(true);
     try {
+      // First check if user exists and is verified
+      const { data: profileData, error: profileError } = await supabase
+        .from("profiles")
+        .select("id, is_verified")
+        .eq("mobile", values.mobile)
+        .single();
+
+      if (profileError || !profileData) {
+        toast({
+          title: "Login Failed",
+          description: "Invalid mobile number or password.",
+          variant: "destructive",
+        });
+        setIsLoading(false);
+        return;
+      }
+
+      if (!profileData.is_verified) {
+        toast({
+          title: "Account Not Verified",
+          description: "Please verify your mobile number before logging in.",
+          variant: "destructive",
+        });
+        setIsLoading(false);
+        return;
+      }
+
+      // Create email from mobile for Supabase auth
+      const email = `${values.mobile.replace(/[^0-9]/g, "")}@app.internal`;
+
       const { data, error } = await supabase.auth.signInWithPassword({
-        email: values.email,
+        email,
         password: values.password,
       });
 
       if (error) {
-        if (error.message.includes("Invalid login credentials")) {
-          toast({
-            title: "Login Failed",
-            description: "Invalid email or password. Please try again.",
-            variant: "destructive",
-          });
-        } else {
-          toast({
-            title: "Error",
-            description: error.message,
-            variant: "destructive",
-          });
-        }
+        toast({
+          title: "Login Failed",
+          description: "Invalid mobile number or password.",
+          variant: "destructive",
+        });
         return;
       }
 
@@ -103,16 +125,16 @@ export default function Login() {
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <FormField
                 control={form.control}
-                name="email"
+                name="mobile"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel>Mobile Number</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
-                        type="email"
-                        placeholder="your.email@example.com"
-                        autoComplete="email"
+                        type="tel"
+                        placeholder="+1 (555) 123-4567"
+                        autoComplete="tel"
                         disabled={isLoading}
                       />
                     </FormControl>

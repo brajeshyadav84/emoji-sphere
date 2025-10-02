@@ -13,12 +13,6 @@ import { Loader2, UserPlus } from "lucide-react";
 import { countries } from "@/data/countries";
 
 const registerSchema = z.object({
-  email: z
-    .string()
-    .trim()
-    .min(1, "Email is required")
-    .email("Invalid email address")
-    .max(255, "Email must be less than 255 characters"),
   password: z
     .string()
     .min(8, "Password must be at least 8 characters")
@@ -58,7 +52,6 @@ export default function Register() {
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
-      email: "",
       password: "",
       name: "",
       age: "",
@@ -81,8 +74,28 @@ export default function Register() {
   const onSubmit = async (values: RegisterFormValues) => {
     setIsLoading(true);
     try {
+      // Check if mobile already exists
+      const { data: existingProfile } = await supabase
+        .from("profiles")
+        .select("id")
+        .eq("mobile", values.mobile)
+        .single();
+
+      if (existingProfile) {
+        toast({
+          title: "Registration Failed",
+          description: "This mobile number is already registered.",
+          variant: "destructive",
+        });
+        setIsLoading(false);
+        return;
+      }
+
+      // Create email from mobile number for Supabase auth
+      const email = `${values.mobile.replace(/[^0-9]/g, "")}@app.internal`;
+
       const { data, error } = await supabase.auth.signUp({
-        email: values.email,
+        email,
         password: values.password,
         options: {
           data: {
@@ -98,28 +111,40 @@ export default function Register() {
       });
 
       if (error) {
-        if (error.message.includes("already registered")) {
-          toast({
-            title: "Registration Failed",
-            description: "This email is already registered. Please sign in instead.",
-            variant: "destructive",
-          });
-        } else {
-          toast({
-            title: "Error",
-            description: error.message,
-            variant: "destructive",
-          });
-        }
+        toast({
+          title: "Error",
+          description: error.message,
+          variant: "destructive",
+        });
         return;
       }
 
       if (data.user) {
+        // Send OTP via WhatsApp
+        const otpResponse = await fetch(
+          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-whatsapp-otp`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+            },
+            body: JSON.stringify({ mobile: values.mobile }),
+          }
+        );
+
+        if (!otpResponse.ok) {
+          throw new Error("Failed to send OTP");
+        }
+
         toast({
-          title: "Success!",
-          description: "Your account has been created. You can now sign in.",
+          title: "Registration Successful",
+          description: "Please verify your mobile number with the OTP sent to WhatsApp",
         });
-        navigate("/auth/login");
+
+        navigate("/auth/verify-otp", {
+          state: { mobile: values.mobile, userId: data.user.id },
+        });
       }
     } catch (error) {
       toast({
@@ -165,17 +190,17 @@ export default function Register() {
 
                 <FormField
                   control={form.control}
-                  name="email"
+                  name="mobile"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Email</FormLabel>
+                      <FormLabel>Mobile Number</FormLabel>
                       <FormControl>
                         <Input
                           {...field}
-                          type="email"
-                          placeholder="your.email@example.com"
+                          type="tel"
+                          placeholder="+1 (555) 123-4567"
                           disabled={isLoading}
-                          autoComplete="email"
+                          autoComplete="tel"
                         />
                       </FormControl>
                       <FormMessage />
@@ -255,17 +280,17 @@ export default function Register() {
 
                 <FormField
                   control={form.control}
-                  name="mobile"
+                  name="password"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Mobile Number</FormLabel>
+                      <FormLabel>Password</FormLabel>
                       <FormControl>
                         <Input
                           {...field}
-                          type="tel"
-                          placeholder="+1 (555) 123-4567"
+                          type="password"
+                          placeholder="Create a strong password"
                           disabled={isLoading}
-                          autoComplete="tel"
+                          autoComplete="new-password"
                         />
                       </FormControl>
                       <FormMessage />
