@@ -80,8 +80,8 @@ const AnimalQuiz = () => {
         <Card className="p-8 max-w-2xl mx-auto shadow-playful">
           <div className="text-center mb-8">
             <div className="text-6xl mb-4">{question.emoji}</div>
-            <h1 className="text-3xl font-bold mb-2 gradient-primary bg-clip-text text-transparent">
-              Animal Quiz
+            <h1 className="text-3xl font-bold mb-2">
+              <span className="gradient-text-primary">Animal Quiz</span>
             </h1>
             <p className="text-lg text-muted-foreground">
               Question {currentQuestion + 1} of {questions.length}

@@ -83,8 +83,8 @@ const HolidayAssignments = () => {
 
         <div className="mb-8 flex items-center justify-between">
           <div>
-            <h1 className="text-4xl font-bold mb-2 gradient-primary bg-clip-text text-transparent">
-              Holiday Assignments
+            <h1 className="text-4xl font-bold mb-2">
+              <span className="gradient-text-primary">Holiday Assignments</span>
             </h1>
             <p className="text-lg text-muted-foreground">
               Create summer and winter holiday tasks

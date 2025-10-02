@@ -81,8 +81,8 @@ const ChallengeManagement = () => {
 
         <div className="mb-8 flex items-center justify-between">
           <div>
-            <h1 className="text-4xl font-bold mb-2 gradient-primary bg-clip-text text-transparent">
-              Daily Challenges
+            <h1 className="text-4xl font-bold mb-2">
+              <span className="gradient-text-primary">Daily Challenges</span>
             </h1>
             <p className="text-lg text-muted-foreground">
               Create grade-wise daily challenges

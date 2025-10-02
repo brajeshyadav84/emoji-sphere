@@ -60,8 +60,8 @@ const GroupManagement = () => {
 
         <div className="mb-8 flex items-center justify-between">
           <div>
-            <h1 className="text-4xl font-bold mb-2 gradient-primary bg-clip-text text-transparent">
-              Group Management
+            <h1 className="text-4xl font-bold mb-2">
+              <span className="gradient-text-primary">Group Management</span>
             </h1>
             <p className="text-lg text-muted-foreground">
               Create and manage groups for kids

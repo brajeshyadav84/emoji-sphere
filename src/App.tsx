@@ -25,6 +25,7 @@ import RhymeTime from "./games/RhymeTime";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import GroupManagement from "./pages/admin/GroupManagement";
 import QuizManagement from "./pages/admin/QuizManagement";
+import QuestionManagement from "./pages/admin/QuestionManagement";
 import ChallengeManagement from "./pages/admin/ChallengeManagement";
 import HolidayAssignments from "./pages/admin/HolidayAssignments";
 
@@ -58,6 +59,7 @@ const App = () => (
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/admin/groups" element={<GroupManagement />} />
           <Route path="/admin/quizzes" element={<QuizManagement />} />
+          <Route path="/admin/questions" element={<QuestionManagement />} />
           <Route path="/admin/challenges" element={<ChallengeManagement />} />
           <Route path="/admin/assignments" element={<HolidayAssignments />} />
           

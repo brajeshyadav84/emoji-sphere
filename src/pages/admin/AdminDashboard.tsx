@@ -20,6 +20,13 @@ const AdminDashboard = () => {
       color: "text-green-500",
     },
     {
+      title: "Daily Questions",
+      description: "Manage daily knowledge questions for kids",
+      icon: Calendar,
+      path: "/admin/questions",
+      color: "text-purple-500",
+    },
+    {
       title: "Daily Challenges",
       description: "Add grade-wise daily challenges",
       icon: Trophy,
@@ -41,8 +48,8 @@ const AdminDashboard = () => {
       
       <main className="container mx-auto px-4 py-6">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-2 gradient-primary bg-clip-text text-transparent">
-            Admin Dashboard 👨‍💼
+          <h1 className="text-4xl font-bold mb-2">
+            <span className="gradient-text-primary">Admin Dashboard</span> 👨‍💼
           </h1>
           <p className="text-lg text-muted-foreground">
             Manage your platform and create content for kids
@@ -75,12 +82,12 @@ const AdminDashboard = () => {
               <p className="text-sm text-muted-foreground">Active Quizzes</p>
             </div>
             <div className="text-center">
-              <p className="text-3xl font-bold text-success">30</p>
-              <p className="text-sm text-muted-foreground">Daily Challenges</p>
+              <p className="text-3xl font-bold text-purple-500">10</p>
+              <p className="text-sm text-muted-foreground">Daily Questions</p>
             </div>
             <div className="text-center">
-              <p className="text-3xl font-bold text-purple-500">8</p>
-              <p className="text-sm text-muted-foreground">Assignments</p>
+              <p className="text-3xl font-bold text-success">30</p>
+              <p className="text-sm text-muted-foreground">Daily Challenges</p>
             </div>
           </div>
         </Card>

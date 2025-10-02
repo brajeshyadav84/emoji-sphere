@@ -105,8 +105,8 @@ const Games = () => {
       
       <main className="container mx-auto px-4 py-6">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-2 gradient-primary bg-clip-text text-transparent">
-            Fun Games! 🎮
+          <h1 className="text-4xl font-bold mb-2">
+            <span className="gradient-text-primary">Fun Games!</span> 🎮
           </h1>
           <p className="text-lg text-muted-foreground">
             Play educational games and have fun while learning!

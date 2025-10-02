@@ -46,7 +46,7 @@ const QuizManagement = () => {
     toast.success("Quiz deleted successfully!");
   };
 
-  const updateQuestion = (index: number, field: string, value: any) => {
+  const updateQuestion = (index: number, field: string, value: string | string[]) => {
     const newQuestions = [...formData.questions];
     newQuestions[index] = { ...newQuestions[index], [field]: value };
     setFormData({ ...formData, questions: newQuestions });
@@ -68,8 +68,8 @@ const QuizManagement = () => {
 
         <div className="mb-8 flex items-center justify-between">
           <div>
-            <h1 className="text-4xl font-bold mb-2 gradient-primary bg-clip-text text-transparent">
-              Quiz Management
+            <h1 className="text-4xl font-bold mb-2">
+              <span className="gradient-text-primary">Quiz Management</span>
             </h1>
             <p className="text-lg text-muted-foreground">
               Create quizzes with 10 questions each

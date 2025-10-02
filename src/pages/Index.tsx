@@ -3,6 +3,7 @@ import Hero from "@/components/Hero";
 import Sidebar from "@/components/Sidebar";
 import CreatePost from "@/components/CreatePost";
 import PostCard from "@/components/PostCard";
+import TodaysChallenge from "@/components/TodaysChallenge";
 
 const Index = () => {
   const samplePosts = [
@@ -54,15 +55,7 @@ const Index = () => {
 
           <div className="lg:col-span-3 hidden lg:block">
             <div className="sticky top-20 space-y-4">
-              <div className="bg-card p-4 rounded-2xl shadow-playful border-2 border-primary/20">
-                <h3 className="font-bold text-base mb-3 flex items-center gap-2">
-                  🎯 Today's Challenge
-                </h3>
-                <p className="text-sm text-muted-foreground mb-3">
-                  Share something that made you smile today!
-                </p>
-                <div className="text-3xl">😊🌟✨</div>
-              </div>
+              <TodaysChallenge />
 
               <div className="bg-card p-4 rounded-2xl shadow-playful border-2 border-secondary/20">
                 <h3 className="font-bold text-base mb-3 flex items-center gap-2">

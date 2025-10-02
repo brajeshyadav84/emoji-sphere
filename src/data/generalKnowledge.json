@@ -1,0 +1,110 @@
+[
+  {
+    "id": 1,
+    "question": "What is the largest planet in our solar system?",
+    "answer": "Jupiter is the largest planet in our solar system. It's a gas giant with a mass greater than all other planets combined.",
+    "videoId": "PtkqwslbLY8",
+    "category": "Astronomy",
+    "difficulty": "Easy",
+    "date": "2025-10-01"
+  },
+  {
+    "id": 2,
+    "question": "Who painted the Mona Lisa?",
+    "answer": "Leonardo da Vinci painted the Mona Lisa between 1503 and 1519. It's one of the most famous paintings in the world.",
+    "videoId": "sKcHTb1F-eI",
+    "category": "Art",
+    "difficulty": "Easy",
+    "date": "2025-10-02"
+  },
+  {
+    "id": 3,
+    "question": "What is photosynthesis?",
+    "answer": "Photosynthesis is the process by which plants use sunlight, water, and carbon dioxide to create oxygen and energy in the form of sugar.",
+    "videoId": "sQK3Yr1p5nM",
+    "category": "Science",
+    "difficulty": "Medium",
+    "date": "2025-10-03"
+  },
+  {
+    "id": 4,
+    "question": "Which country is known as the Land of the Rising Sun?",
+    "answer": "Japan is known as the Land of the Rising Sun. This name comes from Japan's position to the east of China.",
+    "videoId": "MqZgMZo9oSQ",
+    "category": "Geography",
+    "difficulty": "Easy",
+    "date": "2025-10-04"
+  },
+  {
+    "id": 5,
+    "question": "What is the speed of light?",
+    "answer": "The speed of light in a vacuum is approximately 299,792,458 meters per second (about 186,282 miles per second).",
+    "videoId": "msVuCEs8Ydo",
+    "category": "Physics",
+    "difficulty": "Medium",
+    "date": "2025-10-05"
+  },
+  {
+    "id": 6,
+    "question": "Who wrote Romeo and Juliet?",
+    "answer": "William Shakespeare wrote Romeo and Juliet around 1594-1596. It's one of his most famous tragedies.",
+    "videoId": "ydDMGpC_06M",
+    "category": "Literature",
+    "difficulty": "Easy",
+    "date": "2025-10-06"
+  },
+  {
+    "id": 7,
+    "question": "What is the capital of Australia?",
+    "answer": "Canberra is the capital of Australia. Many people mistakenly think it's Sydney or Melbourne.",
+    "videoId": "eWrQfCHH3Y4",
+    "category": "Geography",
+    "difficulty": "Medium",
+    "date": "2025-10-07"
+  },
+  {
+    "id": 8,
+    "question": "How many bones are in the human body?",
+    "answer": "An adult human has 206 bones. Babies are born with about 270 bones, but many fuse together as they grow.",
+    "videoId": "bXZKXVUu5lE",
+    "category": "Biology",
+    "difficulty": "Medium",
+    "date": "2025-10-08"
+  },
+  {
+    "id": 9,
+    "question": "What is the smallest country in the world?",
+    "answer": "Vatican City is the smallest country in the world, with an area of only 0.17 square miles (0.44 square kilometers).",
+    "videoId": "IUwlm2g6yow",
+    "category": "Geography",
+    "difficulty": "Easy",
+    "date": "2025-10-09"
+  },
+  {
+    "id": 10,
+    "question": "Who invented the telephone?",
+    "answer": "Alexander Graham Bell is credited with inventing the telephone in 1876, though the invention involved contributions from many scientists.",
+    "videoId": "va1oiojnGdY",
+    "category": "History",
+    "difficulty": "Easy",
+    "date": "2025-10-10"
+  },
+  {
+    "id": 11,
+    "question": "What is the capital of France?",
+    "answer": "Paris is the capital and largest city of France. It's known as the 'City of Light' and is famous for the Eiffel Tower.",
+    "videoId": "Bg9gWY9tsxY",
+    "category": "Geography",
+    "difficulty": "Easy",
+    "date": "2025-10-11"
+  },
+  {
+    "id": 12,
+    "question": "How many sides does a triangle have?",
+    "answer": "A triangle has 3 sides. It's the simplest polygon and its angles always add up to 180 degrees.",
+    "videoId": "DgFOE_2OFJo",
+    "category": "Mathematics",
+    "difficulty": "Easy",
+    "date": "2025-10-12"
+  }
+]

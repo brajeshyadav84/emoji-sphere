@@ -66,8 +66,8 @@ const MathQuest = () => {
         <Card className="p-8 max-w-2xl mx-auto shadow-playful">
           <div className="text-center mb-8">
             <div className="text-6xl mb-4">🔢</div>
-            <h1 className="text-3xl font-bold mb-2 gradient-primary bg-clip-text text-transparent">
-              Math Quest
+            <h1 className="text-3xl font-bold mb-2">
+              <span className="gradient-text-primary">Math Quest</span>
             </h1>
             <p className="text-lg text-muted-foreground">
               Solve the math problems!

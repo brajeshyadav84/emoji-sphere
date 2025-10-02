@@ -71,21 +71,15 @@ const Groups = () => {
       <Header />
       
       <main className="container mx-auto px-4 py-6">
-        <div className="mb-8 flex items-center justify-between">
-          <div>
-            <h1 className="text-4xl font-bold mb-2 gradient-primary bg-clip-text text-transparent">
-              My Groups 👥
+        <div className="mb-8">
+          <h1 className="text-4xl font-bold mb-2">
+              <span className="gradient-text-primary">My Groups</span> 👥
             </h1>
             <p className="text-lg text-muted-foreground">
               Join groups and connect with friends who share your interests!
             </p>
-          </div>
-          <Button className="gradient-secondary font-semibold gap-2">
-            <Plus className="h-5 w-5" />
-            Create Group
-          </Button>
         </div>
-
+        
         <section className="mb-12">
           <h2 className="text-2xl font-bold mb-4">Your Groups</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

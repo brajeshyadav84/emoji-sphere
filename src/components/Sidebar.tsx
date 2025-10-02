@@ -51,7 +51,7 @@ const Sidebar = () => {
         </div>
       </Card>
 
-      <Card className="p-4 shadow-playful">
+      {/* <Card className="p-4 shadow-playful">
         <h3 className="font-bold text-base mb-3 flex items-center gap-2">
           <Users className="h-5 w-5 text-primary" />
           Suggested Friends
@@ -71,7 +71,7 @@ const Sidebar = () => {
             </div>
           ))}
         </div>
-      </Card>
+      </Card> */}
     </aside>
   );
 };
