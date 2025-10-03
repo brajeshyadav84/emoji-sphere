@@ -12,6 +12,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { ArrowLeft, Plus, Edit, Trash2, Calendar } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -26,6 +36,7 @@ const QuestionManagement = () => {
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
   const [selectedVideoId, setSelectedVideoId] = useState("");
   const [selectedVideoTitle, setSelectedVideoTitle] = useState("");
+  const [deleteTarget, setDeleteTarget] = useState<number | null>(null);
 
   const [formData, setFormData] = useState({
     question: "",
@@ -48,6 +59,11 @@ const QuestionManagement = () => {
       date: "",
       videoId: "",
     });
+  };
+
+  const handleDelete = (id: number) => {
+    toast.success("Question deleted successfully!");
+    setDeleteTarget(null);
   };
 
   const categories = [
@@ -266,7 +282,11 @@ const QuestionManagement = () => {
                   <Button size="icon" variant="outline">
                     <Edit className="h-4 w-4" />
                   </Button>
-                  <Button size="icon" variant="destructive">
+                  <Button 
+                    size="icon" 
+                    variant="destructive"
+                    onClick={() => setDeleteTarget(question.id)}
+                  >
                     <Trash2 className="h-4 w-4" />
                   </Button>
                 </div>
@@ -283,6 +303,26 @@ const QuestionManagement = () => {
           title={selectedVideoTitle}
         />
       </main>
+
+      <AlertDialog open={deleteTarget !== null} onOpenChange={() => setDeleteTarget(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently delete the question. This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={() => deleteTarget && handleDelete(deleteTarget)} 
+              className="bg-destructive hover:bg-destructive/90"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

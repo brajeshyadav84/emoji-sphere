@@ -12,6 +12,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { ArrowLeft, Plus, Edit, Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -20,6 +30,7 @@ const QuizManagement = () => {
   const navigate = useNavigate();
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [currentQuestion, setCurrentQuestion] = useState(1);
+  const [deleteTarget, setDeleteTarget] = useState<number | null>(null);
   
   const [quizzes, setQuizzes] = useState([
     { id: 1, title: "Math Fun", grade: 3, questions: 10, active: true },
@@ -44,6 +55,7 @@ const QuizManagement = () => {
   const handleDelete = (id: number) => {
     setQuizzes(quizzes.filter((q) => q.id !== id));
     toast.success("Quiz deleted successfully!");
+    setDeleteTarget(null);
   };
 
   const updateQuestion = (index: number, field: string, value: string | string[]) => {
@@ -231,7 +243,7 @@ const QuizManagement = () => {
                   <Button
                     size="icon"
                     variant="destructive"
-                    onClick={() => handleDelete(quiz.id)}
+                    onClick={() => setDeleteTarget(quiz.id)}
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>
@@ -256,6 +268,26 @@ const QuizManagement = () => {
           ))}
         </div>
       </main>
+
+      <AlertDialog open={deleteTarget !== null} onOpenChange={() => setDeleteTarget(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently delete the quiz and all its questions. This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={() => deleteTarget && handleDelete(deleteTarget)} 
+              className="bg-destructive hover:bg-destructive/90"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

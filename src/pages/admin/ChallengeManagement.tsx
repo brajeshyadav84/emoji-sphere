@@ -12,6 +12,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { ArrowLeft, Plus, Edit, Trash2, Calendar } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -19,6 +29,7 @@ import { toast } from "sonner";
 const ChallengeManagement = () => {
   const navigate = useNavigate();
   const [showCreateForm, setShowCreateForm] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<number | null>(null);
   
   const [challenges, setChallenges] = useState([
     {
@@ -63,6 +74,7 @@ const ChallengeManagement = () => {
   const handleDelete = (id: number) => {
     setChallenges(challenges.filter((c) => c.id !== id));
     toast.success("Challenge deleted successfully!");
+    setDeleteTarget(null);
   };
 
   return (
@@ -219,7 +231,7 @@ const ChallengeManagement = () => {
                   <Button
                     size="icon"
                     variant="destructive"
-                    onClick={() => handleDelete(challenge.id)}
+                    onClick={() => setDeleteTarget(challenge.id)}
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>
@@ -229,6 +241,26 @@ const ChallengeManagement = () => {
           ))}
         </div>
       </main>
+
+      <AlertDialog open={deleteTarget !== null} onOpenChange={() => setDeleteTarget(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently delete the challenge. This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={() => deleteTarget && handleDelete(deleteTarget)} 
+              className="bg-destructive hover:bg-destructive/90"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
