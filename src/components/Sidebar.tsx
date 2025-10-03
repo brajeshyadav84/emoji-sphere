@@ -51,6 +51,22 @@ const Sidebar = () => {
         </div>
       </Card>
 
+      {/* Advertisement Placeholder */}
+      <Card className="p-4 shadow-playful border-2 border-dashed border-muted-foreground/30 bg-muted/20">
+        <div className="flex flex-col items-center justify-center py-6 text-center">
+          <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center mb-3">
+            <span className="text-xl">📢</span>
+          </div>
+          <h3 className="font-semibold text-sm mb-2 text-muted-foreground">Advertisement Space</h3>
+          <p className="text-xs text-muted-foreground/80">
+            This space is reserved for child-friendly ads
+          </p>
+          <div className="w-full h-16 bg-gradient-to-r from-muted to-muted/50 rounded-lg mt-3 flex items-center justify-center">
+            <span className="text-xs font-medium text-muted-foreground">300 x 64px</span>
+          </div>
+        </div>
+      </Card>
+
       {/* <Card className="p-4 shadow-playful">
         <h3 className="font-bold text-base mb-3 flex items-center gap-2">
           <Users className="h-5 w-5 text-primary" />

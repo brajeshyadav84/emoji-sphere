@@ -1,0 +1,365 @@
+{
+  "subject": "Science",
+  "grades": {
+    "grade2": {
+      "name": "Grade 2",
+      "questions": [
+        {
+          "id": 1,
+          "question": "What do animals need to stay alive?",
+          "options": ["Food and water", "Only food", "Only water", "Only air"],
+          "correctAnswer": "Food and water",
+          "explanation": "Animals need food and water to stay alive"
+        },
+        {
+          "id": 2,
+          "question": "What comes from the sun that helps plants grow?",
+          "options": ["Rain", "Wind", "Sunlight", "Clouds"],
+          "correctAnswer": "Sunlight",
+          "explanation": "Sunlight from the sun helps plants grow"
+        },
+        {
+          "id": 3,
+          "question": "How many legs does a cat have?",
+          "options": ["2", "4", "6", "8"],
+          "correctAnswer": "4",
+          "explanation": "A cat has 4 legs"
+        },
+        {
+          "id": 4,
+          "question": "What happens to ice when it gets warm?",
+          "options": ["It stays the same", "It melts", "It gets harder", "It becomes cold"],
+          "correctAnswer": "It melts",
+          "explanation": "Ice melts when it gets warm and becomes water"
+        },
+        {
+          "id": 5,
+          "question": "Which one of these is a living thing?",
+          "options": ["Rock", "Tree", "Table", "Book"],
+          "correctAnswer": "Tree",
+          "explanation": "A tree is a living thing that grows and needs water"
+        }
+      ]
+    },
+    "grade3": {
+      "name": "Grade 3",
+      "questions": [
+        {
+          "id": 6,
+          "question": "What do plants need to make their own food?",
+          "options": ["Only sunlight", "Only water", "Sunlight, water, and air", "Only soil"],
+          "correctAnswer": "Sunlight, water, and air",
+          "explanation": "Plants need sunlight, water, and carbon dioxide from air to make food"
+        },
+        {
+          "id": 7,
+          "question": "How many legs does a spider have?",
+          "options": ["6", "8", "10", "12"],
+          "correctAnswer": "8",
+          "explanation": "Spiders have 8 legs"
+        },
+        {
+          "id": 8,
+          "question": "What is the largest planet in our solar system?",
+          "options": ["Earth", "Saturn", "Jupiter", "Mars"],
+          "correctAnswer": "Jupiter",
+          "explanation": "Jupiter is the largest planet in our solar system"
+        },
+        {
+          "id": 9,
+          "question": "What do we call baby frogs?",
+          "options": ["Puppies", "Tadpoles", "Kittens", "Chicks"],
+          "correctAnswer": "Tadpoles",
+          "explanation": "Baby frogs are called tadpoles"
+        },
+        {
+          "id": 10,
+          "question": "Which part of the plant grows underground?",
+          "options": ["Leaves", "Flowers", "Roots", "Stem"],
+          "correctAnswer": "Roots",
+          "explanation": "Roots grow underground and absorb water and nutrients"
+        }
+      ]
+    },
+    "grade4": {
+      "name": "Grade 4",
+      "questions": [
+        {
+          "id": 11,
+          "question": "What gas do we breathe in to stay alive?",
+          "options": ["Carbon dioxide", "Nitrogen", "Oxygen", "Hydrogen"],
+          "correctAnswer": "Oxygen",
+          "explanation": "We breathe in oxygen to stay alive"
+        },
+        {
+          "id": 12,
+          "question": "What is the process by which plants make their own food called?",
+          "options": ["Respiration", "Digestion", "Photosynthesis", "Transpiration"],
+          "correctAnswer": "Photosynthesis",
+          "explanation": "Photosynthesis is the process by which plants make their own food"
+        },
+        {
+          "id": 13,
+          "question": "Which planet is known as the Red Planet?",
+          "options": ["Venus", "Mars", "Mercury", "Saturn"],
+          "correctAnswer": "Mars",
+          "explanation": "Mars is known as the Red Planet due to its reddish appearance"
+        },
+        {
+          "id": 14,
+          "question": "What are the three states of matter?",
+          "options": ["Hot, cold, warm", "Solid, liquid, gas", "Big, medium, small", "Heavy, light, medium"],
+          "correctAnswer": "Solid, liquid, gas",
+          "explanation": "The three states of matter are solid, liquid, and gas"
+        },
+        {
+          "id": 15,
+          "question": "Which organ in your body helps you breathe?",
+          "options": ["Heart", "Brain", "Lungs", "Stomach"],
+          "correctAnswer": "Lungs",
+          "explanation": "Your lungs help you breathe by taking in oxygen"
+        }
+      ]
+    },
+    "grade5": {
+      "name": "Grade 5",
+      "questions": [
+        {
+          "id": 16,
+          "question": "What is the hardest natural substance on Earth?",
+          "options": ["Gold", "Iron", "Diamond", "Silver"],
+          "correctAnswer": "Diamond",
+          "explanation": "Diamond is the hardest natural substance on Earth"
+        },
+        {
+          "id": 17,
+          "question": "Which organ pumps blood through your body?",
+          "options": ["Brain", "Lungs", "Heart", "Liver"],
+          "correctAnswer": "Heart",
+          "explanation": "The heart pumps blood through your body"
+        },
+        {
+          "id": 18,
+          "question": "What is the chemical symbol for water?",
+          "options": ["H2O", "CO2", "O2", "N2"],
+          "correctAnswer": "H2O",
+          "explanation": "The chemical symbol for water is H2O"
+        },
+        {
+          "id": 19,
+          "question": "How many chambers does a human heart have?",
+          "options": ["2", "3", "4", "5"],
+          "correctAnswer": "4",
+          "explanation": "The human heart has 4 chambers"
+        },
+        {
+          "id": 20,
+          "question": "What type of animal is a dolphin?",
+          "options": ["Fish", "Reptile", "Mammal", "Bird"],
+          "correctAnswer": "Mammal",
+          "explanation": "A dolphin is a mammal, not a fish"
+        }
+      ]
+    },
+    "grade6": {
+      "name": "Grade 6",
+      "questions": [
+        {
+          "id": 21,
+          "question": "What is the center of an atom called?",
+          "options": ["Electron", "Proton", "Nucleus", "Neutron"],
+          "correctAnswer": "Nucleus",
+          "explanation": "The center of an atom is called the nucleus"
+        },
+        {
+          "id": 22,
+          "question": "Which system in the human body includes the heart and blood vessels?",
+          "options": ["Respiratory system", "Digestive system", "Circulatory system", "Nervous system"],
+          "correctAnswer": "Circulatory system",
+          "explanation": "The circulatory system includes the heart and blood vessels"
+        },
+        {
+          "id": 23,
+          "question": "What is the smallest unit of life?",
+          "options": ["Organ", "Tissue", "Cell", "Organism"],
+          "correctAnswer": "Cell",
+          "explanation": "The cell is the smallest unit of life"
+        },
+        {
+          "id": 24,
+          "question": "What causes earthquakes?",
+          "options": ["Wind", "Rain", "Moving tectonic plates", "Ocean waves"],
+          "correctAnswer": "Moving tectonic plates",
+          "explanation": "Earthquakes are caused by the movement of tectonic plates"
+        },
+        {
+          "id": 25,
+          "question": "Which gas makes up most of Earth's atmosphere?",
+          "options": ["Oxygen", "Carbon dioxide", "Nitrogen", "Hydrogen"],
+          "correctAnswer": "Nitrogen",
+          "explanation": "Nitrogen makes up about 78% of Earth's atmosphere"
+        }
+      ]
+    },
+    "grade7": {
+      "name": "Grade 7",
+      "questions": [
+        {
+          "id": 26,
+          "question": "What is the pH scale used to measure?",
+          "options": ["Temperature", "Acidity and alkalinity", "Pressure", "Speed"],
+          "correctAnswer": "Acidity and alkalinity",
+          "explanation": "The pH scale measures how acidic or alkaline a substance is"
+        },
+        {
+          "id": 27,
+          "question": "Which type of reproduction involves only one parent?",
+          "options": ["Sexual reproduction", "Asexual reproduction", "Binary fission", "Budding"],
+          "correctAnswer": "Asexual reproduction",
+          "explanation": "Asexual reproduction involves only one parent"
+        },
+        {
+          "id": 28,
+          "question": "What is the powerhouse of the cell?",
+          "options": ["Nucleus", "Mitochondria", "Ribosome", "Cytoplasm"],
+          "correctAnswer": "Mitochondria",
+          "explanation": "Mitochondria are called the powerhouse of the cell because they produce energy"
+        },
+        {
+          "id": 29,
+          "question": "What is the force that pulls objects toward Earth?",
+          "options": ["Magnetism", "Friction", "Gravity", "Inertia"],
+          "correctAnswer": "Gravity",
+          "explanation": "Gravity is the force that pulls objects toward Earth"
+        },
+        {
+          "id": 30,
+          "question": "Which part of the electromagnetic spectrum has the shortest wavelength?",
+          "options": ["Radio waves", "Visible light", "X-rays", "Gamma rays"],
+          "correctAnswer": "Gamma rays",
+          "explanation": "Gamma rays have the shortest wavelength in the electromagnetic spectrum"
+        }
+      ]
+    },
+    "grade8": {
+      "name": "Grade 8",
+      "questions": [
+        {
+          "id": 31,
+          "question": "What is the chemical formula for carbon dioxide?",
+          "options": ["CO", "CO2", "C2O", "C2O2"],
+          "correctAnswer": "CO2",
+          "explanation": "The chemical formula for carbon dioxide is CO2"
+        },
+        {
+          "id": 32,
+          "question": "Which law states that energy cannot be created or destroyed?",
+          "options": ["Newton's first law", "Law of conservation of energy", "Law of gravity", "Ohm's law"],
+          "correctAnswer": "Law of conservation of energy",
+          "explanation": "The law of conservation of energy states that energy cannot be created or destroyed"
+        },
+        {
+          "id": 33,
+          "question": "What is the process by which cells divide to form two identical cells?",
+          "options": ["Meiosis", "Mitosis", "Photosynthesis", "Respiration"],
+          "correctAnswer": "Mitosis",
+          "explanation": "Mitosis is the process by which cells divide to form two identical cells"
+        },
+        {
+          "id": 34,
+          "question": "What is the speed of light in a vacuum?",
+          "options": ["300,000 km/s", "3,000,000 km/s", "30,000,000 km/s", "300,000,000 m/s"],
+          "correctAnswer": "300,000,000 m/s",
+          "explanation": "The speed of light in a vacuum is approximately 300,000,000 m/s"
+        },
+        {
+          "id": 35,
+          "question": "Which blood cells help fight infections?",
+          "options": ["Red blood cells", "White blood cells", "Platelets", "Plasma"],
+          "correctAnswer": "White blood cells",
+          "explanation": "White blood cells help fight infections in the body"
+        }
+      ]
+    },
+    "grade9": {
+      "name": "Grade 9",
+      "questions": [
+        {
+          "id": 36,
+          "question": "What is the atomic number of carbon?",
+          "options": ["4", "6", "8", "12"],
+          "correctAnswer": "6",
+          "explanation": "Carbon has an atomic number of 6, meaning it has 6 protons"
+        },
+        {
+          "id": 37,
+          "question": "Which organelle controls what enters and leaves the cell?",
+          "options": ["Cell wall", "Cell membrane", "Nucleus", "Cytoplasm"],
+          "correctAnswer": "Cell membrane",
+          "explanation": "The cell membrane controls what enters and leaves the cell"
+        },
+        {
+          "id": 38,
+          "question": "What is the study of heredity called?",
+          "options": ["Ecology", "Genetics", "Anatomy", "Physiology"],
+          "correctAnswer": "Genetics",
+          "explanation": "Genetics is the study of heredity and inherited traits"
+        },
+        {
+          "id": 39,
+          "question": "Which gas is produced during photosynthesis?",
+          "options": ["Carbon dioxide", "Nitrogen", "Oxygen", "Hydrogen"],
+          "correctAnswer": "Oxygen",
+          "explanation": "Oxygen is produced as a byproduct of photosynthesis"
+        },
+        {
+          "id": 40,
+          "question": "What is the SI unit for electric current?",
+          "options": ["Volt", "Ampere", "Ohm", "Watt"],
+          "correctAnswer": "Ampere",
+          "explanation": "The ampere (A) is the SI unit for electric current"
+        }
+      ]
+    },
+    "grade10": {
+      "name": "Grade 10",
+      "questions": [
+        {
+          "id": 41,
+          "question": "What is the molecular formula for glucose?",
+          "options": ["C6H12O6", "C12H22O11", "C6H6", "CH4"],
+          "correctAnswer": "C6H12O6",
+          "explanation": "The molecular formula for glucose is C6H12O6"
+        },
+        {
+          "id": 42,
+          "question": "Which principle explains why airplanes can fly?",
+          "options": ["Newton's third law", "Bernoulli's principle", "Archimedes' principle", "Pascal's principle"],
+          "correctAnswer": "Bernoulli's principle",
+          "explanation": "Bernoulli's principle explains the lift force that allows airplanes to fly"
+        },
+        {
+          "id": 43,
+          "question": "What is the process of cell division that produces gametes?",
+          "options": ["Mitosis", "Meiosis", "Binary fission", "Budding"],
+          "correctAnswer": "Meiosis",
+          "explanation": "Meiosis is the process of cell division that produces gametes (sex cells)"
+        },
+        {
+          "id": 44,
+          "question": "Which hormone regulates blood sugar levels?",
+          "options": ["Adrenaline", "Insulin", "Testosterone", "Estrogen"],
+          "correctAnswer": "Insulin",
+          "explanation": "Insulin regulates blood sugar levels by helping cells absorb glucose"
+        },
+        {
+          "id": 45,
+          "question": "What is the half-life of carbon-14?",
+          "options": ["5,730 years", "1,200 years", "10,000 years", "50,000 years"],
+          "correctAnswer": "5,730 years",
+          "explanation": "Carbon-14 has a half-life of approximately 5,730 years"
+        }
+      ]
+    }
+  }
+}

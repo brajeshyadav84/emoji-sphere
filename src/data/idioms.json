@@ -1,0 +1,428 @@
+{
+  "grade3-5": [
+    {
+      "id": 1,
+      "idiom": "Break a leg",
+      "meaning": "Good luck",
+      "example": "Break a leg on your school play tonight!",
+      "grade": "3-5"
+    },
+    {
+      "id": 2,
+      "idiom": "It's raining cats and dogs",
+      "meaning": "It's raining very heavily",
+      "example": "We can't go to the park because it's raining cats and dogs.",
+      "grade": "3-5"
+    },
+    {
+      "id": 3,
+      "idiom": "Don't cry over spilled milk",
+      "meaning": "Don't worry about past mistakes",
+      "example": "You failed the test, but don't cry over spilled milk. Study harder next time.",
+      "grade": "3-5"
+    },
+    {
+      "id": 4,
+      "idiom": "A piece of cake",
+      "meaning": "Something very easy",
+      "example": "The math homework was a piece of cake for Sarah.",
+      "grade": "3-5"
+    },
+    {
+      "id": 5,
+      "idiom": "Don't count your chickens before they hatch",
+      "meaning": "Don't assume something will happen before it actually does",
+      "example": "Don't count your chickens before they hatch - wait until you get your test results.",
+      "grade": "3-5"
+    },
+    {
+      "id": 6,
+      "idiom": "The early bird catches the worm",
+      "meaning": "People who wake up early or arrive first get the best opportunities",
+      "example": "I got to school early and got the best seat. The early bird catches the worm!",
+      "grade": "3-5"
+    },
+    {
+      "id": 7,
+      "idiom": "Don't put all your eggs in one basket",
+      "meaning": "Don't risk everything on one plan",
+      "example": "Apply to several schools, don't put all your eggs in one basket.",
+      "grade": "3-5"
+    },
+    {
+      "id": 8,
+      "idiom": "When pigs fly",
+      "meaning": "Something that will never happen",
+      "example": "I'll clean my room when pigs fly!",
+      "grade": "3-5"
+    },
+    {
+      "id": 9,
+      "idiom": "Hold your horses",
+      "meaning": "Slow down, be patient",
+      "example": "Hold your horses! We need to wait for everyone before we start the game.",
+      "grade": "3-5"
+    },
+    {
+      "id": 10,
+      "idiom": "It's a piece of work",
+      "meaning": "Something or someone difficult to deal with",
+      "example": "That puzzle is really a piece of work - it's so hard!",
+      "grade": "3-5"
+    },
+    {
+      "id": 11,
+      "idiom": "Kill two birds with one stone",
+      "meaning": "Accomplish two things at once",
+      "example": "I'll visit grandma and go to the store - kill two birds with one stone.",
+      "grade": "3-5"
+    },
+    {
+      "id": 12,
+      "idiom": "Let the cat out of the bag",
+      "meaning": "Reveal a secret",
+      "example": "Don't let the cat out of the bag about the surprise party!",
+      "grade": "3-5"
+    },
+    {
+      "id": 13,
+      "idiom": "Like a fish out of water",
+      "meaning": "Feel uncomfortable in a situation",
+      "example": "At the fancy restaurant, Tom felt like a fish out of water.",
+      "grade": "3-5"
+    },
+    {
+      "id": 14,
+      "idiom": "Once in a blue moon",
+      "meaning": "Very rarely",
+      "example": "We go to the movies once in a blue moon because it's expensive.",
+      "grade": "3-5"
+    },
+    {
+      "id": 15,
+      "idiom": "Spill the beans",
+      "meaning": "Tell a secret",
+      "example": "Come on, spill the beans! What did you get me for my birthday?",
+      "grade": "3-5"
+    },
+    {
+      "id": 16,
+      "idiom": "The ball is in your court",
+      "meaning": "It's your turn to make a decision",
+      "example": "I've made my offer, now the ball is in your court.",
+      "grade": "3-5"
+    },
+    {
+      "id": 17,
+      "idiom": "Under the weather",
+      "meaning": "Feeling sick",
+      "example": "I'm feeling under the weather today, so I'll stay home.",
+      "grade": "3-5"
+    },
+    {
+      "id": 18,
+      "idiom": "You're pulling my leg",
+      "meaning": "You're joking with me",
+      "example": "A talking dog? You're pulling my leg!",
+      "grade": "3-5"
+    },
+    {
+      "id": 19,
+      "idiom": "Time flies",
+      "meaning": "Time passes quickly",
+      "example": "I can't believe summer is over - time flies!",
+      "grade": "3-5"
+    },
+    {
+      "id": 20,
+      "idiom": "Better late than never",
+      "meaning": "It's better to do something late than not at all",
+      "example": "You finally cleaned your room. Better late than never!",
+      "grade": "3-5"
+    }
+  ],
+  "grade6-8": [
+    {
+      "id": 21,
+      "idiom": "Bite the bullet",
+      "meaning": "Face a difficult situation bravely",
+      "example": "I have to bite the bullet and tell my parents about my bad grade.",
+      "grade": "6-8"
+    },
+    {
+      "id": 22,
+      "idiom": "Burn the midnight oil",
+      "meaning": "Work late into the night",
+      "example": "I had to burn the midnight oil to finish my science project.",
+      "grade": "6-8"
+    },
+    {
+      "id": 23,
+      "idiom": "Don't judge a book by its cover",
+      "meaning": "Don't form opinions based on appearance alone",
+      "example": "She looks mean, but don't judge a book by its cover - she's actually very kind.",
+      "grade": "6-8"
+    },
+    {
+      "id": 24,
+      "idiom": "Every cloud has a silver lining",
+      "meaning": "There's something good in every bad situation",
+      "example": "I broke my leg, but every cloud has a silver lining - now I have time to read.",
+      "grade": "6-8"
+    },
+    {
+      "id": 25,
+      "idiom": "Hit the nail on the head",
+      "meaning": "Be exactly right about something",
+      "example": "You hit the nail on the head when you said the test would be difficult.",
+      "grade": "6-8"
+    },
+    {
+      "id": 26,
+      "idiom": "Jump on the bandwagon",
+      "meaning": "Join a popular activity or opinion",
+      "example": "Everyone's buying those shoes, so I jumped on the bandwagon too.",
+      "grade": "6-8"
+    },
+    {
+      "id": 27,
+      "idiom": "Keep your chin up",
+      "meaning": "Stay positive during difficult times",
+      "example": "I know you're sad about moving, but keep your chin up!",
+      "grade": "6-8"
+    },
+    {
+      "id": 28,
+      "idiom": "Let sleeping dogs lie",
+      "meaning": "Don't disturb a situation that's currently peaceful",
+      "example": "They're not fighting anymore, so let sleeping dogs lie.",
+      "grade": "6-8"
+    },
+    {
+      "id": 29,
+      "idiom": "Make a mountain out of a molehill",
+      "meaning": "Make a small problem seem bigger than it is",
+      "example": "It's just a small scratch - don't make a mountain out of a molehill.",
+      "grade": "6-8"
+    },
+    {
+      "id": 30,
+      "idiom": "Practice makes perfect",
+      "meaning": "Doing something repeatedly makes you better at it",
+      "example": "Keep playing piano every day - practice makes perfect!",
+      "grade": "6-8"
+    },
+    {
+      "id": 31,
+      "idiom": "Rome wasn't built in a day",
+      "meaning": "Important things take time to accomplish",
+      "example": "Learning guitar is hard, but Rome wasn't built in a day.",
+      "grade": "6-8"
+    },
+    {
+      "id": 32,
+      "idiom": "The grass is always greener on the other side",
+      "meaning": "Other situations always seem better than your own",
+      "example": "You think private school is better, but the grass is always greener on the other side.",
+      "grade": "6-8"
+    },
+    {
+      "id": 33,
+      "idiom": "Actions speak louder than words",
+      "meaning": "What you do is more important than what you say",
+      "example": "He says he'll help, but actions speak louder than words.",
+      "grade": "6-8"
+    },
+    {
+      "id": 34,
+      "idiom": "A blessing in disguise",
+      "meaning": "Something that seems bad but turns out to be good",
+      "example": "Missing the bus was a blessing in disguise - I found my lost wallet!",
+      "grade": "6-8"
+    },
+    {
+      "id": 35,
+      "idiom": "Cross your fingers",
+      "meaning": "Hope for good luck",
+      "example": "Cross your fingers that it doesn't rain during our picnic.",
+      "grade": "6-8"
+    },
+    {
+      "id": 36,
+      "idiom": "Get cold feet",
+      "meaning": "Become nervous about doing something",
+      "example": "I was going to ask her to the dance, but I got cold feet.",
+      "grade": "6-8"
+    },
+    {
+      "id": 37,
+      "idiom": "Hit the books",
+      "meaning": "Study hard",
+      "example": "I need to hit the books if I want to pass the exam.",
+      "grade": "6-8"
+    },
+    {
+      "id": 38,
+      "idiom": "In hot water",
+      "meaning": "In trouble",
+      "example": "I'm in hot water with my teacher for not doing homework.",
+      "grade": "6-8"
+    },
+    {
+      "id": 39,
+      "idiom": "Keep your eyes peeled",
+      "meaning": "Watch carefully",
+      "example": "Keep your eyes peeled for the school bus.",
+      "grade": "6-8"
+    },
+    {
+      "id": 40,
+      "idiom": "On cloud nine",
+      "meaning": "Very happy",
+      "example": "She was on cloud nine after getting accepted to her dream school.",
+      "grade": "6-8"
+    }
+  ],
+  "grade9-10": [
+    {
+      "id": 41,
+      "idiom": "Beat around the bush",
+      "meaning": "Avoid talking directly about a topic",
+      "example": "Stop beating around the bush and tell me what happened.",
+      "grade": "9-10"
+    },
+    {
+      "id": 42,
+      "idiom": "Bite off more than you can chew",
+      "meaning": "Take on more than you can handle",
+      "example": "Taking six AP classes might mean you're biting off more than you can chew.",
+      "grade": "9-10"
+    },
+    {
+      "id": 43,
+      "idiom": "Call it a day",
+      "meaning": "Stop working for the day",
+      "example": "We've been studying for hours - let's call it a day.",
+      "grade": "9-10"
+    },
+    {
+      "id": 44,
+      "idiom": "Cut to the chase",
+      "meaning": "Get to the point quickly",
+      "example": "Let's cut to the chase - what do you really want?",
+      "grade": "9-10"
+    },
+    {
+      "id": 45,
+      "idiom": "Devil's advocate",
+      "meaning": "Argue the opposite side for the sake of argument",
+      "example": "I'll play devil's advocate - what if this plan doesn't work?",
+      "grade": "9-10"
+    },
+    {
+      "id": 46,
+      "idiom": "Go the extra mile",
+      "meaning": "Make an extra effort",
+      "example": "She always goes the extra mile to help her students understand.",
+      "grade": "9-10"
+    },
+    {
+      "id": 47,
+      "idiom": "Hit the ground running",
+      "meaning": "Start something energetically and successfully",
+      "example": "On her first day at the new school, she hit the ground running.",
+      "grade": "9-10"
+    },
+    {
+      "id": 48,
+      "idiom": "In the same boat",
+      "meaning": "In the same difficult situation",
+      "example": "We're all stressed about finals - we're in the same boat.",
+      "grade": "9-10"
+    },
+    {
+      "id": 49,
+      "idiom": "Jump the gun",
+      "meaning": "Act too soon or prematurely",
+      "example": "Don't jump the gun - wait for all the college responses before deciding.",
+      "grade": "9-10"
+    },
+    {
+      "id": 50,
+      "idiom": "Keep your cards close to your chest",
+      "meaning": "Keep your plans or thoughts secret",
+      "example": "He's keeping his cards close to his chest about which college he'll choose.",
+      "grade": "9-10"
+    },
+    {
+      "id": 51,
+      "idiom": "Let the chips fall where they may",
+      "meaning": "Accept whatever happens as a result of your actions",
+      "example": "I'm going to tell the truth and let the chips fall where they may.",
+      "grade": "9-10"
+    },
+    {
+      "id": 52,
+      "idiom": "Miss the boat",
+      "meaning": "Miss an opportunity",
+      "example": "I missed the boat on applying for that scholarship.",
+      "grade": "9-10"
+    },
+    {
+      "id": 53,
+      "idiom": "No pain, no gain",
+      "meaning": "You must work hard to achieve success",
+      "example": "Studying is hard, but no pain, no gain - you'll get good grades.",
+      "grade": "9-10"
+    },
+    {
+      "id": 54,
+      "idiom": "Pull yourself together",
+      "meaning": "Calm down and control your emotions",
+      "example": "Pull yourself together - the presentation isn't that scary.",
+      "grade": "9-10"
+    },
+    {
+      "id": 55,
+      "idiom": "Read between the lines",
+      "meaning": "Understand the hidden meaning",
+      "example": "She said she was fine, but reading between the lines, she's upset.",
+      "grade": "9-10"
+    },
+    {
+      "id": 56,
+      "idiom": "Steal someone's thunder",
+      "meaning": "Take credit for someone else's idea or achievement",
+      "example": "He stole my thunder by presenting my idea first.",
+      "grade": "9-10"
+    },
+    {
+      "id": 57,
+      "idiom": "The ball is in your court",
+      "meaning": "It's your responsibility to take action",
+      "example": "I've given you all the information - the ball is in your court now.",
+      "grade": "9-10"
+    },
+    {
+      "id": 58,
+      "idiom": "Think outside the box",
+      "meaning": "Think creatively and unconventionally",
+      "example": "This problem needs creative solutions - think outside the box.",
+      "grade": "9-10"
+    },
+    {
+      "id": 59,
+      "idiom": "Walk on eggshells",
+      "meaning": "Be very careful about what you say or do",
+      "example": "Ever since the argument, I've been walking on eggshells around her.",
+      "grade": "9-10"
+    },
+    {
+      "id": 60,
+      "idiom": "You can't have your cake and eat it too",
+      "meaning": "You can't have two good things that contradict each other",
+      "example": "You can't skip practice and be on the team - you can't have your cake and eat it too.",
+      "grade": "9-10"
+    }
+  ]
+}

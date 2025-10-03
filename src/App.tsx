@@ -3,11 +3,20 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import useSecurity from "@/hooks/useSecurity";
 import Index from "./pages/Index";
 import Games from "./pages/Games";
 import Groups from "./pages/Groups";
 import Chat from "./pages/Chat";
+import Idioms from "./pages/Idioms";
+import Exams from "./pages/Exams";
 import NotFound from "./pages/NotFound";
+
+// Exam imports
+import MathExam from "./pages/exam/MathExam";
+import ScienceExam from "./pages/exam/ScienceExam";
+import EnglishExam from "./pages/exam/EnglishExam";
+import PuzzleExam from "./pages/exam/PuzzleExam";
 
 // Auth imports
 import Login from "./pages/auth/Login";
@@ -37,8 +46,12 @@ import HolidayAssignments from "./pages/admin/HolidayAssignments";
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
+const App = () => {
+  // Apply security features globally
+  useSecurity();
+  
+  return (
+    <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Toaster />
       <Sonner />
@@ -48,6 +61,8 @@ const App = () => (
           <Route path="/games" element={<Games />} />
           <Route path="/groups" element={<Groups />} />
           <Route path="/chat" element={<Chat />} />
+          <Route path="/idioms" element={<Idioms />} />
+          <Route path="/exams" element={<Exams />} />
           
           {/* Auth routes */}
           <Route path="/auth/login" element={<Login />} />
@@ -67,6 +82,12 @@ const App = () => (
           <Route path="/games/drawing-board" element={<DrawingBoard />} />
           <Route path="/games/rhyme-time" element={<RhymeTime />} />
           
+          {/* Exam routes */}
+          <Route path="/exam/math" element={<MathExam />} />
+          <Route path="/exam/science" element={<ScienceExam />} />
+          <Route path="/exam/english" element={<EnglishExam />} />
+          <Route path="/exam/puzzles" element={<PuzzleExam />} />
+          
           {/* Admin routes */}
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/admin/groups" element={<GroupManagement />} />
@@ -81,6 +102,7 @@ const App = () => (
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
-);
+  );
+};
 
 export default App;

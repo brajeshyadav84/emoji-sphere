@@ -2,19 +2,106 @@ import { useState } from "react";
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
 import { Card } from "./ui/card";
-import { Smile, Image } from "lucide-react";
+import { Smile, AlertTriangle } from "lucide-react";
+import { validateContent, ContentValidationResult } from "@/utils/contentFilter";
+import useSecurity from "@/hooks/useSecurity";
+import SecurityNotice from "./SecurityNotice";
 
 const CreatePost = () => {
   const [postText, setPostText] = useState("");
+  const [showMoreEmojis, setShowMoreEmojis] = useState(false);
+  const [validationMessage, setValidationMessage] = useState<ContentValidationResult | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const emojis = ["😊", "❤️", "🎉", "⭐", "🌈", "🎨", "🎮", "🎵", "🌟", "✨", "🦄", "🌸"];
+  // Apply security features
+  useSecurity();
+
+  const basicEmojis = ["😊", "❤️", "🎉", "⭐", "🌈", "🎨", "🎮", "🎵", "☀️", "✨", "🦄", "🌸"];
+  const moreEmojis = ["🚀", "🎯", "🏆", "🎪", "🎭", "🎬", "📚", "🔥", "💫", "🌟", "🎊", "🎈", "🍰", "🎂", "🌺"];
 
   const addEmoji = (emoji: string) => {
     setPostText(postText + emoji);
+    // Clear validation message when user interacts
+    if (validationMessage && !validationMessage.isValid) {
+      setValidationMessage(null);
+    }
+  };
+
+  const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setPostText(e.target.value);
+    // Clear validation message when user types
+    if (validationMessage && !validationMessage.isValid) {
+      setValidationMessage(null);
+    }
+  };
+
+  const handleShare = async () => {
+    if (!postText.trim()) {
+      setValidationMessage({
+        isValid: false,
+        message: "📝 Please write something before sharing!",
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+    
+    // Validate content
+    const validation = validateContent(postText);
+    setValidationMessage(validation);
+    
+    if (!validation.isValid) {
+      setIsSubmitting(false);
+      return;
+    }
+
+    // If validation passes, you can proceed with posting
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Success - clear form
+      setPostText("");
+      setValidationMessage({
+        isValid: true,
+        message: "🎉 Your post has been shared successfully!"
+      });
+      
+      // Clear success message after 3 seconds
+      setTimeout(() => {
+        setValidationMessage(null);
+      }, 3000);
+      
+    } catch (error) {
+      setValidationMessage({
+        isValid: false,
+        message: "❌ Something went wrong. Please try again."
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // Prevent copy-paste in textarea
+  const handlePaste = (e: React.ClipboardEvent) => {
+    e.preventDefault();
+    setValidationMessage({
+      isValid: false,
+      message: "📋 Copy-paste is not allowed. Please type your message!"
+    });
+    setTimeout(() => {
+      setValidationMessage(null);
+    }, 3000);
+  };
+
+  const handleCopy = (e: React.ClipboardEvent) => {
+    e.preventDefault();
   };
 
   return (
-    <Card className="p-6 shadow-playful hover:shadow-hover transition-all duration-300">
+    <div className="space-y-4">
+      <SecurityNotice />
+      <Card className="p-6 shadow-playful hover:shadow-hover transition-all duration-300">
       <div className="flex items-start gap-4">
         <div className="w-12 h-12 rounded-full gradient-primary flex items-center justify-center text-2xl flex-shrink-0">
           😊
@@ -23,40 +110,76 @@ const CreatePost = () => {
           <Textarea
             placeholder="What's on your mind? Share something nice! 🌈"
             value={postText}
-            onChange={(e) => setPostText(e.target.value)}
+            onChange={handleTextChange}
+            onPaste={handlePaste}
+            onCopy={handleCopy}
             className="min-h-[100px] border-2 border-border focus:border-primary resize-none text-base"
           />
           
-          <div className="mt-4 flex flex-wrap gap-2">
-            {emojis.map((emoji) => (
-              <button
-                key={emoji}
-                onClick={() => addEmoji(emoji)}
-                className="text-2xl hover:scale-125 transition-transform duration-200"
-              >
-                {emoji}
-              </button>
-            ))}
+          {/* Validation Message */}
+          {validationMessage && (
+            <div className={`mt-2 p-3 rounded-lg text-sm flex items-start gap-2 ${
+              validationMessage.isValid 
+                ? 'bg-green-50 text-green-700 border border-green-200' 
+                : 'bg-red-50 text-red-700 border border-red-200'
+            }`}>
+              {!validationMessage.isValid && <AlertTriangle className="h-4 w-4 mt-0.5 flex-shrink-0" />}
+              <span>{validationMessage.message}</span>
+            </div>
+          )}
+          
+          <div className="mt-4 space-y-2">
+            <div className="flex flex-wrap gap-2">
+              {basicEmojis.map((emoji) => (
+                <button
+                  key={emoji}
+                  onClick={() => addEmoji(emoji)}
+                  className="text-2xl hover:scale-125 transition-transform duration-200"
+                >
+                  {emoji}
+                </button>
+              ))}
+            </div>
+            
+            {showMoreEmojis && (
+              <div className="flex flex-wrap gap-2 pt-2">
+                {moreEmojis.map((emoji) => (
+                  <button
+                    key={emoji}
+                    onClick={() => addEmoji(emoji)}
+                    className="text-2xl hover:scale-125 transition-transform duration-200"
+                  >
+                    {emoji}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           <div className="mt-4 flex items-center justify-between">
             <div className="flex gap-2">
-              <Button variant="outline" size="sm" className="gap-2">
-                <Image className="h-4 w-4" />
-                Add Image
-              </Button>
-              <Button variant="outline" size="sm" className="gap-2">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="gap-2"
+                onClick={() => setShowMoreEmojis(!showMoreEmojis)}
+              >
                 <Smile className="h-4 w-4" />
-                More Emojis
+                {showMoreEmojis ? "Less Emojis" : "More Emojis"}
               </Button>
             </div>
-            <Button className="gradient-primary font-semibold">
-              Share Post 🚀
+            <Button 
+              className="gradient-primary font-semibold"
+              onClick={handleShare}
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Sharing..." : "Share Post 🚀"}
             </Button>
           </div>
         </div>
       </div>
     </Card>
+    </div>
   );
 };
 

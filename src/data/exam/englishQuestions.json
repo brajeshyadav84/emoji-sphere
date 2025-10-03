@@ -1,0 +1,365 @@
+{
+  "subject": "English",
+  "grades": {
+    "grade2": {
+      "name": "Grade 2",
+      "questions": [
+        {
+          "id": 1,
+          "question": "Which word rhymes with 'cat'?",
+          "options": ["dog", "bat", "pig", "cow"],
+          "correctAnswer": "bat",
+          "explanation": "'Cat' and 'bat' both end with the same sound"
+        },
+        {
+          "id": 2,
+          "question": "What letter comes after 'B' in the alphabet?",
+          "options": ["A", "C", "D", "E"],
+          "correctAnswer": "C",
+          "explanation": "The letter C comes after B in the alphabet"
+        },
+        {
+          "id": 3,
+          "question": "How many letters are in the word 'dog'?",
+          "options": ["2", "3", "4", "5"],
+          "correctAnswer": "3",
+          "explanation": "The word 'dog' has 3 letters: d-o-g"
+        },
+        {
+          "id": 4,
+          "question": "Which word means the opposite of 'big'?",
+          "options": ["huge", "large", "small", "giant"],
+          "correctAnswer": "small",
+          "explanation": "'Small' is the opposite of 'big'"
+        },
+        {
+          "id": 5,
+          "question": "What sound does the letter 'M' make?",
+          "options": ["mmmm", "ssss", "ffff", "nnnn"],
+          "correctAnswer": "mmmm",
+          "explanation": "The letter M makes the 'mmmm' sound"
+        }
+      ]
+    },
+    "grade3": {
+      "name": "Grade 3",
+      "questions": [
+        {
+          "id": 6,
+          "question": "What is the plural of 'child'?",
+          "options": ["childs", "children", "childes", "child"],
+          "correctAnswer": "children",
+          "explanation": "The plural of 'child' is 'children'"
+        },
+        {
+          "id": 7,
+          "question": "Which word is a noun?",
+          "options": ["run", "happy", "book", "quickly"],
+          "correctAnswer": "book",
+          "explanation": "A noun is a person, place, or thing. 'Book' is a thing."
+        },
+        {
+          "id": 8,
+          "question": "What punctuation mark goes at the end of a question?",
+          "options": [".", "!", "?", ","],
+          "correctAnswer": "?",
+          "explanation": "A question mark (?) goes at the end of a question"
+        },
+        {
+          "id": 9,
+          "question": "Which word is spelled correctly?",
+          "options": ["freind", "friend", "frend", "friende"],
+          "correctAnswer": "friend",
+          "explanation": "'Friend' is the correct spelling"
+        },
+        {
+          "id": 10,
+          "question": "What is the beginning sound of the word 'phone'?",
+          "options": ["p", "f", "ph", "h"],
+          "correctAnswer": "f",
+          "explanation": "The 'ph' in 'phone' makes the 'f' sound"
+        }
+      ]
+    },
+    "grade4": {
+      "name": "Grade 4",
+      "questions": [
+        {
+          "id": 11,
+          "question": "What type of word describes an action?",
+          "options": ["Noun", "Adjective", "Verb", "Adverb"],
+          "correctAnswer": "Verb",
+          "explanation": "A verb describes an action or state of being"
+        },
+        {
+          "id": 12,
+          "question": "What is the past tense of 'go'?",
+          "options": ["goed", "went", "goes", "going"],
+          "correctAnswer": "went",
+          "explanation": "The past tense of 'go' is 'went'"
+        },
+        {
+          "id": 13,
+          "question": "Which word is an adjective?",
+          "options": ["run", "beautiful", "quickly", "jump"],
+          "correctAnswer": "beautiful",
+          "explanation": "An adjective describes a noun. 'Beautiful' describes something."
+        },
+        {
+          "id": 14,
+          "question": "What is a group of words that makes complete sense called?",
+          "options": ["Word", "Letter", "Sentence", "Paragraph"],
+          "correctAnswer": "Sentence",
+          "explanation": "A sentence is a group of words that makes complete sense"
+        },
+        {
+          "id": 15,
+          "question": "Which sentence uses correct capitalization?",
+          "options": ["my name is john", "My Name Is John", "My name is John", "my Name is john"],
+          "correctAnswer": "My name is John",
+          "explanation": "The first letter of a sentence and proper nouns should be capitalized"
+        }
+      ]
+    },
+    "grade5": {
+      "name": "Grade 5",
+      "questions": [
+        {
+          "id": 16,
+          "question": "What do we call words that sound the same but have different meanings?",
+          "options": ["Synonyms", "Antonyms", "Homophones", "Rhymes"],
+          "correctAnswer": "Homophones",
+          "explanation": "Homophones are words that sound the same but have different meanings"
+        },
+        {
+          "id": 17,
+          "question": "Which sentence is correct?",
+          "options": ["She are going to school", "She is going to school", "She am going to school", "She be going to school"],
+          "correctAnswer": "She is going to school",
+          "explanation": "The correct form is 'She is going to school'"
+        },
+        {
+          "id": 18,
+          "question": "What is a word that means the same as another word called?",
+          "options": ["Antonym", "Synonym", "Homophone", "Rhyme"],
+          "correctAnswer": "Synonym",
+          "explanation": "A synonym is a word that means the same as another word"
+        },
+        {
+          "id": 19,
+          "question": "Which is the correct plural form of 'box'?",
+          "options": ["boxs", "boxes", "boxies", "boxen"],
+          "correctAnswer": "boxes",
+          "explanation": "The plural of 'box' is 'boxes'"
+        },
+        {
+          "id": 20,
+          "question": "What type of word modifies a verb?",
+          "options": ["Noun", "Adjective", "Adverb", "Pronoun"],
+          "correctAnswer": "Adverb",
+          "explanation": "An adverb modifies a verb, adjective, or another adverb"
+        }
+      ]
+    },
+    "grade6": {
+      "name": "Grade 6",
+      "questions": [
+        {
+          "id": 21,
+          "question": "What is the subject in the sentence 'The dog barked loudly'?",
+          "options": ["dog", "barked", "loudly", "The"],
+          "correctAnswer": "dog",
+          "explanation": "The subject is what the sentence is about - 'dog'"
+        },
+        {
+          "id": 22,
+          "question": "Which word is a preposition?",
+          "options": ["happy", "under", "running", "blue"],
+          "correctAnswer": "under",
+          "explanation": "A preposition shows the relationship between a noun and other words"
+        },
+        {
+          "id": 23,
+          "question": "What is the correct past tense of 'write'?",
+          "options": ["writed", "wrote", "written", "writes"],
+          "correctAnswer": "wrote",
+          "explanation": "The past tense of 'write' is 'wrote'"
+        },
+        {
+          "id": 24,
+          "question": "Which sentence contains a metaphor?",
+          "options": ["She runs like the wind", "The stars are diamonds in the sky", "He is as tall as a tree", "The water flows quickly"],
+          "correctAnswer": "The stars are diamonds in the sky",
+          "explanation": "A metaphor directly compares two things without using 'like' or 'as'"
+        },
+        {
+          "id": 25,
+          "question": "What is the main idea of a paragraph called?",
+          "options": ["Topic sentence", "Conclusion", "Supporting detail", "Transition"],
+          "correctAnswer": "Topic sentence",
+          "explanation": "The topic sentence states the main idea of a paragraph"
+        }
+      ]
+    },
+    "grade7": {
+      "name": "Grade 7",
+      "questions": [
+        {
+          "id": 26,
+          "question": "Which is an example of alliteration?",
+          "options": ["The sun shines brightly", "Peter Piper picked peppers", "She runs very fast", "The book was interesting"],
+          "correctAnswer": "Peter Piper picked peppers",
+          "explanation": "Alliteration is the repetition of initial consonant sounds"
+        },
+        {
+          "id": 27,
+          "question": "What is the purpose of a thesis statement?",
+          "options": ["To end an essay", "To introduce the main argument", "To provide examples", "To ask questions"],
+          "correctAnswer": "To introduce the main argument",
+          "explanation": "A thesis statement introduces the main argument of an essay"
+        },
+        {
+          "id": 28,
+          "question": "Which type of conflict involves a character vs. society?",
+          "options": ["Internal conflict", "External conflict", "Man vs. nature", "Character vs. character"],
+          "correctAnswer": "External conflict",
+          "explanation": "Character vs. society is a type of external conflict"
+        },
+        {
+          "id": 29,
+          "question": "What is personification?",
+          "options": ["Comparing two things", "Giving human qualities to non-human things", "Exaggerating for effect", "Using like or as"],
+          "correctAnswer": "Giving human qualities to non-human things",
+          "explanation": "Personification gives human characteristics to non-human things"
+        },
+        {
+          "id": 30,
+          "question": "Which sentence uses the active voice?",
+          "options": ["The ball was thrown by John", "The cake was eaten", "John threw the ball", "The letter was written by her"],
+          "correctAnswer": "John threw the ball",
+          "explanation": "Active voice has the subject performing the action"
+        }
+      ]
+    },
+    "grade8": {
+      "name": "Grade 8",
+      "questions": [
+        {
+          "id": 31,
+          "question": "What is the difference between denotation and connotation?",
+          "options": ["Literal vs. implied meaning", "Noun vs. verb", "Past vs. present", "Active vs. passive"],
+          "correctAnswer": "Literal vs. implied meaning",
+          "explanation": "Denotation is literal meaning; connotation is implied meaning"
+        },
+        {
+          "id": 32,
+          "question": "Which is an example of dramatic irony?",
+          "options": ["A character says one thing but means another", "The audience knows something a character doesn't", "A situation turns out opposite to expectations", "Words sound alike but have different meanings"],
+          "correctAnswer": "The audience knows something a character doesn't",
+          "explanation": "Dramatic irony occurs when the audience knows more than a character"
+        },
+        {
+          "id": 33,
+          "question": "What is the climax of a story?",
+          "options": ["The beginning", "The turning point", "The ending", "The setting"],
+          "correctAnswer": "The turning point",
+          "explanation": "The climax is the turning point or most intense moment of a story"
+        },
+        {
+          "id": 34,
+          "question": "Which sentence contains a dangling modifier?",
+          "options": ["Running quickly, the dog chased the ball", "After studying, I took the test", "Walking to school, the bag fell", "She sang beautifully"],
+          "correctAnswer": "Walking to school, the bag fell",
+          "explanation": "The modifier 'walking to school' doesn't clearly relate to 'bag'"
+        },
+        {
+          "id": 35,
+          "question": "What is an unreliable narrator?",
+          "options": ["A narrator who lies", "A narrator whose perspective is questionable", "A narrator who changes the story", "A narrator who doesn't appear in the story"],
+          "correctAnswer": "A narrator whose perspective is questionable",
+          "explanation": "An unreliable narrator's credibility or perspective is questionable"
+        }
+      ]
+    },
+    "grade9": {
+      "name": "Grade 9",
+      "questions": [
+        {
+          "id": 36,
+          "question": "What is the purpose of a foil character?",
+          "options": ["To provide comic relief", "To highlight another character's traits", "To serve as the antagonist", "To narrate the story"],
+          "correctAnswer": "To highlight another character's traits",
+          "explanation": "A foil character contrasts with another to highlight their traits"
+        },
+        {
+          "id": 37,
+          "question": "Which literary device uses extreme exaggeration?",
+          "options": ["Metaphor", "Simile", "Hyperbole", "Alliteration"],
+          "correctAnswer": "Hyperbole",
+          "explanation": "Hyperbole is deliberate and extreme exaggeration"
+        },
+        {
+          "id": 38,
+          "question": "What is stream of consciousness in literature?",
+          "options": ["A type of dialogue", "Unfiltered thoughts and feelings", "A narrative technique", "Both B and C"],
+          "correctAnswer": "Both B and C",
+          "explanation": "Stream of consciousness is a narrative technique showing unfiltered thoughts"
+        },
+        {
+          "id": 39,
+          "question": "Which term describes the emotional atmosphere of a literary work?",
+          "options": ["Tone", "Mood", "Theme", "Style"],
+          "correctAnswer": "Mood",
+          "explanation": "Mood is the emotional atmosphere that affects the reader"
+        },
+        {
+          "id": 40,
+          "question": "What is the difference between tone and mood?",
+          "options": ["Tone is author's attitude, mood is reader's feeling", "They are the same", "Tone is louder than mood", "Mood comes first, then tone"],
+          "correctAnswer": "Tone is author's attitude, mood is reader's feeling",
+          "explanation": "Tone reflects the author's attitude; mood is what the reader feels"
+        }
+      ]
+    },
+    "grade10": {
+      "name": "Grade 10",
+      "questions": [
+        {
+          "id": 41,
+          "question": "What is the effect of using first person point of view?",
+          "options": ["Creates distance", "Increases intimacy and subjectivity", "Provides objectivity", "Confuses the reader"],
+          "correctAnswer": "Increases intimacy and subjectivity",
+          "explanation": "First person creates intimacy and shows one character's subjective view"
+        },
+        {
+          "id": 42,
+          "question": "Which is an example of situational irony?",
+          "options": ["A fire station burns down", "Saying 'Nice weather' during a storm", "A character who doesn't know what the audience knows", "Using words with double meanings"],
+          "correctAnswer": "A fire station burns down",
+          "explanation": "Situational irony occurs when the outcome is opposite to what's expected"
+        },
+        {
+          "id": 43,
+          "question": "What is the purpose of symbolism in literature?",
+          "options": ["To confuse readers", "To represent deeper meanings", "To make writing longer", "To show off vocabulary"],
+          "correctAnswer": "To represent deeper meanings",
+          "explanation": "Symbolism uses objects or actions to represent deeper meanings or ideas"
+        },
+        {
+          "id": 44,
+          "question": "Which element is most important in a tragedy?",
+          "options": ["Comic relief", "Happy ending", "Tragic flaw", "Romance"],
+          "correctAnswer": "Tragic flaw",
+          "explanation": "A tragic flaw in the protagonist is essential to classical tragedy"
+        },
+        {
+          "id": 45,
+          "question": "What is the function of a chorus in Greek drama?",
+          "options": ["To sing songs", "To comment on action and provide background", "To play multiple characters", "To provide special effects"],
+          "correctAnswer": "To comment on action and provide background",
+          "explanation": "The chorus comments on the action and provides context and background"
+        }
+      ]
+    }
+  }
+}

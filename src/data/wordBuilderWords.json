@@ -1,0 +1,1418 @@
+{
+  "easy": [
+    {
+      "letters": ["C", "A", "T"],
+      "words": [
+        { "word": "CAT", "hint": "A furry pet that meows" },
+        { "word": "ACT", "hint": "To perform or behave" },
+        { "word": "TAC", "hint": "A small nail" }
+      ]
+    },
+    {
+      "letters": ["D", "O", "G"],
+      "words": [
+        { "word": "DOG", "hint": "Man's best friend" },
+        { "word": "GOD", "hint": "A divine being" },
+        { "word": "COD", "hint": "A type of fish" }
+      ]
+    },
+    {
+      "letters": ["S", "U", "N"],
+      "words": [
+        { "word": "SUN", "hint": "The bright star in our sky" },
+        { "word": "NUS", "hint": "Nuts backwards" },
+        { "word": "NUN", "hint": "A religious woman" }
+      ]
+    },
+    {
+      "letters": ["B", "A", "T"],
+      "words": [
+        { "word": "BAT", "hint": "A flying mammal or sports equipment" },
+        { "word": "TAB", "hint": "A small flap or bill" },
+        { "word": "CAB", "hint": "A taxi" }
+      ]
+    },
+    {
+      "letters": ["R", "A", "T"],
+      "words": [
+        { "word": "RAT", "hint": "A small rodent" },
+        { "word": "TAR", "hint": "A black sticky substance" },
+        { "word": "ART", "hint": "Creative expression" }
+      ]
+    },
+    {
+      "letters": ["P", "I", "G"],
+      "words": [
+        { "word": "PIG", "hint": "A farm animal that oinks" },
+        { "word": "GIP", "hint": "To clean a fish" },
+        { "word": "GIG", "hint": "A musical performance" }
+      ]
+    },
+    {
+      "letters": ["F", "U", "N"],
+      "words": [
+        { "word": "FUN", "hint": "Enjoyable activity" },
+        { "word": "NUN", "hint": "A religious woman" },
+        { "word": "BUN", "hint": "A type of bread roll" }
+      ]
+    },
+    {
+      "letters": ["B", "U", "G"],
+      "words": [
+        { "word": "BUG", "hint": "A small insect" },
+        { "word": "HUG", "hint": "An embrace" },
+        { "word": "JUG", "hint": "A container for liquids" }
+      ]
+    },
+    {
+      "letters": ["C", "U", "P"],
+      "words": [
+        { "word": "CUP", "hint": "A drinking container" },
+        { "word": "PUP", "hint": "A young dog" },
+        { "word": "CUT", "hint": "To slice with a knife" }
+      ]
+    },
+    {
+      "letters": ["P", "E", "N"],
+      "words": [
+        { "word": "PEN", "hint": "A writing tool" },
+        { "word": "DEN", "hint": "A small room or animal's home" },
+        { "word": "HEN", "hint": "A female chicken" }
+      ]
+    },
+    {
+      "letters": ["B", "E", "D"],
+      "words": [
+        { "word": "BED", "hint": "Where you sleep" },
+        { "word": "RED", "hint": "The color of blood" },
+        { "word": "LED", "hint": "Past tense of lead" }
+      ]
+    },
+    {
+      "letters": ["T", "O", "P"],
+      "words": [
+        { "word": "TOP", "hint": "The highest point" },
+        { "word": "POT", "hint": "A cooking container" },
+        { "word": "TOT", "hint": "A small child" }
+      ]
+    },
+    {
+      "letters": ["F", "O", "X"],
+      "words": [
+        { "word": "FOX", "hint": "A clever orange animal" },
+        { "word": "BOX", "hint": "A container" },
+        { "word": "COX", "hint": "Person who steers a boat" }
+      ]
+    },
+    {
+      "letters": ["H", "A", "T"],
+      "words": [
+        { "word": "HAT", "hint": "Something you wear on your head" },
+        { "word": "BAT", "hint": "A flying mammal" },
+        { "word": "CAT", "hint": "A meowing pet" }
+      ]
+    },
+    {
+      "letters": ["N", "E", "T"],
+      "words": [
+        { "word": "NET", "hint": "Used to catch fish" },
+        { "word": "TEN", "hint": "The number after nine" },
+        { "word": "PET", "hint": "A domestic animal" }
+      ]
+    },
+    {
+      "letters": ["C", "O", "W"],
+      "words": [
+        { "word": "COW", "hint": "A farm animal that gives milk" },
+        { "word": "BOW", "hint": "To bend forward" },
+        { "word": "ROW", "hint": "A line of things" }
+      ]
+    },
+    {
+      "letters": ["F", "I", "G"],
+      "words": [
+        { "word": "FIG", "hint": "A sweet fruit" },
+        { "word": "BIG", "hint": "Large in size" },
+        { "word": "DIG", "hint": "To make a hole" }
+      ]
+    },
+    {
+      "letters": ["W", "I", "N"],
+      "words": [
+        { "word": "WIN", "hint": "To be victorious" },
+        { "word": "TIN", "hint": "A type of metal" },
+        { "word": "BIN", "hint": "A container for trash" }
+      ]
+    },
+    {
+      "letters": ["S", "I", "T"],
+      "words": [
+        { "word": "SIT", "hint": "To be seated" },
+        { "word": "BIT", "hint": "A small piece" },
+        { "word": "HIT", "hint": "To strike" }
+      ]
+    },
+    {
+      "letters": ["M", "A", "N"],
+      "words": [
+        { "word": "MAN", "hint": "An adult male" },
+        { "word": "CAN", "hint": "A metal container" },
+        { "word": "FAN", "hint": "A cooling device" }
+      ]
+    },
+    {
+      "letters": ["R", "U", "N"],
+      "words": [
+        { "word": "RUN", "hint": "To move quickly on foot" },
+        { "word": "BUN", "hint": "A type of bread" },
+        { "word": "SUN", "hint": "The star that lights our day" }
+      ]
+    },
+    {
+      "letters": ["C", "A", "R"],
+      "words": [
+        { "word": "CAR", "hint": "A vehicle with four wheels" },
+        { "word": "BAR", "hint": "A long rod" },
+        { "word": "JAR", "hint": "A glass container" }
+      ]
+    },
+    {
+      "letters": ["H", "O", "T"],
+      "words": [
+        { "word": "HOT", "hint": "Very warm" },
+        { "word": "COT", "hint": "A small bed" },
+        { "word": "DOT", "hint": "A small spot" }
+      ]
+    },
+    {
+      "letters": ["L", "O", "G"],
+      "words": [
+        { "word": "LOG", "hint": "A piece of wood" },
+        { "word": "HOG", "hint": "A pig" },
+        { "word": "COG", "hint": "A gear wheel" }
+      ]
+    },
+    {
+      "letters": ["M", "U", "D"],
+      "words": [
+        { "word": "MUD", "hint": "Wet dirt" },
+        { "word": "BUD", "hint": "A flower before it blooms" },
+        { "word": "CUD", "hint": "Food that cows chew" }
+      ]
+    },
+    {
+      "letters": ["Y", "E", "S"],
+      "words": [
+        { "word": "YES", "hint": "An affirmative answer" },
+        { "word": "YET", "hint": "Still or so far" },
+        { "word": "SET", "hint": "To put in place" }
+      ]
+    },
+    {
+      "letters": ["E", "G", "G"],
+      "words": [
+        { "word": "EGG", "hint": "What chickens lay" },
+        { "word": "BEG", "hint": "To ask for something" },
+        { "word": "KEG", "hint": "A small barrel" }
+      ]
+    },
+    {
+      "letters": ["Z", "O", "O"],
+      "words": [
+        { "word": "ZOO", "hint": "A place to see animals" },
+        { "word": "TOO", "hint": "Also or excessively" },
+        { "word": "BOO", "hint": "A scary sound" }
+      ]
+    },
+    {
+      "letters": ["J", "A", "M"],
+      "words": [
+        { "word": "JAM", "hint": "A sweet fruit spread" },
+        { "word": "HAM", "hint": "Meat from a pig" },
+        { "word": "RAM", "hint": "A male sheep" }
+      ]
+    },
+    {
+      "letters": ["W", "E", "B"],
+      "words": [
+        { "word": "WEB", "hint": "What spiders make" },
+        { "word": "BED", "hint": "Where you sleep" },
+        { "word": "WET", "hint": "Covered with water" }
+      ]
+    }
+  ],
+  "medium": [
+    {
+      "letters": ["C", "A", "R", "E"],
+      "words": [
+        { "word": "CARE", "hint": "To look after someone" },
+        { "word": "RACE", "hint": "A competition of speed" },
+        { "word": "ACRE", "hint": "A unit of land measurement" },
+        { "word": "ARC", "hint": "A curved line" },
+        { "word": "CAR", "hint": "A vehicle with four wheels" },
+        { "word": "EAR", "hint": "Body part used for hearing" },
+        { "word": "ERA", "hint": "A period of time" }
+      ]
+    },
+    {
+      "letters": ["T", "I", "M", "E"],
+      "words": [
+        { "word": "TIME", "hint": "What clocks measure" },
+        { "word": "ITEM", "hint": "A single thing or object" },
+        { "word": "EMIT", "hint": "To give off or release" },
+        { "word": "MITE", "hint": "A tiny arachnid" },
+        { "word": "TIE", "hint": "To fasten with a knot" },
+        { "word": "MET", "hint": "Past tense of meet" }
+      ]
+    },
+    {
+      "letters": ["L", "O", "V", "E"],
+      "words": [
+        { "word": "LOVE", "hint": "A strong feeling of affection" },
+        { "word": "VOLE", "hint": "A small mouse-like rodent" },
+        { "word": "OVAL", "hint": "An egg-shaped figure" },
+        { "word": "OLE", "hint": "Spanish exclamation" },
+        { "word": "ELF", "hint": "A mythical creature" }
+      ]
+    },
+    {
+      "letters": ["H", "O", "M", "E"],
+      "words": [
+        { "word": "HOME", "hint": "Where you live" },
+        { "word": "SOME", "hint": "A few or several" },
+        { "word": "MESH", "hint": "A network of threads" },
+        { "word": "HEM", "hint": "The edge of fabric" },
+        { "word": "SHE", "hint": "A female pronoun" }
+      ]
+    },
+    {
+      "letters": ["B", "O", "O", "K"],
+      "words": [
+        { "word": "BOOK", "hint": "Something you read" },
+        { "word": "COOK", "hint": "To prepare food" },
+        { "word": "LOOK", "hint": "To see with your eyes" },
+        { "word": "HOOK", "hint": "A curved fastening device" },
+        { "word": "TOOK", "hint": "Past tense of take" }
+      ]
+    },
+    {
+      "letters": ["F", "I", "R", "E"],
+      "words": [
+        { "word": "FIRE", "hint": "Burning flames" },
+        { "word": "DIRE", "hint": "Extremely serious" },
+        { "word": "HIRE", "hint": "To employ someone" },
+        { "word": "TIRE", "hint": "To become weary" },
+        { "word": "IRE", "hint": "Anger" },
+        { "word": "FIR", "hint": "A type of evergreen tree" }
+      ]
+    },
+    {
+      "letters": ["M", "A", "K", "E"],
+      "words": [
+        { "word": "MAKE", "hint": "To create or build" },
+        { "word": "CAKE", "hint": "A sweet dessert" },
+        { "word": "LAKE", "hint": "A body of water" },
+        { "word": "WAKE", "hint": "To stop sleeping" },
+        { "word": "TAKE", "hint": "To grab or receive" },
+        { "word": "FAKE", "hint": "Not real" }
+      ]
+    },
+    {
+      "letters": ["W", "O", "R", "D"],
+      "words": [
+        { "word": "WORD", "hint": "A unit of language" },
+        { "word": "LORD", "hint": "A nobleman" },
+        { "word": "CORD", "hint": "A thick string" },
+        { "word": "FORD", "hint": "A shallow crossing" },
+        { "word": "ROD", "hint": "A long thin pole" },
+        { "word": "ODD", "hint": "Strange or unusual" }
+      ]
+    },
+    {
+      "letters": ["P", "L", "A", "Y"],
+      "words": [
+        { "word": "PLAY", "hint": "To have fun or perform" },
+        { "word": "LAY", "hint": "To put down" },
+        { "word": "PAY", "hint": "To give money" },
+        { "word": "YAP", "hint": "To bark sharply" },
+        { "word": "LAP", "hint": "One circuit of a track" },
+        { "word": "PAL", "hint": "A friend" }
+      ]
+    },
+    {
+      "letters": ["G", "A", "M", "E"],
+      "words": [
+        { "word": "GAME", "hint": "A fun activity with rules" },
+        { "word": "CAME", "hint": "Past tense of come" },
+        { "word": "SAME", "hint": "Identical" },
+        { "word": "TAME", "hint": "Not wild" },
+        { "word": "FAME", "hint": "Being well known" },
+        { "word": "NAME", "hint": "What you're called" }
+      ]
+    },
+    {
+      "letters": ["H", "A", "N", "D"],
+      "words": [
+        { "word": "HAND", "hint": "Part of your arm" },
+        { "word": "BAND", "hint": "A group of musicians" },
+        { "word": "LAND", "hint": "Solid ground" },
+        { "word": "SAND", "hint": "Tiny grains on a beach" },
+        { "word": "WAND", "hint": "A magic stick" },
+        { "word": "AND", "hint": "A connecting word" }
+      ]
+    },
+    {
+      "letters": ["F", "O", "O", "D"],
+      "words": [
+        { "word": "FOOD", "hint": "What you eat" },
+        { "word": "GOOD", "hint": "Excellent or well-behaved" },
+        { "word": "MOOD", "hint": "How you feel" },
+        { "word": "HOOD", "hint": "A covering for the head" },
+        { "word": "WOOD", "hint": "Material from trees" },
+        { "word": "DOOR", "hint": "An entrance" }
+      ]
+    },
+    {
+      "letters": ["R", "E", "A", "D"],
+      "words": [
+        { "word": "READ", "hint": "To look at words and understand" },
+        { "word": "DEAR", "hint": "Beloved or expensive" },
+        { "word": "HEAR", "hint": "To perceive sound" },
+        { "word": "NEAR", "hint": "Close by" },
+        { "word": "YEAR", "hint": "365 days" },
+        { "word": "BEAR", "hint": "A large furry animal" }
+      ]
+    },
+    {
+      "letters": ["T", "R", "E", "E"],
+      "words": [
+        { "word": "TREE", "hint": "A tall plant with branches" },
+        { "word": "FREE", "hint": "Not costing money" },
+        { "word": "THREE", "hint": "The number after two" },
+        { "word": "TERSE", "hint": "Brief and to the point" },
+        { "word": "REEF", "hint": "A coral formation" },
+        { "word": "FEET", "hint": "Plural of foot" }
+      ]
+    },
+    {
+      "letters": ["B", "L", "U", "E"],
+      "words": [
+        { "word": "BLUE", "hint": "The color of the sky" },
+        { "word": "CLUE", "hint": "A hint or evidence" },
+        { "word": "GLUE", "hint": "A sticky substance" },
+        { "word": "TRUE", "hint": "Correct or honest" },
+        { "word": "CRUEL", "hint": "Mean or harsh" },
+        { "word": "RULE", "hint": "A regulation" }
+      ]
+    },
+    {
+      "letters": ["K", "I", "N", "D"],
+      "words": [
+        { "word": "KIND", "hint": "Nice or a type" },
+        { "word": "MIND", "hint": "Your thoughts" },
+        { "word": "FIND", "hint": "To discover" },
+        { "word": "BIND", "hint": "To tie together" },
+        { "word": "WIND", "hint": "Moving air" },
+        { "word": "DINK", "hint": "A small dent" }
+      ]
+    },
+    {
+      "letters": ["S", "H", "O", "P"],
+      "words": [
+        { "word": "SHOP", "hint": "A place to buy things" },
+        { "word": "HOP", "hint": "To jump on one foot" },
+        { "word": "TOP", "hint": "The highest point" },
+        { "word": "POP", "hint": "To burst or a fizzy drink" },
+        { "word": "STOP", "hint": "To cease movement" },
+        { "word": "CHOP", "hint": "To cut with an axe" }
+      ]
+    },
+    {
+      "letters": ["F", "A", "S", "T"],
+      "words": [
+        { "word": "FAST", "hint": "Moving quickly" },
+        { "word": "LAST", "hint": "Coming at the end" },
+        { "word": "CAST", "hint": "To throw or actors in a play" },
+        { "word": "PAST", "hint": "Time that has gone by" },
+        { "word": "VAST", "hint": "Very large" },
+        { "word": "MAST", "hint": "A tall pole on a ship" }
+      ]
+    },
+    {
+      "letters": ["C", "O", "L", "D"],
+      "words": [
+        { "word": "COLD", "hint": "Not warm" },
+        { "word": "BOLD", "hint": "Brave and confident" },
+        { "word": "FOLD", "hint": "To bend over" },
+        { "word": "GOLD", "hint": "A precious metal" },
+        { "word": "HOLD", "hint": "To grasp" },
+        { "word": "SOLD", "hint": "Past tense of sell" }
+      ]
+    },
+    {
+      "letters": ["W", "I", "S", "H"],
+      "words": [
+        { "word": "WISH", "hint": "To desire something" },
+        { "word": "FISH", "hint": "An aquatic animal" },
+        { "word": "DISH", "hint": "A plate or food" },
+        { "word": "RUSH", "hint": "To hurry" },
+        { "word": "BUSH", "hint": "A small shrub" },
+        { "word": "PUSH", "hint": "To press forward" }
+      ]
+    },
+    {
+      "letters": ["T", "A", "L", "K"],
+      "words": [
+        { "word": "TALK", "hint": "To speak" },
+        { "word": "WALK", "hint": "To move on foot" },
+        { "word": "TAKE", "hint": "To grab or receive" },
+        { "word": "LAKE", "hint": "A body of water" },
+        { "word": "TALE", "hint": "A story" },
+        { "word": "TALL", "hint": "Having great height" }
+      ]
+    },
+    {
+      "letters": ["D", "A", "R", "K"],
+      "words": [
+        { "word": "DARK", "hint": "Without light" },
+        { "word": "BARK", "hint": "The sound a dog makes" },
+        { "word": "MARK", "hint": "A sign or score" },
+        { "word": "PARK", "hint": "A public green space" },
+        { "word": "HARD", "hint": "Firm or difficult" },
+        { "word": "CARD", "hint": "A piece of stiff paper" }
+      ]
+    },
+    {
+      "letters": ["S", "O", "N", "G"],
+      "words": [
+        { "word": "SONG", "hint": "Music with words" },
+        { "word": "LONG", "hint": "Having great length" },
+        { "word": "GONG", "hint": "A percussion instrument" },
+        { "word": "GONE", "hint": "No longer here" },
+        { "word": "BONE", "hint": "Hard tissue in your body" },
+        { "word": "TONE", "hint": "A sound or shade" }
+      ]
+    },
+    {
+      "letters": ["M", "O", "V", "E"],
+      "words": [
+        { "word": "MOVE", "hint": "To change position" },
+        { "word": "LOVE", "hint": "A strong feeling of affection" },
+        { "word": "DOVE", "hint": "A white bird" },
+        { "word": "COVE", "hint": "A small bay" },
+        { "word": "WOVE", "hint": "Past tense of weave" },
+        { "word": "ROVE", "hint": "To wander" }
+      ]
+    },
+    {
+      "letters": ["J", "U", "M", "P"],
+      "words": [
+        { "word": "JUMP", "hint": "To leap off the ground" },
+        { "word": "BUMP", "hint": "To hit against something" },
+        { "word": "PUMP", "hint": "A device that moves fluids" },
+        { "word": "DUMP", "hint": "To drop or unload" },
+        { "word": "LUMP", "hint": "A small mass" },
+        { "word": "HUMP", "hint": "A rounded protuberance" }
+      ]
+    },
+    {
+      "letters": ["R", "I", "D", "E"],
+      "words": [
+        { "word": "RIDE", "hint": "To travel on something" },
+        { "word": "SIDE", "hint": "The edge or flank" },
+        { "word": "HIDE", "hint": "To conceal" },
+        { "word": "WIDE", "hint": "Having great width" },
+        { "word": "TIDE", "hint": "The rise and fall of the sea" },
+        { "word": "DICE", "hint": "Small cubes used in games" }
+      ]
+    },
+    {
+      "letters": ["S", "M", "I", "L", "E"],
+      "words": [
+        { "word": "SMILE", "hint": "A happy facial expression" },
+        { "word": "MILE", "hint": "A unit of distance" },
+        { "word": "FILE", "hint": "A collection of papers" },
+        { "word": "TILE", "hint": "A flat piece for covering" },
+        { "word": "LIME", "hint": "A green citrus fruit" },
+        { "word": "TIME", "hint": "What clocks measure" }
+      ]
+    },
+    {
+      "letters": ["G", "R", "E", "E", "N"],
+      "words": [
+        { "word": "GREEN", "hint": "The color of grass" },
+        { "word": "GENRE", "hint": "A category of art" },
+        { "word": "GREET", "hint": "To welcome someone" },
+        { "word": "AGREE", "hint": "To have the same opinion" },
+        { "word": "RAGE", "hint": "Intense anger" },
+        { "word": "GEAR", "hint": "Equipment or mechanism" }
+      ]
+    },
+    {
+      "letters": ["S", "P", "E", "A", "K"],
+      "words": [
+        { "word": "SPEAK", "hint": "To talk or say words" },
+        { "word": "PEAK", "hint": "The top of a mountain" },
+        { "word": "WEAK", "hint": "Not strong" },
+        { "word": "LEAK", "hint": "An unwanted hole" },
+        { "word": "BEAK", "hint": "A bird's mouth" },
+        { "word": "SAKE", "hint": "For the purpose of" }
+      ]
+    },
+    {
+      "letters": ["B", "R", "I", "G", "H", "T"],
+      "words": [
+        { "word": "BRIGHT", "hint": "Giving off light" },
+        { "word": "RIGHT", "hint": "Correct or opposite of left" },
+        { "word": "TIGHT", "hint": "Firmly held or fitting closely" },
+        { "word": "FIGHT", "hint": "To battle or struggle" },
+        { "word": "LIGHT", "hint": "Illumination" },
+        { "word": "NIGHT", "hint": "When it's dark" }
+      ]
+    }
+  ],
+  "hard": [
+    {
+      "letters": ["S", "C", "H", "O", "O", "L"],
+      "words": [
+        { "word": "SCHOOL", "hint": "A place of education" },
+        { "word": "CHOOSE", "hint": "To select from options" },
+        { "word": "CHOOLS", "hint": "Plural of chool" },
+        { "word": "COOL", "hint": "Not warm; fashionable" },
+        { "word": "LOCH", "hint": "A Scottish lake" },
+        { "word": "SOLO", "hint": "Performed alone" },
+        { "word": "OOLS", "hint": "Plural of ool" }
+      ]
+    },
+    {
+      "letters": ["F", "R", "I", "E", "N", "D"],
+      "words": [
+        { "word": "FRIEND", "hint": "A close companion" },
+        { "word": "FINDER", "hint": "One who discovers" },
+        { "word": "DEFINED", "hint": "Clearly explained" },
+        { "word": "FIRE", "hint": "Burning flames" },
+        { "word": "RIDE", "hint": "To travel on something" },
+        { "word": "DIRE", "hint": "Extremely serious" },
+        { "word": "FIND", "hint": "To discover or locate" }
+      ]
+    },
+    {
+      "letters": ["P", "L", "A", "Y", "E", "R"],
+      "words": [
+        { "word": "PLAYER", "hint": "Someone who plays a game" },
+        { "word": "REPLAY", "hint": "To play again" },
+        { "word": "PARLEY", "hint": "A discussion or conference" },
+        { "word": "LAYER", "hint": "A sheet or level" },
+        { "word": "EARLY", "hint": "Before the usual time" },
+        { "word": "PEARL", "hint": "A precious gem from oysters" },
+        { "word": "PLAY", "hint": "To engage in games" },
+        { "word": "YEAR", "hint": "365 days" },
+        { "word": "LEAP", "hint": "To jump" },
+        { "word": "PEAR", "hint": "A type of fruit" }
+      ]
+    },
+    {
+      "letters": ["M", "A", "S", "T", "E", "R"],
+      "words": [
+        { "word": "MASTER", "hint": "An expert or skilled person" },
+        { "word": "STREAM", "hint": "A small river" },
+        { "word": "FASTER", "hint": "More quick" },
+        { "word": "MASTER", "hint": "To become skilled at" },
+        { "word": "STEAM", "hint": "Water vapor" },
+        { "word": "TEAMS", "hint": "Groups working together" },
+        { "word": "SMART", "hint": "Intelligent" },
+        { "word": "TERMS", "hint": "Conditions or words" },
+        { "word": "RATES", "hint": "Prices or speeds" }
+      ]
+    },
+    {
+      "letters": ["C", "H", "A", "N", "G", "E"],
+      "words": [
+        { "word": "CHANGE", "hint": "To make different" },
+        { "word": "CHANCE", "hint": "An opportunity" },
+        { "word": "ANGEL", "hint": "A heavenly being" },
+        { "word": "CAGE", "hint": "An enclosure for animals" },
+        { "word": "GAME", "hint": "A fun activity with rules" },
+        { "word": "HANG", "hint": "To suspend from above" },
+        { "word": "EACH", "hint": "Every one individually" },
+        { "word": "ECHO", "hint": "A reflected sound" }
+      ]
+    },
+    {
+      "letters": ["W", "I", "N", "T", "E", "R"],
+      "words": [
+        { "word": "WINTER", "hint": "The coldest season" },
+        { "word": "WRITER", "hint": "Someone who writes" },
+        { "word": "TWINER", "hint": "Something that twines" },
+        { "word": "INTER", "hint": "To bury" },
+        { "word": "WRITE", "hint": "To put words on paper" },
+        { "word": "INERT", "hint": "Inactive or sluggish" },
+        { "word": "TIRE", "hint": "To become weary" },
+        { "word": "WINE", "hint": "An alcoholic beverage" },
+        { "word": "TWIN", "hint": "One of two siblings" }
+      ]
+    },
+    {
+      "letters": ["S", "U", "M", "M", "E", "R"],
+      "words": [
+        { "word": "SUMMER", "hint": "The warmest season" },
+        { "word": "RESUME", "hint": "To continue or a CV" },
+        { "word": "UMER", "hint": "Part of summer" },
+        { "word": "USER", "hint": "Someone who uses" },
+        { "word": "SURE", "hint": "Certain or confident" },
+        { "word": "RUSE", "hint": "A trick or deception" },
+        { "word": "MUSE", "hint": "A source of inspiration" },
+        { "word": "RUMS", "hint": "Plural of rum" }
+      ]
+    },
+    {
+      "letters": ["S", "P", "R", "I", "N", "G"],
+      "words": [
+        { "word": "SPRING", "hint": "The season of growth" },
+        { "word": "STRING", "hint": "A thin cord" },
+        { "word": "BRINGS", "hint": "Carries or causes" },
+        { "word": "GRINS", "hint": "Smiles widely" },
+        { "word": "RINGS", "hint": "Circular bands" },
+        { "word": "SPIN", "hint": "To rotate rapidly" },
+        { "word": "GRIP", "hint": "To hold firmly" },
+        { "word": "SING", "hint": "To make music with voice" }
+      ]
+    },
+    {
+      "letters": ["A", "U", "T", "U", "M", "N"],
+      "words": [
+        { "word": "AUTUMN", "hint": "The fall season" },
+        { "word": "MOUNT", "hint": "To climb or a hill" },
+        { "word": "AMOUNT", "hint": "A quantity" },
+        { "word": "TAUNT", "hint": "To tease or provoke" },
+        { "word": "AUNT", "hint": "Your parent's sister" },
+        { "word": "TUNA", "hint": "A type of fish" },
+        { "word": "UNTO", "hint": "An old word for 'to'" }
+      ]
+    },
+    {
+      "letters": ["B", "R", "A", "N", "C", "H"],
+      "words": [
+        { "word": "BRANCH", "hint": "A part of a tree" },
+        { "word": "RANCH", "hint": "A large farm" },
+        { "word": "ARCH", "hint": "A curved structure" },
+        { "word": "CHAR", "hint": "To burn or blacken" },
+        { "word": "BARN", "hint": "A farm building" },
+        { "word": "CRAB", "hint": "A sea creature with claws" },
+        { "word": "BRAN", "hint": "Outer layer of grain" }
+      ]
+    },
+    {
+      "letters": ["F", "L", "O", "W", "E", "R"],
+      "words": [
+        { "word": "FLOWER", "hint": "A plant's bloom" },
+        { "word": "SLOWER", "hint": "Moving at less speed" },
+        { "word": "LOWER", "hint": "To move down" },
+        { "word": "TOWER", "hint": "A tall structure" },
+        { "word": "POWER", "hint": "Strength or energy" },
+        { "word": "FLOW", "hint": "To move like water" },
+        { "word": "WOLF", "hint": "A wild canine" },
+        { "word": "FOWL", "hint": "A bird, especially poultry" }
+      ]
+    },
+    {
+      "letters": ["C", "A", "S", "T", "L", "E"],
+      "words": [
+        { "word": "CASTLE", "hint": "A fortified residence" },
+        { "word": "CLEATS", "hint": "Athletic shoes with spikes" },
+        { "word": "ECLATS", "hint": "Brilliant displays" },
+        { "word": "SCALE", "hint": "To climb or measure" },
+        { "word": "LEAST", "hint": "The smallest amount" },
+        { "word": "STEAL", "hint": "To take without permission" },
+        { "word": "TALES", "hint": "Stories" },
+        { "word": "SLATE", "hint": "A type of rock" }
+      ]
+    },
+    {
+      "letters": ["K", "I", "T", "C", "H", "E", "N"],
+      "words": [
+        { "word": "KITCHEN", "hint": "Where you cook food" },
+        { "word": "CHICKEN", "hint": "A farm bird" },
+        { "word": "THICKEN", "hint": "To make more dense" },
+        { "word": "THICK", "hint": "Having great width" },
+        { "word": "THINK", "hint": "To use your mind" },
+        { "word": "KITE", "hint": "A flying toy" },
+        { "word": "NICE", "hint": "Pleasant or kind" },
+        { "word": "TECH", "hint": "Short for technology" }
+      ]
+    },
+    {
+      "letters": ["G", "A", "R", "D", "E", "N"],
+      "words": [
+        { "word": "GARDEN", "hint": "A place where plants grow" },
+        { "word": "DANGER", "hint": "Risk of harm" },
+        { "word": "RANGED", "hint": "Extended or varied" },
+        { "word": "ANGLED", "hint": "Having angles" },
+        { "word": "ANGER", "hint": "A strong emotion" },
+        { "word": "GRADE", "hint": "A level or mark" },
+        { "word": "GRAND", "hint": "Large and impressive" },
+        { "word": "RANGE", "hint": "A series or extent" }
+      ]
+    },
+    {
+      "letters": ["P", "I", "C", "T", "U", "R", "E"],
+      "words": [
+        { "word": "PICTURE", "hint": "An image or photo" },
+        { "word": "CAPTURE", "hint": "To catch or record" },
+        { "word": "CUPRITE", "hint": "A copper mineral" },
+        { "word": "PRICE", "hint": "The cost of something" },
+        { "word": "CURE", "hint": "A remedy" },
+        { "word": "PURE", "hint": "Clean or unmixed" },
+        { "word": "TRIP", "hint": "A journey" },
+        { "word": "CUTE", "hint": "Attractive or charming" }
+      ]
+    },
+    {
+      "letters": ["B", "U", "I", "L", "D", "I", "N", "G"],
+      "words": [
+        { "word": "BUILDING", "hint": "A structure with walls" },
+        { "word": "GUILDING", "hint": "Covering with gold" },
+        { "word": "BUILD", "hint": "To construct" },
+        { "word": "GUILD", "hint": "A craftsman's association" },
+        { "word": "BLIND", "hint": "Unable to see" },
+        { "word": "BLING", "hint": "Flashy jewelry" },
+        { "word": "DING", "hint": "A small dent" },
+        { "word": "BIND", "hint": "To tie together" }
+      ]
+    },
+    {
+      "letters": ["M", "O", "R", "N", "I", "N", "G"],
+      "words": [
+        { "word": "MORNING", "hint": "The early part of the day" },
+        { "word": "MOORING", "hint": "A place to tie a boat" },
+        { "word": "ROOMING", "hint": "Living in rooms" },
+        { "word": "GROOM", "hint": "To clean or a bridegroom" },
+        { "word": "MINOR", "hint": "Small or underage" },
+        { "word": "ROOM", "hint": "A space in a building" },
+        { "word": "RING", "hint": "A circular band" },
+        { "word": "GRIN", "hint": "To smile widely" }
+      ]
+    },
+    {
+      "letters": ["E", "V", "E", "N", "I", "N", "G"],
+      "words": [
+        { "word": "EVENING", "hint": "The end of the day" },
+        { "word": "GIVEN", "hint": "Provided or assumed" },
+        { "word": "GIVING", "hint": "The act of providing" },
+        { "word": "VEIN", "hint": "A blood vessel" },
+        { "word": "VINE", "hint": "A climbing plant" },
+        { "word": "EVEN", "hint": "Level or equal" },
+        { "word": "NINE", "hint": "The number after eight" },
+        { "word": "GENE", "hint": "A unit of heredity" }
+      ]
+    },
+    {
+      "letters": ["W", "E", "A", "T", "H", "E", "R"],
+      "words": [
+        { "word": "WEATHER", "hint": "Atmospheric conditions" },
+        { "word": "LEATHER", "hint": "Animal hide material" },
+        { "word": "FEATHER", "hint": "A bird's plume" },
+        { "word": "HEATHER", "hint": "A purple flowering plant" },
+        { "word": "HEART", "hint": "The organ that pumps blood" },
+        { "word": "EARTH", "hint": "Our planet" },
+        { "word": "HEAR", "hint": "To perceive sound" },
+        { "word": "TEAR", "hint": "To rip or a drop from the eye" }
+      ]
+    },
+    {
+      "letters": ["A", "N", "I", "M", "A", "L"],
+      "words": [
+        { "word": "ANIMAL", "hint": "A living creature" },
+        { "word": "MANILA", "hint": "Capital of Philippines" },
+        { "word": "LAMINA", "hint": "A thin layer" },
+        { "word": "MAMA", "hint": "Mother" },
+        { "word": "MAIL", "hint": "Letters and packages" },
+        { "word": "NAIL", "hint": "A fastener or finger part" },
+        { "word": "MAIN", "hint": "Primary or chief" },
+        { "word": "LAIN", "hint": "Past participle of lie" }
+      ]
+    },
+    {
+      "letters": ["T", "E", "A", "C", "H", "E", "R"],
+      "words": [
+        { "word": "TEACHER", "hint": "Someone who educates" },
+        { "word": "CHEATER", "hint": "Someone who breaks rules" },
+        { "word": "THEATER", "hint": "A place for performances" },
+        { "word": "REACHED", "hint": "Extended to or arrived at" },
+        { "word": "TEACH", "hint": "To educate or instruct" },
+        { "word": "REACH", "hint": "To extend or arrive" },
+        { "word": "CHEAT", "hint": "To act dishonestly" },
+        { "word": "HEART", "hint": "The organ that pumps blood" }
+      ]
+    },
+    {
+      "letters": ["S", "T", "U", "D", "E", "N", "T"],
+      "words": [
+        { "word": "STUDENT", "hint": "Someone who learns" },
+        { "word": "STUNTED", "hint": "Having restricted growth" },
+        { "word": "TRUSTED", "hint": "Relied upon" },
+        { "word": "DUSTED", "hint": "Cleaned with a cloth" },
+        { "word": "STUDY", "hint": "To learn or examine" },
+        { "word": "DUST", "hint": "Fine particles" },
+        { "word": "SEND", "hint": "To dispatch" },
+        { "word": "TENT", "hint": "A portable shelter" }
+      ]
+    },
+    {
+      "letters": ["C", "O", "M", "P", "U", "T", "E", "R"],
+      "words": [
+        { "word": "COMPUTER", "hint": "An electronic device" },
+        { "word": "COMPETE", "hint": "To strive against others" },
+        { "word": "COUNTER", "hint": "A surface or counting device" },
+        { "word": "TROUPE", "hint": "A group of performers" },
+        { "word": "ROUTE", "hint": "A way or path" },
+        { "word": "COURT", "hint": "A legal venue" },
+        { "word": "CROP", "hint": "Plants grown for food" },
+        { "word": "PORT", "hint": "A harbor" }
+      ]
+    },
+    {
+      "letters": ["L", "I", "B", "R", "A", "R", "Y"],
+      "words": [
+        { "word": "LIBRARY", "hint": "A place with books" },
+        { "word": "RARELY", "hint": "Not often" },
+        { "word": "BARELY", "hint": "Just barely" },
+        { "word": "BRIARY", "hint": "Full of thorns" },
+        { "word": "BARRY", "hint": "A common name" },
+        { "word": "RAIL", "hint": "A horizontal bar" },
+        { "word": "LIAR", "hint": "Someone who doesn't tell truth" },
+        { "word": "IARY", "hint": "Part of diary" }
+      ]
+    },
+    {
+      "letters": ["M", "U", "S", "I", "C", "A", "L"],
+      "words": [
+        { "word": "MUSICAL", "hint": "Related to music" },
+        { "word": "CLAIMS", "hint": "Assertions or demands" },
+        { "word": "MUSLIM", "hint": "A follower of Islam" },
+        { "word": "MUSIC", "hint": "Organized sound" },
+        { "word": "CLAIM", "hint": "To assert ownership" },
+        { "word": "CLAM", "hint": "A shellfish" },
+        { "word": "SLIM", "hint": "Thin or slender" },
+        { "word": "MAIL", "hint": "Postal delivery" }
+      ]
+    },
+    {
+      "letters": ["D", "A", "N", "C", "I", "N", "G"],
+      "words": [
+        { "word": "DANCING", "hint": "Moving to music" },
+        { "word": "CANNING", "hint": "Preserving food in cans" },
+        { "word": "DINNING", "hint": "Making a loud noise" },
+        { "word": "DANCE", "hint": "To move rhythmically" },
+        { "word": "AGING", "hint": "Getting older" },
+        { "word": "ACING", "hint": "Performing excellently" },
+        { "word": "CAND", "hint": "Short for candidate" },
+        { "word": "DING", "hint": "A ringing sound" }
+      ]
+    },
+    {
+      "letters": ["P", "A", "I", "N", "T", "I", "N", "G"],
+      "words": [
+        { "word": "PAINTING", "hint": "Art made with paint" },
+        { "word": "POINTING", "hint": "Indicating direction" },
+        { "word": "PANTING", "hint": "Breathing heavily" },
+        { "word": "TAPPING", "hint": "Gentle striking" },
+        { "word": "PAINT", "hint": "Colored liquid for art" },
+        { "word": "POINT", "hint": "A sharp end" },
+        { "word": "GIANT", "hint": "Very large person" },
+        { "word": "PINT", "hint": "A unit of measurement" }
+      ]
+    },
+    {
+      "letters": ["R", "E", "A", "D", "I", "N", "G"],
+      "words": [
+        { "word": "READING", "hint": "Looking at words to understand" },
+        { "word": "LEADING", "hint": "Going first or guiding" },
+        { "word": "HEADING", "hint": "A title or direction" },
+        { "word": "DEALING", "hint": "Handling or trading" },
+        { "word": "GRADE", "hint": "A level or mark" },
+        { "word": "RANGE", "hint": "A span or extent" },
+        { "word": "ANGER", "hint": "A strong emotion" },
+        { "word": "DEAR", "hint": "Beloved or expensive" }
+      ]
+    },
+    {
+      "letters": ["W", "R", "I", "T", "I", "N", "G"],
+      "words": [
+        { "word": "WRITING", "hint": "Putting words on paper" },
+        { "word": "RIGHTING", "hint": "Correcting or upright" },
+        { "word": "TWINING", "hint": "Wrapping around" },
+        { "word": "WINING", "hint": "Winning or dining well" },
+        { "word": "WRITE", "hint": "To put words on paper" },
+        { "word": "RIGHT", "hint": "Correct or opposite of left" },
+        { "word": "TWIN", "hint": "One of two siblings" },
+        { "word": "GRIT", "hint": "Small particles or courage" }
+      ]
+    },
+    {
+      "letters": ["S", "P", "O", "R", "T", "S"],
+      "words": [
+        { "word": "SPORTS", "hint": "Athletic activities" },
+        { "word": "STOPS", "hint": "Ceases movement" },
+        { "word": "POSTS", "hint": "Mail or positions" },
+        { "word": "PORTS", "hint": "Harbors" },
+        { "word": "SORT", "hint": "To arrange in order" },
+        { "word": "POST", "hint": "Mail or a position" },
+        { "word": "SPOT", "hint": "A mark or place" },
+        { "word": "TOPS", "hint": "Highest points" }
+      ]
+    }
+  ],
+  "expert": [
+    {
+      "letters": ["E", "D", "U", "C", "A", "T", "I", "O", "N"],
+      "words": [
+        { "word": "EDUCATION", "hint": "The process of learning" },
+        { "word": "CAUTION", "hint": "Careful attention to avoid danger" },
+        { "word": "AUCTION", "hint": "A public sale" },
+        { "word": "ACTION", "hint": "The process of doing something" },
+        { "word": "NOTICE", "hint": "To observe or pay attention" },
+        { "word": "UNITED", "hint": "Joined together" },
+        { "word": "UNTIED", "hint": "Not fastened" },
+        { "word": "DONATE", "hint": "To give to charity" },
+        { "word": "NATION", "hint": "A country" },
+        { "word": "OCEAN", "hint": "A large body of water" }
+      ]
+    },
+    {
+      "letters": ["C", "O", "M", "P", "U", "T", "E", "R"],
+      "words": [
+        { "word": "COMPUTER", "hint": "An electronic device for processing data" },
+        { "word": "COMPETE", "hint": "To strive against others" },
+        { "word": "COUNTER", "hint": "A surface for working or counting device" },
+        { "word": "TROUPE", "hint": "A group of performers" },
+        { "word": "ROUTE", "hint": "A way or path" },
+        { "word": "COURT", "hint": "A place where legal cases are heard" },
+        { "word": "TRUCE", "hint": "A temporary peace agreement" },
+        { "word": "CROP", "hint": "Plants grown for food" },
+        { "word": "CORE", "hint": "The central part" },
+        { "word": "CURE", "hint": "A remedy for illness" }
+      ]
+    },
+    {
+      "letters": ["I", "M", "P", "O", "R", "T", "A", "N", "T"],
+      "words": [
+        { "word": "IMPORTANT", "hint": "Having great significance" },
+        { "word": "TRANSPORT", "hint": "To carry from one place to another" },
+        { "word": "PORTRAIT", "hint": "A painting or photo of a person" },
+        { "word": "PATRON", "hint": "A regular customer or supporter" },
+        { "word": "IMPORT", "hint": "To bring goods from another country" },
+        { "word": "PORTION", "hint": "A part or share" },
+        { "word": "POTION", "hint": "A magical drink" },
+        { "word": "POINT", "hint": "A sharp end or location" },
+        { "word": "PRINT", "hint": "To produce text or images" },
+        { "word": "TRAIN", "hint": "A railway vehicle" }
+      ]
+    },
+    {
+      "letters": ["U", "N", "I", "V", "E", "R", "S", "I", "T", "Y"],
+      "words": [
+        { "word": "UNIVERSITY", "hint": "A higher education institution" },
+        { "word": "IVERSITY", "hint": "Variety or difference" },
+        { "word": "SINCERITY", "hint": "Genuine honesty" },
+        { "word": "VISITS", "hint": "Goes to see someone" },
+        { "word": "UNITY", "hint": "Being united" },
+        { "word": "RUSTY", "hint": "Covered with rust" },
+        { "word": "VIRTUE", "hint": "Good moral quality" },
+        { "word": "TURKEY", "hint": "A large bird or country" },
+        { "word": "YESTER", "hint": "Of yesterday" },
+        { "word": "THIRTY", "hint": "The number 30" }
+      ]
+    },
+    {
+      "letters": ["R", "E", "S", "T", "A", "U", "R", "A", "N", "T"],
+      "words": [
+        { "word": "RESTAURANT", "hint": "A place to eat meals" },
+        { "word": "SATURATE", "hint": "To soak completely" },
+        { "word": "TREASURE", "hint": "Valuable items" },
+        { "word": "RESTART", "hint": "To begin again" },
+        { "word": "NATURE", "hint": "The natural world" },
+        { "word": "STATUE", "hint": "A carved figure" },
+        { "word": "ANSWER", "hint": "A response to a question" },
+        { "word": "STREAM", "hint": "A small river" },
+        { "word": "MASTER", "hint": "An expert" },
+        { "word": "STARE", "hint": "To look intently" }
+      ]
+    },
+    {
+      "letters": ["T", "E", "L", "E", "V", "I", "S", "I", "O", "N"],
+      "words": [
+        { "word": "TELEVISION", "hint": "A device for watching shows" },
+        { "word": "VIOLETS", "hint": "Purple flowers" },
+        { "word": "TENSILE", "hint": "Related to stretching" },
+        { "word": "LISTEN", "hint": "To hear attentively" },
+        { "word": "SILENT", "hint": "Making no sound" },
+        { "word": "STOLEN", "hint": "Taken illegally" },
+        { "word": "LOTION", "hint": "A skin moisturizer" },
+        { "word": "VIOLET", "hint": "A purple flower" },
+        { "word": "ISION", "hint": "Part of vision" },
+        { "word": "NOTES", "hint": "Written reminders" }
+      ]
+    },
+    {
+      "letters": ["P", "H", "O", "T", "O", "G", "R", "A", "P", "H"],
+      "words": [
+        { "word": "PHOTOGRAPH", "hint": "A captured image" },
+        { "word": "GRAPH", "hint": "A visual data representation" },
+        { "word": "PHOTO", "hint": "A picture" },
+        { "word": "HARP", "hint": "A stringed instrument" },
+        { "word": "PATH", "hint": "A way or track" },
+        { "word": "ORTH", "hint": "Part of north" },
+        { "word": "HOAR", "hint": "White frost" },
+        { "word": "GOTH", "hint": "A subculture style" },
+        { "word": "TOGA", "hint": "A Roman garment" },
+        { "word": "GOAT", "hint": "A farm animal" }
+      ]
+    },
+    {
+      "letters": ["A", "R", "C", "H", "I", "T", "E", "C", "T", "U", "R", "E"],
+      "words": [
+        { "word": "ARCHITECTURE", "hint": "The design of buildings" },
+        { "word": "TREASURE", "hint": "Valuable possessions" },
+        { "word": "CREATURE", "hint": "A living being" },
+        { "word": "TEACHER", "hint": "Someone who educates" },
+        { "word": "REACH", "hint": "To extend or arrive" },
+        { "word": "CHAIR", "hint": "A seat with a back" },
+        { "word": "CHEAT", "hint": "To act dishonestly" },
+        { "word": "HEART", "hint": "The organ that pumps blood" },
+        { "word": "EARTH", "hint": "Our planet" },
+        { "word": "CHART", "hint": "A graph or map" }
+      ]
+    },
+    {
+      "letters": ["T", "E", "C", "H", "N", "O", "L", "O", "G", "Y"],
+      "words": [
+        { "word": "TECHNOLOGY", "hint": "Applied science" },
+        { "word": "ECOLOGY", "hint": "Study of environment" },
+        { "word": "GEOLOGY", "hint": "Study of earth" },
+        { "word": "LENGTHY", "hint": "Very long" },
+        { "word": "GOLDEN", "hint": "Made of gold" },
+        { "word": "TOGGLE", "hint": "A switch or fastener" },
+        { "word": "GOOGLE", "hint": "A search engine" },
+        { "word": "GENTLY", "hint": "In a soft manner" },
+        { "word": "LONELY", "hint": "Without company" },
+        { "word": "HONEY", "hint": "Sweet substance from bees" }
+      ]
+    },
+    {
+      "letters": ["E", "N", "V", "I", "R", "O", "N", "M", "E", "N", "T"],
+      "words": [
+        { "word": "ENVIRONMENT", "hint": "Natural surroundings" },
+        { "word": "INVENTION", "hint": "A new creation" },
+        { "word": "MENTION", "hint": "To refer to briefly" },
+        { "word": "TENSION", "hint": "Mental or physical strain" },
+        { "word": "IMMERSION", "hint": "Being completely surrounded" },
+        { "word": "MOMENTUM", "hint": "Force of movement" },
+        { "word": "MOTION", "hint": "Movement" },
+        { "word": "NOTION", "hint": "An idea or concept" },
+        { "word": "EMOTION", "hint": "A feeling" },
+        { "word": "VITAMIN", "hint": "Essential nutrient" }
+      ]
+    },
+    {
+      "letters": ["P", "H", "I", "L", "O", "S", "O", "P", "H", "Y"],
+      "words": [
+        { "word": "PHILOSOPHY", "hint": "Love of wisdom" },
+        { "word": "POLISH", "hint": "To make shiny" },
+        { "word": "SHOP", "hint": "A place to buy things" },
+        { "word": "SHIP", "hint": "A water vessel" },
+        { "word": "FISH", "hint": "An aquatic animal" },
+        { "word": "WISH", "hint": "To desire" },
+        { "word": "HOLY", "hint": "Sacred or divine" },
+        { "word": "POLO", "hint": "A sport on horseback" },
+        { "word": "LOOP", "hint": "A circular path" },
+        { "word": "POOL", "hint": "A body of water" }
+      ]
+    },
+    {
+      "letters": ["P", "S", "Y", "C", "H", "O", "L", "O", "G", "Y"],
+      "words": [
+        { "word": "PSYCHOLOGY", "hint": "Study of the mind" },
+        { "word": "ECOLOGY", "hint": "Study of environment" },
+        { "word": "PHYLUM", "hint": "A taxonomic category" },
+        { "word": "GLYPH", "hint": "A symbolic character" },
+        { "word": "COPY", "hint": "To duplicate" },
+        { "word": "PLAY", "hint": "To have fun" },
+        { "word": "HOLY", "hint": "Sacred" },
+        { "word": "POLO", "hint": "A horse sport" },
+        { "word": "COOL", "hint": "Not warm" },
+        { "word": "LOOP", "hint": "A circular shape" }
+      ]
+    },
+    {
+      "letters": ["M", "A", "T", "H", "E", "M", "A", "T", "I", "C", "S"],
+      "words": [
+        { "word": "MATHEMATICS", "hint": "The study of numbers" },
+        { "word": "SCHEMATIC", "hint": "A diagram or plan" },
+        { "word": "ATHLETICS", "hint": "Sports and exercises" },
+        { "word": "THEMATIC", "hint": "Related to themes" },
+        { "word": "STIGMA", "hint": "A mark of disgrace" },
+        { "word": "STATIC", "hint": "Not moving" },
+        { "word": "MASTIC", "hint": "A type of resin" },
+        { "word": "MYSTIC", "hint": "Spiritual or mysterious" },
+        { "word": "ETHICS", "hint": "Moral principles" },
+        { "word": "CHANGE", "hint": "To make different" }
+      ]
+    },
+    {
+      "letters": ["C", "H", "A", "M", "P", "I", "O", "N", "S", "H", "I", "P"],
+      "words": [
+        { "word": "CHAMPIONSHIP", "hint": "A contest to determine winner" },
+        { "word": "COMPANION", "hint": "A friend or partner" },
+        { "word": "CHAMPION", "hint": "A winner or defender" },
+        { "word": "CAMPING", "hint": "Outdoor recreation" },
+        { "word": "STAMPING", "hint": "Pressing down firmly" },
+        { "word": "CHIMP", "hint": "A type of ape" },
+        { "word": "CRIMP", "hint": "To press into folds" },
+        { "word": "PIANO", "hint": "A musical instrument" },
+        { "word": "CHAIN", "hint": "Connected metal links" },
+        { "word": "PANIC", "hint": "Sudden overwhelming fear" }
+      ]
+    },
+    {
+      "letters": ["A", "D", "V", "E", "N", "T", "U", "R", "E"],
+      "words": [
+        { "word": "ADVENTURE", "hint": "An exciting experience" },
+        { "word": "VENTURE", "hint": "A risky undertaking" },
+        { "word": "DENTURE", "hint": "False teeth" },
+        { "word": "NATURE", "hint": "The natural world" },
+        { "word": "AVERTED", "hint": "Prevented or turned away" },
+        { "word": "READER", "hint": "Someone who reads" },
+        { "word": "THREAD", "hint": "A thin strand" },
+        { "word": "EARNED", "hint": "Gained through work" },
+        { "word": "TRADER", "hint": "Someone who buys and sells" },
+        { "word": "TREND", "hint": "A general direction" }
+      ]
+    },
+    {
+      "letters": ["E", "X", "P", "E", "R", "I", "E", "N", "C", "E"],
+      "words": [
+        { "word": "EXPERIENCE", "hint": "Knowledge gained through doing" },
+        { "word": "PREFERENCE", "hint": "A greater liking" },
+        { "word": "PRESENCE", "hint": "Being there" },
+        { "word": "PRINCE", "hint": "A royal male" },
+        { "word": "RECIPE", "hint": "Cooking instructions" },
+        { "word": "PIECE", "hint": "A part of something" },
+        { "word": "PRICE", "hint": "The cost" },
+        { "word": "CREEP", "hint": "To move slowly" },
+        { "word": "CREPE", "hint": "A thin pancake" },
+        { "word": "RENCE", "hint": "Part of reference" }
+      ]
+    },
+    {
+      "letters": ["L", "A", "N", "G", "U", "A", "G", "E"],
+      "words": [
+        { "word": "LANGUAGE", "hint": "A system of communication" },
+        { "word": "BAGGAGE", "hint": "Luggage or emotional burden" },
+        { "word": "ANGEL", "hint": "A heavenly being" },
+        { "word": "ANGLE", "hint": "A corner or viewpoint" },
+        { "word": "GLEAN", "hint": "To gather bit by bit" },
+        { "word": "EAGLE", "hint": "A large bird of prey" },
+        { "word": "LEAGUE", "hint": "A group or distance" },
+        { "word": "VAGUE", "hint": "Not clearly expressed" },
+        { "word": "GAUGE", "hint": "To measure" },
+        { "word": "USAGE", "hint": "The way something is used" }
+      ]
+    },
+    {
+      "letters": ["C", "O", "M", "M", "U", "N", "I", "C", "A", "T", "I", "O", "N"],
+      "words": [
+        { "word": "COMMUNICATION", "hint": "Exchange of information" },
+        { "word": "COMMUNITY", "hint": "A group of people" },
+        { "word": "IMMUNITY", "hint": "Protection from disease" },
+        { "word": "AUTOMATIC", "hint": "Self-operating" },
+        { "word": "MOUNTAIN", "hint": "A high landform" },
+        { "word": "FOUNTAIN", "hint": "A water feature" },
+        { "word": "CONTAIN", "hint": "To hold within" },
+        { "word": "CAPTAIN", "hint": "A leader or ship commander" },
+        { "word": "CAUTION", "hint": "Careful attention" },
+        { "word": "AUCTION", "hint": "A public sale" }
+      ]
+    },
+    {
+      "letters": ["I", "N", "F", "O", "R", "M", "A", "T", "I", "O", "N"],
+      "words": [
+        { "word": "INFORMATION", "hint": "Facts or data" },
+        { "word": "FORMATION", "hint": "The process of forming" },
+        { "word": "TRANSFORMATION", "hint": "A complete change" },
+        { "word": "NATION", "hint": "A country" },
+        { "word": "RATION", "hint": "A fixed allowance" },
+        { "word": "MOTION", "hint": "Movement" },
+        { "word": "NOTION", "hint": "An idea" },
+        { "word": "ORIGIN", "hint": "The beginning" },
+        { "word": "MARGIN", "hint": "The edge or border" },
+        { "word": "FORMAT", "hint": "The arrangement" }
+      ]
+    },
+    {
+      "letters": ["O", "R", "G", "A", "N", "I", "Z", "A", "T", "I", "O", "N"],
+      "words": [
+        { "word": "ORGANIZATION", "hint": "A structured group" },
+        { "word": "REORGANIZATION", "hint": "Restructuring" },
+        { "word": "RATIONALIZATION", "hint": "Logical explanation" },
+        { "word": "NATION", "hint": "A country" },
+        { "word": "RATION", "hint": "A fixed amount" },
+        { "word": "ORIGIN", "hint": "The source" },
+        { "word": "ZONING", "hint": "Area planning" },
+        { "word": "GROAN", "hint": "A sound of pain" },
+        { "word": "ORGAN", "hint": "A body part" },
+        { "word": "GRAIN", "hint": "Seeds or texture" }
+      ]
+    },
+    {
+      "letters": ["R", "E", "S", "P", "O", "N", "S", "I", "B", "I", "L", "I", "T", "Y"],
+      "words": [
+        { "word": "RESPONSIBILITY", "hint": "Being accountable" },
+        { "word": "POSSIBILITY", "hint": "The chance of happening" },
+        { "word": "PERSONALITY", "hint": "Individual character" },
+        { "word": "SPIRITUALITY", "hint": "Religious or spiritual quality" },
+        { "word": "RESPONSE", "hint": "An answer or reaction" },
+        { "word": "POSITIVE", "hint": "Optimistic or certain" },
+        { "word": "POSITION", "hint": "A place or stance" },
+        { "word": "PRESENT", "hint": "Current time or gift" },
+        { "word": "PERSON", "hint": "An individual" },
+        { "word": "SPORT", "hint": "Athletic activity" }
+      ]
+    },
+    {
+      "letters": ["D", "E", "V", "E", "L", "O", "P", "M", "E", "N", "T"],
+      "words": [
+        { "word": "DEVELOPMENT", "hint": "Growth or progress" },
+        { "word": "MOVEMENT", "hint": "The act of moving" },
+        { "word": "MOMENT", "hint": "A brief period" },
+        { "word": "PAYMENT", "hint": "Money given" },
+        { "word": "ELEMENT", "hint": "A basic part" },
+        { "word": "TEMPLE", "hint": "A place of worship" },
+        { "word": "PEOPLE", "hint": "Human beings" },
+        { "word": "DEPTH", "hint": "How deep something is" },
+        { "word": "TEMPO", "hint": "The speed of music" },
+        { "word": "DEMENT", "hint": "To make insane" }
+      ]
+    },
+    {
+      "letters": ["U", "N", "D", "E", "R", "S", "T", "A", "N", "D", "I", "N", "G"],
+      "words": [
+        { "word": "UNDERSTANDING", "hint": "Comprehension or empathy" },
+        { "word": "STANDING", "hint": "Upright position" },
+        { "word": "OUTSTANDING", "hint": "Excellent or unpaid" },
+        { "word": "STANDARD", "hint": "A level of quality" },
+        { "word": "TURNING", "hint": "Rotating or changing" },
+        { "word": "BURNING", "hint": "On fire" },
+        { "word": "TRADING", "hint": "Buying and selling" },
+        { "word": "READING", "hint": "Looking at text" },
+        { "word": "SENDING", "hint": "Dispatching" },
+        { "word": "ENDING", "hint": "The conclusion" }
+      ]
+    },
+    {
+      "letters": ["I", "N", "T", "E", "R", "N", "A", "T", "I", "O", "N", "A", "L"],
+      "words": [
+        { "word": "INTERNATIONAL", "hint": "Between nations" },
+        { "word": "NATIONAL", "hint": "Of a nation" },
+        { "word": "RATIONAL", "hint": "Based on reason" },
+        { "word": "INTERNAL", "hint": "Inside or within" },
+        { "word": "EXTERNAL", "hint": "Outside or outer" },
+        { "word": "ETERNAL", "hint": "Lasting forever" },
+        { "word": "RELATION", "hint": "A connection" },
+        { "word": "CREATION", "hint": "The act of making" },
+        { "word": "ITERATION", "hint": "Repetition" },
+        { "word": "INTENTION", "hint": "A purpose or plan" }
+      ]
+    },
+    {
+      "letters": ["P", "R", "O", "F", "E", "S", "S", "I", "O", "N", "A", "L"],
+      "words": [
+        { "word": "PROFESSIONAL", "hint": "Related to a profession" },
+        { "word": "PERSONAL", "hint": "Individual or private" },
+        { "word": "SEASONAL", "hint": "Related to seasons" },
+        { "word": "NATIONAL", "hint": "Of a nation" },
+        { "word": "OPTIONAL", "hint": "Not required" },
+        { "word": "PROFESSOR", "hint": "A university teacher" },
+        { "word": "PRISON", "hint": "A place of confinement" },
+        { "word": "PERSON", "hint": "An individual" },
+        { "word": "LESSON", "hint": "Something to be learned" },
+        { "word": "REASON", "hint": "A cause or logic" }
+      ]
+    },
+    {
+      "letters": ["C", "H", "A", "R", "A", "C", "T", "E", "R", "I", "S", "T", "I", "C"],
+      "words": [
+        { "word": "CHARACTERISTIC", "hint": "A distinguishing feature" },
+        { "word": "CHARACTER", "hint": "Personal qualities" },
+        { "word": "ARTISTIC", "hint": "Related to art" },
+        { "word": "STATISTIC", "hint": "A numerical fact" },
+        { "word": "REALISTIC", "hint": "Practical or lifelike" },
+        { "word": "CHAIR", "hint": "A seat" },
+        { "word": "CHART", "hint": "A graph" },
+        { "word": "CHEAT", "hint": "To act dishonestly" },
+        { "word": "HEART", "hint": "The organ that pumps blood" },
+        { "word": "REACH", "hint": "To extend" }
+      ]
+    },
+    {
+      "letters": ["E", "N", "T", "E", "R", "T", "A", "I", "N", "M", "E", "N", "T"],
+      "words": [
+        { "word": "ENTERTAINMENT", "hint": "Amusement or fun" },
+        { "word": "TREATMENT", "hint": "Medical care" },
+        { "word": "APARTMENT", "hint": "A living space" },
+        { "word": "STATEMENT", "hint": "A declaration" },
+        { "word": "AGREEMENT", "hint": "A mutual understanding" },
+        { "word": "RETIREMENT", "hint": "End of working life" },
+        { "word": "INSTRUMENT", "hint": "A tool or device" },
+        { "word": "MOMENT", "hint": "A brief time" },
+        { "word": "ATTEMPT", "hint": "To try" },
+        { "word": "ELEMENT", "hint": "A basic component" }
+      ]
+    },
+    {
+      "letters": ["O", "P", "P", "O", "R", "T", "U", "N", "I", "T", "Y"],
+      "words": [
+        { "word": "OPPORTUNITY", "hint": "A chance for advancement" },
+        { "word": "PROPERTY", "hint": "Something owned" },
+        { "word": "PRIORITY", "hint": "Something important" },
+        { "word": "PORTION", "hint": "A part or share" },
+        { "word": "POTION", "hint": "A liquid mixture" },
+        { "word": "POINT", "hint": "A sharp end" },
+        { "word": "PRINT", "hint": "To produce text" },
+        { "word": "UNITY", "hint": "Being united" },
+        { "word": "TROPHY", "hint": "A prize" },
+        { "word": "THIRTY", "hint": "The number 30" }
+      ]
+    },
+    {
+      "letters": ["R", "E", "P", "R", "E", "S", "E", "N", "T", "A", "T", "I", "V", "E"],
+      "words": [
+        { "word": "REPRESENTATIVE", "hint": "Someone who represents others" },
+        { "word": "PRESENT", "hint": "Current or a gift" },
+        { "word": "REPRESENT", "hint": "To stand for" },
+        { "word": "PRESERVE", "hint": "To keep safe" },
+        { "word": "PREVENT", "hint": "To stop from happening" },
+        { "word": "ALTERNATIVE", "hint": "Another choice" },
+        { "word": "NEGATIVE", "hint": "Not positive" },
+        { "word": "CREATIVE", "hint": "Imaginative" },
+        { "word": "RELATIVE", "hint": "A family member" },
+        { "word": "EXPENSIVE", "hint": "Costing a lot" }
+      ]
+    },
+    {
+      "letters": ["A", "D", "M", "I", "N", "I", "S", "T", "R", "A", "T", "I", "O", "N"],
+      "words": [
+        { "word": "ADMINISTRATION", "hint": "Management or government" },
+        { "word": "DEMONSTRATION", "hint": "A showing or protest" },
+        { "word": "DESTINATION", "hint": "A place to go" },
+        { "word": "DISCRIMINATION", "hint": "Unfair treatment" },
+        { "word": "TRADITION", "hint": "A custom" },
+        { "word": "NATION", "hint": "A country" },
+        { "word": "RATION", "hint": "A fixed amount" },
+        { "word": "STATION", "hint": "A stopping place" },
+        { "word": "MINISTER", "hint": "A government official" },
+        { "word": "ADMIRATION", "hint": "Respect and approval" }
+      ]
+    }
+  ]
+}

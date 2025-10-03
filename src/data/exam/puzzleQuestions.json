@@ -1,0 +1,365 @@
+{
+  "subject": "Puzzles",
+  "grades": {
+    "grade2": {
+      "name": "Grade 2",
+      "questions": [
+        {
+          "id": 1,
+          "question": "What comes next in this pattern: 🔴 🔵 🔴 🔵 ?",
+          "options": ["🔴", "🔵", "🟡", "🟢"],
+          "correctAnswer": "🔴",
+          "explanation": "The pattern alternates between red and blue, so red comes next"
+        },
+        {
+          "id": 2,
+          "question": "What shape has 3 sides and 3 corners?",
+          "options": ["Square", "Circle", "Triangle", "Rectangle"],
+          "correctAnswer": "Triangle",
+          "explanation": "A triangle has 3 sides and 3 corners"
+        },
+        {
+          "id": 3,
+          "question": "If you arrange these letters: CAT, what animal do you get?",
+          "options": ["Dog", "Cat", "Rat", "Bat"],
+          "correctAnswer": "Cat",
+          "explanation": "The letters C-A-T spell 'cat'"
+        },
+        {
+          "id": 4,
+          "question": "What has 4 legs and says 'moo'?",
+          "options": ["Dog", "Cat", "Cow", "Horse"],
+          "correctAnswer": "Cow",
+          "explanation": "A cow has 4 legs and says 'moo'"
+        },
+        {
+          "id": 5,
+          "question": "Complete the pattern: ⭐ ⭐ 🌙 ⭐ ⭐ 🌙 ⭐ ⭐ ?",
+          "options": ["⭐", "🌙", "☀️", "🌍"],
+          "correctAnswer": "🌙",
+          "explanation": "The pattern is two stars followed by a moon, so moon comes next"
+        }
+      ]
+    },
+    "grade3": {
+      "name": "Grade 3",
+      "questions": [
+        {
+          "id": 6,
+          "question": "I am tall when I'm young and short when I'm old. What am I?",
+          "options": ["Tree", "Candle", "Person", "Building"],
+          "correctAnswer": "Candle",
+          "explanation": "A candle is tall when new and gets shorter as it burns"
+        },
+        {
+          "id": 7,
+          "question": "What has hands but cannot clap?",
+          "options": ["Robot", "Clock", "Statue", "Doll"],
+          "correctAnswer": "Clock",
+          "explanation": "A clock has hands (hour and minute hands) but cannot clap"
+        },
+        {
+          "id": 8,
+          "question": "Complete the sequence: A, C, E, G, ?",
+          "options": ["H", "I", "J", "K"],
+          "correctAnswer": "I",
+          "explanation": "The pattern skips one letter each time: A(+2)C(+2)E(+2)G(+2)I"
+        },
+        {
+          "id": 9,
+          "question": "If today is Wednesday, what day will it be in 3 days?",
+          "options": ["Thursday", "Friday", "Saturday", "Sunday"],
+          "correctAnswer": "Saturday",
+          "explanation": "Wednesday + 3 days = Saturday (Thu, Fri, Sat)"
+        },
+        {
+          "id": 10,
+          "question": "What number should replace the ?: 2, 4, 6, 8, ?",
+          "options": ["9", "10", "11", "12"],
+          "correctAnswer": "10",
+          "explanation": "The pattern adds 2 each time: 2+2=4, 4+2=6, 6+2=8, 8+2=10"
+        }
+      ]
+    },
+    "grade4": {
+      "name": "Grade 4",
+      "questions": [
+        {
+          "id": 11,
+          "question": "What gets wetter the more it dries?",
+          "options": ["Sponge", "Towel", "Hair", "Clothes"],
+          "correctAnswer": "Towel",
+          "explanation": "A towel gets wetter as it dries other things"
+        },
+        {
+          "id": 12,
+          "question": "What has keys but no locks?",
+          "options": ["Door", "Piano", "Car", "House"],
+          "correctAnswer": "Piano",
+          "explanation": "A piano has keys (black and white keys) but no locks"
+        },
+        {
+          "id": 13,
+          "question": "What number should replace the ?: 2, 4, 8, 16, ?",
+          "options": ["24", "28", "32", "36"],
+          "correctAnswer": "32",
+          "explanation": "Each number doubles: 2×2=4, 4×2=8, 8×2=16, 16×2=32"
+        },
+        {
+          "id": 14,
+          "question": "I have a face and two hands, but no arms or legs. What am I?",
+          "options": ["Clock", "Robot", "Doll", "Picture"],
+          "correctAnswer": "Clock",
+          "explanation": "A clock has a face and two hands (hour and minute) but no arms or legs"
+        },
+        {
+          "id": 15,
+          "question": "What word becomes shorter when you add two letters to it?",
+          "options": ["Long", "Short", "Big", "Small"],
+          "correctAnswer": "Short",
+          "explanation": "The word 'short' becomes 'shorter' when you add 'er'"
+        }
+      ]
+    },
+    "grade5": {
+      "name": "Grade 5",
+      "questions": [
+        {
+          "id": 16,
+          "question": "What can travel around the world while staying in a corner?",
+          "options": ["Stamp", "Letter", "Book", "Map"],
+          "correctAnswer": "Stamp",
+          "explanation": "A stamp stays in the corner of an envelope but travels around the world"
+        },
+        {
+          "id": 17,
+          "question": "What goes up but never comes down?",
+          "options": ["Balloon", "Airplane", "Your age", "Temperature"],
+          "correctAnswer": "Your age",
+          "explanation": "Your age always goes up and never comes down"
+        },
+        {
+          "id": 18,
+          "question": "If you have 12 apples and give away 3, then buy 7 more, how many do you have?",
+          "options": ["13", "16", "19", "22"],
+          "correctAnswer": "16",
+          "explanation": "12 - 3 + 7 = 16 apples"
+        },
+        {
+          "id": 19,
+          "question": "What has many teeth but cannot bite?",
+          "options": ["Snake", "Shark", "Comb", "Crocodile"],
+          "correctAnswer": "Comb",
+          "explanation": "A comb has teeth but cannot bite"
+        },
+        {
+          "id": 20,
+          "question": "Complete the sequence: 1, 1, 2, 3, 5, 8, ?",
+          "options": ["11", "13", "15", "16"],
+          "correctAnswer": "13",
+          "explanation": "This is the Fibonacci sequence: each number is the sum of the two before it (5+8=13)"
+        }
+      ]
+    },
+    "grade6": {
+      "name": "Grade 6",
+      "questions": [
+        {
+          "id": 21,
+          "question": "A man lives on the 20th floor. Every day he takes the elevator down to the ground floor. When he comes back, he takes the elevator to the 10th floor and walks the rest. Why?",
+          "options": ["He likes exercise", "Elevator is broken", "He can't reach the button", "He lives on 10th floor"],
+          "correctAnswer": "He can't reach the button",
+          "explanation": "He's too short to reach the 20th floor button, but can reach the 10th floor button"
+        },
+        {
+          "id": 22,
+          "question": "What number is missing: 3, 6, 12, 24, ?",
+          "options": ["36", "42", "48", "54"],
+          "correctAnswer": "48",
+          "explanation": "Each number doubles: 3×2=6, 6×2=12, 12×2=24, 24×2=48"
+        },
+        {
+          "id": 23,
+          "question": "If all roses are flowers and all flowers are plants, then all roses are:",
+          "options": ["Trees", "Plants", "Weeds", "Grass"],
+          "correctAnswer": "Plants",
+          "explanation": "If roses are flowers and flowers are plants, then roses must be plants"
+        },
+        {
+          "id": 24,
+          "question": "What comes once in a minute, twice in a moment, but never in a thousand years?",
+          "options": ["The letter M", "Time", "Sound", "Light"],
+          "correctAnswer": "The letter M",
+          "explanation": "The letter 'M' appears once in 'minute', twice in 'moment', and never in 'thousand years'"
+        },
+        {
+          "id": 25,
+          "question": "A box contains 12 balls: 3 red, 4 blue, and 5 green. What is the minimum number you must draw to guarantee getting 2 balls of the same color?",
+          "options": ["2", "3", "4", "5"],
+          "correctAnswer": "4",
+          "explanation": "In the worst case, you could draw one of each color (3), so the 4th ball must match one of them"
+        }
+      ]
+    },
+    "grade7": {
+      "name": "Grade 7",
+      "questions": [
+        {
+          "id": 26,
+          "question": "If you rearrange the letters 'LISTEN', you can make which word?",
+          "options": ["SILENT", "SOFTEN", "FASTEN", "HASTEN"],
+          "correctAnswer": "SILENT",
+          "explanation": "LISTEN and SILENT use the exact same letters"
+        },
+        {
+          "id": 27,
+          "question": "A farmer has 17 sheep. All but 9 die. How many sheep are left?",
+          "options": ["8", "9", "10", "17"],
+          "correctAnswer": "9",
+          "explanation": "'All but 9 die' means 9 are left alive"
+        },
+        {
+          "id": 28,
+          "question": "What is the next number in the sequence: 1, 4, 9, 16, 25, ?",
+          "options": ["30", "35", "36", "49"],
+          "correctAnswer": "36",
+          "explanation": "These are perfect squares: 1², 2², 3², 4², 5², 6² = 36"
+        },
+        {
+          "id": 29,
+          "question": "If you're running a race and you pass the person in 2nd place, what place are you in?",
+          "options": ["1st place", "2nd place", "3rd place", "4th place"],
+          "correctAnswer": "2nd place",
+          "explanation": "If you pass the person in 2nd place, you take their position (2nd place)"
+        },
+        {
+          "id": 30,
+          "question": "Three doctors said Robert is their brother. Robert says he has no brothers. Who is lying?",
+          "options": ["The doctors", "Robert", "No one", "Everyone"],
+          "correctAnswer": "No one",
+          "explanation": "The doctors are Robert's sisters, so no one is lying"
+        }
+      ]
+    },
+    "grade8": {
+      "name": "Grade 8",
+      "questions": [
+        {
+          "id": 31,
+          "question": "In a certain code, FLOWER is written as REWOLF. How is GARDEN written?",
+          "options": ["NEDRAG", "GARDEN", "RAGDEN", "DEGRAN"],
+          "correctAnswer": "NEDRAG",
+          "explanation": "The letters are written in reverse order: GARDEN becomes NEDRAG"
+        },
+        {
+          "id": 32,
+          "question": "If it takes 5 machines 5 minutes to make 5 widgets, how long does it take 100 machines to make 100 widgets?",
+          "options": ["5 minutes", "20 minutes", "100 minutes", "500 minutes"],
+          "correctAnswer": "5 minutes",
+          "explanation": "Each machine makes 1 widget in 5 minutes, so 100 machines make 100 widgets in 5 minutes"
+        },
+        {
+          "id": 33,
+          "question": "A clock shows 3:15. What is the angle between the hour and minute hands?",
+          "options": ["0°", "7.5°", "15°", "22.5°"],
+          "correctAnswer": "7.5°",
+          "explanation": "At 3:15, the minute hand is at 90° and the hour hand is at 97.5°, difference is 7.5°"
+        },
+        {
+          "id": 34,
+          "question": "If you fold a piece of paper in half 7 times, how many sections will you have?",
+          "options": ["14", "49", "64", "128"],
+          "correctAnswer": "128",
+          "explanation": "Each fold doubles the sections: 2^7 = 128 sections"
+        },
+        {
+          "id": 35,
+          "question": "What is the missing number: 2, 6, 12, 20, 30, ?",
+          "options": ["40", "42", "45", "48"],
+          "correctAnswer": "42",
+          "explanation": "Pattern: n(n+1) where n increases by 1 each time: 6×7=42"
+        }
+      ]
+    },
+    "grade9": {
+      "name": "Grade 9",
+      "questions": [
+        {
+          "id": 36,
+          "question": "A bat and ball cost $1.10 total. The bat costs $1 more than the ball. How much does the ball cost?",
+          "options": ["$0.05", "$0.10", "$0.50", "$1.00"],
+          "correctAnswer": "$0.05",
+          "explanation": "If ball costs x, bat costs x+1. So x + (x+1) = 1.10, therefore 2x = 0.10, x = $0.05"
+        },
+        {
+          "id": 37,
+          "question": "In a group of 23 people, what is the probability that at least two share the same birthday?",
+          "options": ["Less than 25%", "About 50%", "About 75%", "More than 90%"],
+          "correctAnswer": "About 50%",
+          "explanation": "This is the famous birthday paradox - the probability is approximately 50.7%"
+        },
+        {
+          "id": 38,
+          "question": "If you have a 3-gallon jug and a 5-gallon jug, how can you measure exactly 4 gallons?",
+          "options": ["Impossible", "Fill 5, pour into 3, empty 3, pour from 5 to 3", "Fill 3 twice", "Use both jugs together"],
+          "correctAnswer": "Fill 5, pour into 3, empty 3, pour from 5 to 3",
+          "explanation": "Fill 5-gallon (5L), pour into 3-gallon (2L left), empty 3-gallon, pour 2L from 5-gallon to 3-gallon, fill 5-gallon again, pour into 3-gallon until full (1L), leaving 4L in 5-gallon jug"
+        },
+        {
+          "id": 39,
+          "question": "What comes next in the sequence: O, T, T, F, F, S, S, E, ?",
+          "options": ["N", "T", "E", "I"],
+          "correctAnswer": "N",
+          "explanation": "These are the first letters of numbers: One, Two, Three, Four, Five, Six, Seven, Eight, Nine"
+        },
+        {
+          "id": 40,
+          "question": "You have 8 balls, one weighs slightly more. Using a balance scale only twice, how do you find the heavy ball?",
+          "options": ["Impossible", "Divide into groups of 4", "Divide into groups of 3, 3, 2", "Weigh them one by one"],
+          "correctAnswer": "Divide into groups of 3, 3, 2",
+          "explanation": "First weigh: 3 vs 3. If equal, heavy ball is in group of 2. If unequal, heavy ball is in heavier group. Second weigh determines the exact ball."
+        }
+      ]
+    },
+    "grade10": {
+      "name": "Grade 10",
+      "questions": [
+        {
+          "id": 41,
+          "question": "In a room with 100 people, everyone shakes hands exactly once with everyone else. How many handshakes occur?",
+          "options": ["4,950", "5,000", "9,900", "10,000"],
+          "correctAnswer": "4,950",
+          "explanation": "Using combination formula: C(100,2) = 100×99/2 = 4,950 handshakes"
+        },
+        {
+          "id": 42,
+          "question": "A snail is at the bottom of a 30-foot well. Each day it climbs 3 feet, but each night it slides back 2 feet. On which day will it reach the top?",
+          "options": ["Day 28", "Day 29", "Day 30", "Day 31"],
+          "correctAnswer": "Day 28",
+          "explanation": "After 27 days, snail is at 27 feet. On day 28, it climbs 3 feet to reach 30 feet (top) before sliding back"
+        },
+        {
+          "id": 43,
+          "question": "You have 3 boxes. One contains only apples, one only oranges, one both. All labels are wrong. You can take one fruit from one box. Which box do you choose to correctly label all?",
+          "options": ["Apple box", "Orange box", "Mixed box", "Any box"],
+          "correctAnswer": "Mixed box",
+          "explanation": "Take from the 'mixed' box. Since all labels are wrong, it contains only one type. This identifies all boxes."
+        },
+        {
+          "id": 44,
+          "question": "What is the sum of all integers from 1 to 100?",
+          "options": ["5,000", "5,050", "5,100", "5,500"],
+          "correctAnswer": "5,050",
+          "explanation": "Using the formula n(n+1)/2: 100×101/2 = 5,050"
+        },
+        {
+          "id": 45,
+          "question": "In how many ways can you arrange the letters in the word LEVEL?",
+          "options": ["60", "30", "20", "12"],
+          "correctAnswer": "30",
+          "explanation": "LEVEL has 5 letters with 2 L's and 2 E's: 5!/(2!×2!) = 120/4 = 30"
+        }
+      ]
+    }
+  }
+}

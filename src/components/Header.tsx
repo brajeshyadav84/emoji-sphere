@@ -87,7 +87,7 @@ const Header = () => {
             onClick={() => navigate("/groups")}
           >
             <span className="flex items-center gap-1">
-              👥 <span>My Groups</span>
+              👥 <span>Groups</span>
             </span>
           </Button>
           <Button 
@@ -117,6 +117,19 @@ const Header = () => {
             </span>
           </Button>
           <Button 
+            variant={isActive("/exams") || location.pathname.startsWith("/exam/") ? "default" : "ghost"}
+            className={`text-base font-medium whitespace-nowrap min-w-fit ${
+              isActive("/exams") || location.pathname.startsWith("/exam/") 
+                ? "bg-gradient-to-r from-indigo-400 to-blue-500 text-white border-0" 
+                : "text-foreground hover:bg-accent hover:text-accent-foreground"
+            }`}
+            onClick={() => navigate("/exams")}
+          >
+            <span className="flex items-center gap-1">
+              📝 <span>Exams</span>
+            </span>
+          </Button>
+          <Button 
             variant={isActive("/admin") || location.pathname.startsWith("/admin/") ? "default" : "ghost"}
             className={`text-base font-medium whitespace-nowrap min-w-fit ${
               isActive("/admin") || location.pathname.startsWith("/admin/") 
@@ -126,7 +139,7 @@ const Header = () => {
             onClick={() => navigate("/admin")}
           >
             <span className="flex items-center gap-1">
-              👨‍💼 <span>Admin Dashboard</span>
+              👨‍💼 <span>Dashboard</span>
             </span>
           </Button>
         </nav>
@@ -198,7 +211,7 @@ const Header = () => {
               }}
             >
               <span className="flex items-center gap-2">
-                👥 <span>My Groups</span>
+                👥 <span>Groups</span>
               </span>
             </Button>
             <Button 
@@ -234,6 +247,22 @@ const Header = () => {
               </span>
             </Button>
             <Button 
+              variant={isActive("/exams") || location.pathname.startsWith("/exam/") ? "default" : "ghost"}
+              className={`text-base font-medium justify-start w-full ${
+                isActive("/exams") || location.pathname.startsWith("/exam/") 
+                  ? "bg-gradient-to-r from-indigo-400 to-blue-500 text-white border-0" 
+                  : "text-foreground hover:bg-accent hover:text-accent-foreground"
+              }`}
+              onClick={() => {
+                navigate("/exams");
+                setIsMobileMenuOpen(false);
+              }}
+            >
+              <span className="flex items-center gap-2">
+                📝 <span>Exams</span>
+              </span>
+            </Button>
+            <Button 
               variant={isActive("/admin") || location.pathname.startsWith("/admin/") ? "default" : "ghost"}
               className={`text-base font-medium justify-start w-full ${
                 isActive("/admin") || location.pathname.startsWith("/admin/") 
@@ -246,7 +275,7 @@ const Header = () => {
               }}
             >
               <span className="flex items-center gap-2">
-                👨‍💼 <span>Admin Dashboard</span>
+                👨‍💼 <span>Dashboard</span>
               </span>
             </Button>
             {user && (

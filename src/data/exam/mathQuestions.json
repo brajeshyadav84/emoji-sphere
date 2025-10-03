@@ -1,0 +1,365 @@
+{
+  "subject": "Mathematics",
+  "grades": {
+    "grade2": {
+      "name": "Grade 2",
+      "questions": [
+        {
+          "id": 1,
+          "question": "What is 3 + 4?",
+          "options": ["6", "7", "8", "9"],
+          "correctAnswer": "7",
+          "explanation": "3 + 4 = 7"
+        },
+        {
+          "id": 2,
+          "question": "What is 9 - 3?",
+          "options": ["5", "6", "7", "8"],
+          "correctAnswer": "6",
+          "explanation": "9 - 3 = 6"
+        },
+        {
+          "id": 3,
+          "question": "Count the shapes: ⭐⭐⭐⭐⭐",
+          "options": ["4", "5", "6", "7"],
+          "correctAnswer": "5",
+          "explanation": "There are 5 stars"
+        },
+        {
+          "id": 4,
+          "question": "What comes after 19?",
+          "options": ["18", "20", "21", "22"],
+          "correctAnswer": "20",
+          "explanation": "The number after 19 is 20"
+        },
+        {
+          "id": 5,
+          "question": "What is 2 + 2?",
+          "options": ["3", "4", "5", "6"],
+          "correctAnswer": "4",
+          "explanation": "2 + 2 = 4"
+        }
+      ]
+    },
+    "grade3": {
+      "name": "Grade 3",
+      "questions": [
+        {
+          "id": 6,
+          "question": "What is 7 + 8?",
+          "options": ["13", "14", "15", "16"],
+          "correctAnswer": "15",
+          "explanation": "7 + 8 = 15"
+        },
+        {
+          "id": 7,
+          "question": "What is 12 - 5?",
+          "options": ["6", "7", "8", "9"],
+          "correctAnswer": "7",
+          "explanation": "12 - 5 = 7"
+        },
+        {
+          "id": 8,
+          "question": "What is 3 × 4?",
+          "options": ["10", "11", "12", "13"],
+          "correctAnswer": "12",
+          "explanation": "3 × 4 = 12"
+        },
+        {
+          "id": 9,
+          "question": "How many sides does a triangle have?",
+          "options": ["2", "3", "4", "5"],
+          "correctAnswer": "3",
+          "explanation": "A triangle has 3 sides"
+        },
+        {
+          "id": 10,
+          "question": "What is 20 ÷ 4?",
+          "options": ["4", "5", "6", "7"],
+          "correctAnswer": "5",
+          "explanation": "20 ÷ 4 = 5"
+        }
+      ]
+    },
+    "grade4": {
+      "name": "Grade 4",
+      "questions": [
+        {
+          "id": 11,
+          "question": "What is 6 × 7?",
+          "options": ["40", "41", "42", "43"],
+          "correctAnswer": "42",
+          "explanation": "6 × 7 = 42"
+        },
+        {
+          "id": 12,
+          "question": "What is 48 ÷ 8?",
+          "options": ["5", "6", "7", "8"],
+          "correctAnswer": "6",
+          "explanation": "48 ÷ 8 = 6"
+        },
+        {
+          "id": 13,
+          "question": "What is 1/4 of 20?",
+          "options": ["4", "5", "6", "7"],
+          "correctAnswer": "5",
+          "explanation": "1/4 of 20 = 20 ÷ 4 = 5"
+        },
+        {
+          "id": 14,
+          "question": "How many minutes are in 2 hours?",
+          "options": ["100", "110", "120", "130"],
+          "correctAnswer": "120",
+          "explanation": "2 hours = 2 × 60 = 120 minutes"
+        },
+        {
+          "id": 15,
+          "question": "What is the area of a rectangle with length 5 and width 3?",
+          "options": ["8", "15", "16", "18"],
+          "correctAnswer": "15",
+          "explanation": "Area = length × width = 5 × 3 = 15"
+        }
+      ]
+    },
+    "grade5": {
+      "name": "Grade 5",
+      "questions": [
+        {
+          "id": 16,
+          "question": "What is 0.5 + 0.3?",
+          "options": ["0.7", "0.8", "0.9", "1.0"],
+          "correctAnswer": "0.8",
+          "explanation": "0.5 + 0.3 = 0.8"
+        },
+        {
+          "id": 17,
+          "question": "What is 3/4 + 1/4?",
+          "options": ["1/2", "3/4", "4/8", "1"],
+          "correctAnswer": "1",
+          "explanation": "3/4 + 1/4 = 4/4 = 1"
+        },
+        {
+          "id": 18,
+          "question": "What is 15% of 100?",
+          "options": ["10", "15", "20", "25"],
+          "correctAnswer": "15",
+          "explanation": "15% of 100 = 15"
+        },
+        {
+          "id": 19,
+          "question": "What is the perimeter of a square with side 4?",
+          "options": ["12", "14", "16", "18"],
+          "correctAnswer": "16",
+          "explanation": "Perimeter = 4 × side = 4 × 4 = 16"
+        },
+        {
+          "id": 20,
+          "question": "If a bag has 12 apples and you eat 1/3 of them, how many apples are left?",
+          "options": ["6", "7", "8", "9"],
+          "correctAnswer": "8",
+          "explanation": "1/3 of 12 = 4 apples eaten, so 12 - 4 = 8 apples left"
+        }
+      ]
+    },
+    "grade6": {
+      "name": "Grade 6",
+      "questions": [
+        {
+          "id": 21,
+          "question": "What is (-3) + 5?",
+          "options": ["2", "3", "8", "-8"],
+          "correctAnswer": "2",
+          "explanation": "(-3) + 5 = 2"
+        },
+        {
+          "id": 22,
+          "question": "What is 2/3 × 9?",
+          "options": ["4", "5", "6", "7"],
+          "correctAnswer": "6",
+          "explanation": "2/3 × 9 = (2 × 9) ÷ 3 = 18 ÷ 3 = 6"
+        },
+        {
+          "id": 23,
+          "question": "If x + 5 = 12, what is x?",
+          "options": ["6", "7", "8", "17"],
+          "correctAnswer": "7",
+          "explanation": "x = 12 - 5 = 7"
+        },
+        {
+          "id": 24,
+          "question": "What is 25% of 80?",
+          "options": ["15", "20", "25", "30"],
+          "correctAnswer": "20",
+          "explanation": "25% of 80 = 0.25 × 80 = 20"
+        },
+        {
+          "id": 25,
+          "question": "What is the ratio of 6 to 18 in simplest form?",
+          "options": ["1:2", "1:3", "2:3", "3:6"],
+          "correctAnswer": "1:3",
+          "explanation": "6:18 = 1:3 (divide both by 6)"
+        }
+      ]
+    },
+    "grade7": {
+      "name": "Grade 7",
+      "questions": [
+        {
+          "id": 26,
+          "question": "What is 2³?",
+          "options": ["6", "8", "9", "16"],
+          "correctAnswer": "8",
+          "explanation": "2³ = 2 × 2 × 2 = 8"
+        },
+        {
+          "id": 27,
+          "question": "Solve: 3x - 7 = 8",
+          "options": ["x = 3", "x = 5", "x = 7", "x = 15"],
+          "correctAnswer": "x = 5",
+          "explanation": "3x = 8 + 7 = 15, so x = 15 ÷ 3 = 5"
+        },
+        {
+          "id": 28,
+          "question": "What is the area of a circle with radius 3? (Use π ≈ 3.14)",
+          "options": ["18.84", "28.26", "37.68", "113.04"],
+          "correctAnswer": "28.26",
+          "explanation": "Area = πr² = 3.14 × 3² = 3.14 × 9 = 28.26"
+        },
+        {
+          "id": 29,
+          "question": "What is 0.75 as a fraction in simplest form?",
+          "options": ["3/4", "7/5", "75/100", "15/20"],
+          "correctAnswer": "3/4",
+          "explanation": "0.75 = 75/100 = 3/4 (divide by 25)"
+        },
+        {
+          "id": 30,
+          "question": "If the probability of rain is 30%, what is the probability it won't rain?",
+          "options": ["30%", "60%", "70%", "100%"],
+          "correctAnswer": "70%",
+          "explanation": "100% - 30% = 70%"
+        }
+      ]
+    },
+    "grade8": {
+      "name": "Grade 8",
+      "questions": [
+        {
+          "id": 31,
+          "question": "What is √64?",
+          "options": ["6", "7", "8", "9"],
+          "correctAnswer": "8",
+          "explanation": "√64 = 8 because 8² = 64"
+        },
+        {
+          "id": 32,
+          "question": "Solve: 2x + 3y = 12 when x = 3",
+          "options": ["y = 1", "y = 2", "y = 3", "y = 6"],
+          "correctAnswer": "y = 2",
+          "explanation": "2(3) + 3y = 12, so 6 + 3y = 12, 3y = 6, y = 2"
+        },
+        {
+          "id": 33,
+          "question": "What is the slope of the line passing through (0,2) and (4,6)?",
+          "options": ["1", "2", "1/2", "4"],
+          "correctAnswer": "1",
+          "explanation": "Slope = (6-2)/(4-0) = 4/4 = 1"
+        },
+        {
+          "id": 34,
+          "question": "What is 3⁴?",
+          "options": ["12", "64", "81", "243"],
+          "correctAnswer": "81",
+          "explanation": "3⁴ = 3 × 3 × 3 × 3 = 81"
+        },
+        {
+          "id": 35,
+          "question": "In a right triangle, if one angle is 30°, what is the third angle?",
+          "options": ["30°", "60°", "90°", "120°"],
+          "correctAnswer": "60°",
+          "explanation": "In a triangle, angles sum to 180°. With 90° + 30° = 120°, the third angle is 180° - 120° = 60°"
+        }
+      ]
+    },
+    "grade9": {
+      "name": "Grade 9",
+      "questions": [
+        {
+          "id": 36,
+          "question": "Factor: x² + 5x + 6",
+          "options": ["(x + 2)(x + 3)", "(x + 1)(x + 6)", "(x - 2)(x - 3)", "(x + 2)(x - 3)"],
+          "correctAnswer": "(x + 2)(x + 3)",
+          "explanation": "x² + 5x + 6 = (x + 2)(x + 3) because 2 + 3 = 5 and 2 × 3 = 6"
+        },
+        {
+          "id": 37,
+          "question": "What is the distance between points (1, 2) and (4, 6)?",
+          "options": ["3", "4", "5", "7"],
+          "correctAnswer": "5",
+          "explanation": "Distance = √[(4-1)² + (6-2)²] = √[9 + 16] = √25 = 5"
+        },
+        {
+          "id": 38,
+          "question": "Solve: 2x² - 8 = 0",
+          "options": ["x = ±2", "x = ±4", "x = ±√2", "x = ±2√2"],
+          "correctAnswer": "x = ±2",
+          "explanation": "2x² = 8, x² = 4, x = ±2"
+        },
+        {
+          "id": 39,
+          "question": "What is the y-intercept of y = 3x - 7?",
+          "options": ["3", "-7", "7", "-3"],
+          "correctAnswer": "-7",
+          "explanation": "The y-intercept is the constant term when x = 0, which is -7"
+        },
+        {
+          "id": 40,
+          "question": "If sin θ = 3/5, what is cos θ? (θ is acute)",
+          "options": ["3/5", "4/5", "5/3", "5/4"],
+          "correctAnswer": "4/5",
+          "explanation": "Using Pythagorean theorem: cos² θ = 1 - sin² θ = 1 - 9/25 = 16/25, so cos θ = 4/5"
+        }
+      ]
+    },
+    "grade10": {
+      "name": "Grade 10",
+      "questions": [
+        {
+          "id": 41,
+          "question": "What is the vertex of the parabola y = x² - 4x + 3?",
+          "options": ["(2, -1)", "(2, 1)", "(-2, -1)", "(-2, 1)"],
+          "correctAnswer": "(2, -1)",
+          "explanation": "Vertex x = -b/2a = 4/2 = 2, y = 2² - 4(2) + 3 = -1"
+        },
+        {
+          "id": 42,
+          "question": "Simplify: (x³y²)/(x²y)",
+          "options": ["xy", "x²y", "x/y", "xy²"],
+          "correctAnswer": "xy",
+          "explanation": "(x³y²)/(x²y) = x³⁻² × y²⁻¹ = x¹y¹ = xy"
+        },
+        {
+          "id": 43,
+          "question": "What is log₂ 8?",
+          "options": ["2", "3", "4", "8"],
+          "correctAnswer": "3",
+          "explanation": "log₂ 8 = 3 because 2³ = 8"
+        },
+        {
+          "id": 44,
+          "question": "Solve: |x - 3| = 5",
+          "options": ["x = 8", "x = -2", "x = 8 or x = -2", "x = 2 or x = 8"],
+          "correctAnswer": "x = 8 or x = -2",
+          "explanation": "x - 3 = 5 or x - 3 = -5, so x = 8 or x = -2"
+        },
+        {
+          "id": 45,
+          "question": "What is the period of y = sin(2x)?",
+          "options": ["π/2", "π", "2π", "4π"],
+          "correctAnswer": "π",
+          "explanation": "Period of sin(bx) is 2π/b = 2π/2 = π"
+        }
+      ]
+    }
+  }
+}
