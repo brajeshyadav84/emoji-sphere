@@ -93,6 +93,7 @@ const App = () => {
           {/* Admin routes */}
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/admin/groups" element={<GroupManagement />} />
+          <Route path="/admin/groups/:groupId/members" element={<GroupMembers />} />
           <Route path="/admin/quizzes" element={<QuizManagement />} />
           <Route path="/admin/questions" element={<QuestionManagement />} />
           <Route path="/admin/challenges" element={<ChallengeManagement />} />

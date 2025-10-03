@@ -12,6 +12,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { ArrowLeft, Plus, Edit, Trash2, Users } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -19,6 +29,7 @@ import { toast } from "sonner";
 const GroupManagement = () => {
   const navigate = useNavigate();
   const [showCreateForm, setShowCreateForm] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<number | null>(null);
   const [groups, setGroups] = useState([
     { id: 1, name: "Art Lovers", emoji: "🎨", privacy: "public", members: 45 },
     { id: 2, name: "Science Squad", emoji: "🔬", privacy: "public", members: 38 },
@@ -42,6 +53,7 @@ const GroupManagement = () => {
   const handleDelete = (id: number) => {
     setGroups(groups.filter((g) => g.id !== id));
     toast.success("Group deleted successfully!");
+    setDeleteTarget(null);
   };
 
   return (
@@ -157,7 +169,7 @@ const GroupManagement = () => {
                   <Button
                     size="icon"
                     variant="destructive"
-                    onClick={() => handleDelete(group.id)}
+                    onClick={() => setDeleteTarget(group.id)}
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>
@@ -184,6 +196,26 @@ const GroupManagement = () => {
           ))}
         </div>
       </main>
+
+      <AlertDialog open={deleteTarget !== null} onOpenChange={() => setDeleteTarget(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently delete the group and remove all members. This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={() => deleteTarget && handleDelete(deleteTarget)} 
+              className="bg-destructive hover:bg-destructive/90"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
