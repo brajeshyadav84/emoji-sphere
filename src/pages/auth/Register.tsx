@@ -13,13 +13,6 @@ import { Loader2, UserPlus } from "lucide-react";
 import { countries } from "@/data/countries";
 
 const registerSchema = z.object({
-  password: z
-    .string()
-    .min(8, "Password must be at least 8 characters")
-    .max(100, "Password must be less than 100 characters")
-    .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
-    .regex(/[a-z]/, "Password must contain at least one lowercase letter")
-    .regex(/[0-9]/, "Password must contain at least one number"),
   name: z
     .string()
     .trim()
@@ -31,16 +24,27 @@ const registerSchema = z.object({
     .min(1, "Age is required")
     .refine((val) => !isNaN(Number(val)), "Age must be a number")
     .refine((val) => Number(val) >= 1 && Number(val) <= 150, "Age must be between 1 and 150"),
+  gender: z.enum(["male", "female", "other"], {
+    required_error: "Please select a gender",
+  }),
   location: z.string().min(1, "Please select a country"),
   mobile: z
     .string()
     .trim()
     .min(10, "Mobile number must be at least 10 digits")
-    .max(15, "Mobile number must be less than 15 digits")
-    .regex(/^[0-9+\-\s()]+$/, "Invalid mobile number format"),
-  gender: z.enum(["male", "female", "other"], {
-    required_error: "Please select a gender",
-  }),
+    .max(20, "Mobile number must be less than 20 digits")
+    .regex(/^\+?[0-9\s\-()]+$/, "Invalid mobile number format"),
+  password: z
+    .string()
+    .min(8, "Password must be at least 8 characters")
+    .max(100, "Password must be less than 100 characters")
+    .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
+    .regex(/[a-z]/, "Password must contain at least one lowercase letter")
+    .regex(/[0-9]/, "Password must contain at least one number"),
+  confirmPassword: z.string(),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords don't match",
+  path: ["confirmPassword"],
 });
 
 type RegisterFormValues = z.infer<typeof registerSchema>;
@@ -52,12 +56,13 @@ export default function Register() {
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
-      password: "",
       name: "",
       age: "",
+      gender: undefined,
       location: "",
       mobile: "",
-      gender: undefined,
+      password: "",
+      confirmPassword: "",
     },
   });
 
@@ -190,46 +195,6 @@ export default function Register() {
 
                 <FormField
                   control={form.control}
-                  name="mobile"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Mobile Number</FormLabel>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          type="tel"
-                          placeholder="+1 (555) 123-4567"
-                          disabled={isLoading}
-                          autoComplete="tel"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="password"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Password</FormLabel>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          type="password"
-                          placeholder="Create a strong password"
-                          disabled={isLoading}
-                          autoComplete="new-password"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
                   name="age"
                   render={({ field }) => (
                     <FormItem>
@@ -244,6 +209,33 @@ export default function Register() {
                           max="150"
                         />
                       </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="gender"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Gender</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                        disabled={isLoading}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select gender" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="male">Male</SelectItem>
+                          <SelectItem value="female">Female</SelectItem>
+                          <SelectItem value="other">Other</SelectItem>
+                        </SelectContent>
+                      </Select>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -280,6 +272,26 @@ export default function Register() {
 
                 <FormField
                   control={form.control}
+                  name="mobile"
+                  render={({ field }) => (
+                    <FormItem className="md:col-span-2">
+                      <FormLabel>Mobile Number (with country code)</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          type="tel"
+                          placeholder="+1 (555) 123-4567"
+                          disabled={isLoading}
+                          autoComplete="tel"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
                   name="password"
                   render={({ field }) => (
                     <FormItem>
@@ -300,26 +312,19 @@ export default function Register() {
 
                 <FormField
                   control={form.control}
-                  name="gender"
+                  name="confirmPassword"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Gender</FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                        disabled={isLoading}
-                      >
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select gender" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="male">Male</SelectItem>
-                          <SelectItem value="female">Female</SelectItem>
-                          <SelectItem value="other">Other</SelectItem>
-                        </SelectContent>
-                      </Select>
+                      <FormLabel>Confirm Password</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          type="password"
+                          placeholder="Confirm your password"
+                          disabled={isLoading}
+                          autoComplete="new-password"
+                        />
+                      </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}

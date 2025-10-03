@@ -7,6 +7,7 @@ import useSecurity from "@/hooks/useSecurity";
 import Index from "./pages/Index";
 import Games from "./pages/Games";
 import Groups from "./pages/Groups";
+import GroupMembers from "./pages/GroupMembers";
 import Chat from "./pages/Chat";
 import Idioms from "./pages/Idioms";
 import Exams from "./pages/Exams";
@@ -59,7 +60,8 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/games" element={<Games />} />
-          <Route path="/groups" element={<Groups />} />
+        <Route path="/groups" element={<Groups />} />
+        <Route path="/groups/:groupId/members" element={<GroupMembers />} />
           <Route path="/chat" element={<Chat />} />
           <Route path="/idioms" element={<Idioms />} />
           <Route path="/exams" element={<Exams />} />

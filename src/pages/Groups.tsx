@@ -1,9 +1,12 @@
+import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Users, Plus, Lock, Globe } from "lucide-react";
+import { Users, Plus, Lock, Globe, Settings } from "lucide-react";
 
 const Groups = () => {
+  const navigate = useNavigate();
+  
   const myGroups = [
     {
       id: 1,
@@ -105,9 +108,19 @@ const Groups = () => {
                   <span>{group.members} members</span>
                 </div>
 
-                <Button variant="outline" className="w-full">
-                  View Group
-                </Button>
+                <div className="flex gap-2">
+                  <Button variant="outline" className="flex-1">
+                    View Group
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => navigate(`/groups/${group.id}/members`)}
+                    title="Manage Members"
+                  >
+                    <Settings className="h-4 w-4" />
+                  </Button>
+                </div>
               </Card>
             ))}
           </div>
