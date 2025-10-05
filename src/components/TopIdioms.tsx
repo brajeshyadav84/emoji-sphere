@@ -71,9 +71,9 @@ const TopIdioms: React.FC = () => {
               📚 Top Idioms
             </CardTitle>
           </div>
-          <Badge className={`text-xs font-medium ${getGradeColor(featuredIdiom.grade)}`}>
+          {/* <Badge className={`text-xs font-medium ${getGradeColor(featuredIdiom.grade)}`}>
             Grade {featuredIdiom.grade}
-          </Badge>
+          </Badge> */}
         </div>
       </CardHeader>
       

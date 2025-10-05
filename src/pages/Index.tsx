@@ -38,18 +38,18 @@ const Index = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background overflow-x-hidden">
       <Header />
       
-      <main className="container mx-auto px-4 py-6">
+      <main className="container mx-auto px-3 md:px-4 py-4 md:py-6 max-w-full">
         <Hero />
         
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 md:gap-6">
           <div className="lg:col-span-3 hidden lg:block">
             <Sidebar />
           </div>
 
-          <div className="lg:col-span-6 space-y-6">
+          <div className="lg:col-span-6 space-y-3 md:space-y-6 min-w-0 w-full">
             <CreatePost />
             
             {samplePosts.map((post, index) => (

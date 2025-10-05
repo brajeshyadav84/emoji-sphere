@@ -121,6 +121,34 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground font-sans antialiased;
+    overflow-x: hidden;
+  }
+
+  html {
+    overflow-x: hidden;
+  }
+
+  /* Prevent horizontal scroll globally */
+  .container {
+    max-width: 100vw;
+    overflow-x: hidden;
+    padding-left: 0;
+    padding-right: 0;
+  }
+  
+  /* On mobile, force card to full width and remove border radius */
+  @media (max-width: 640px) {
+    .card, .rounded-lg, .rounded-2xl, .rounded-3xl {
+      max-width: 100vw !important;
+      margin-left: 0 !important;
+      margin-right: 0 !important;
+      border-radius: 0.5rem !important;
+    }
+    .container {
+      padding-left: 0 !important;
+      padding-right: 0 !important;
+      max-width: 100vw !important;
+    }
   }
 }
 

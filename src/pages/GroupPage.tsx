@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
 import Header from "@/components/Header";
 import CreatePost from "@/components/CreatePost";
 import PostCard from "@/components/PostCard";
@@ -21,6 +23,7 @@ interface Post {
 
 const GroupPage = () => {
   const { groupId } = useParams<{ groupId: string }>();
+    const navigate = useNavigate();
   const [posts, setPosts] = useState<Post[]>([]);
   const [groupName, setGroupName] = useState("");
   const [loading, setLoading] = useState(true);
@@ -106,10 +109,18 @@ const GroupPage = () => {
     <div className="min-h-screen bg-background">
       <Header />
       
-      <main className="container mx-auto px-4 py-6">
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-foreground">{groupName}</h1>
-        </div>
+        <main className="container mx-auto px-4 py-6">
+          <Button
+            onClick={() => navigate("/")}
+            variant="ghost"
+            className="mb-4 gap-2"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back to Home
+          </Button>
+          <div className="mb-6">
+            <h1 className="text-3xl font-bold text-foreground">{groupName}</h1>
+          </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           <div className="lg:col-span-3 hidden lg:block">

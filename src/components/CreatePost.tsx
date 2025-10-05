@@ -151,40 +151,40 @@ const CreatePost = ({ groupId, onPostCreated }: CreatePostProps = {}) => {
   return (
     <div className="space-y-4">
       <SecurityNotice />
-      <Card className="p-6 shadow-playful hover:shadow-hover transition-all duration-300">
-      <div className="flex items-start gap-4">
-        <div className="w-12 h-12 rounded-full gradient-primary flex items-center justify-center text-2xl flex-shrink-0">
+      <Card className="p-3 md:p-6 shadow-playful hover:shadow-hover transition-all duration-300 mx-0 w-full max-w-full">
+      <div className="flex items-start gap-2 md:gap-4">
+        <div className="w-10 h-10 md:w-12 md:h-12 rounded-full gradient-primary flex items-center justify-center text-xl md:text-2xl flex-shrink-0">
           😊
         </div>
-        <div className="flex-1">
+        <div className="flex-1 min-w-0">
           <Textarea
             placeholder="What's on your mind? Share something nice! 🌈"
             value={postText}
             onChange={handleTextChange}
             onPaste={handlePaste}
             onCopy={handleCopy}
-            className="min-h-[100px] border-2 border-border focus:border-primary resize-none text-base"
+            className="min-h-[80px] md:min-h-[100px] border-2 border-border focus:border-primary resize-none text-sm md:text-base"
           />
           
           {/* Validation Message */}
           {validationMessage && (
-            <div className={`mt-2 p-3 rounded-lg text-sm flex items-start gap-2 ${
+            <div className={`mt-2 p-2 md:p-3 rounded-lg text-xs md:text-sm flex items-start gap-2 ${
               validationMessage.isValid 
                 ? 'bg-green-50 text-green-700 border border-green-200' 
                 : 'bg-red-50 text-red-700 border border-red-200'
             }`}>
-              {!validationMessage.isValid && <AlertTriangle className="h-4 w-4 mt-0.5 flex-shrink-0" />}
-              <span>{validationMessage.message}</span>
+              {!validationMessage.isValid && <AlertTriangle className="h-3 w-3 md:h-4 md:w-4 mt-0.5 flex-shrink-0" />}
+              <span className="break-words">{validationMessage.message}</span>
             </div>
           )}
           
-          <div className="mt-4 space-y-2">
-            <div className="flex flex-wrap gap-2">
+          <div className="mt-3 md:mt-4 space-y-2">
+            <div className="flex flex-wrap gap-1 md:gap-2">
               {basicEmojis.map((emoji) => (
                 <button
                   key={emoji}
                   onClick={() => addEmoji(emoji)}
-                  className="text-2xl hover:scale-125 transition-transform duration-200"
+                  className="text-lg md:text-2xl hover:scale-125 transition-transform duration-200 p-1"
                 >
                   {emoji}
                 </button>
@@ -192,12 +192,12 @@ const CreatePost = ({ groupId, onPostCreated }: CreatePostProps = {}) => {
             </div>
             
             {showMoreEmojis && (
-              <div className="flex flex-wrap gap-2 pt-2">
+              <div className="flex flex-wrap gap-1 md:gap-2 pt-2">
                 {moreEmojis.map((emoji) => (
                   <button
                     key={emoji}
                     onClick={() => addEmoji(emoji)}
-                    className="text-2xl hover:scale-125 transition-transform duration-200"
+                    className="text-lg md:text-2xl hover:scale-125 transition-transform duration-200 p-1"
                   >
                     {emoji}
                   </button>
@@ -206,20 +206,20 @@ const CreatePost = ({ groupId, onPostCreated }: CreatePostProps = {}) => {
             )}
           </div>
 
-          <div className="mt-4 flex items-center justify-between">
+          <div className="mt-3 md:mt-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2">
             <div className="flex gap-2">
               <Button 
                 variant="outline" 
                 size="sm" 
-                className="gap-2"
+                className="gap-1 md:gap-2 text-xs md:text-sm px-2 md:px-3"
                 onClick={() => setShowMoreEmojis(!showMoreEmojis)}
               >
-                <Smile className="h-4 w-4" />
+                <Smile className="h-3 w-3 md:h-4 md:w-4" />
                 {showMoreEmojis ? "Less Emojis" : "More Emojis"}
               </Button>
             </div>
             <Button 
-              className="gradient-primary font-semibold"
+              className="gradient-primary font-semibold text-xs md:text-sm px-3 md:px-4"
               onClick={handleShare}
               disabled={isSubmitting}
             >

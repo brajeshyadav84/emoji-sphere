@@ -192,17 +192,17 @@ const PostCard = ({ postId, author, avatar, time, content, likes, comments, onUp
     }
   };
   return (
-    <Card className="p-6 shadow-playful hover:shadow-hover transition-all duration-300">
-      <div className="flex items-start gap-4">
-        <div className="w-12 h-12 rounded-full flex items-center justify-center text-2xl flex-shrink-0 gradient-primary">
+    <Card className="p-3 md:p-6 shadow-playful hover:shadow-hover transition-all duration-300 mx-0 w-full max-w-full">
+      <div className="flex items-start gap-2 md:gap-4">
+        <div className="w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center text-xl md:text-2xl flex-shrink-0 gradient-primary">
           {avatar}
         </div>
-        <div className="flex-1">
+        <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-2">
-            <h3 className="font-bold text-foreground">{author}</h3>
-            <span className="text-sm text-muted-foreground">• {time}</span>
+            <h3 className="font-bold text-foreground text-sm md:text-base truncate">{author}</h3>
+            <span className="text-xs md:text-sm text-muted-foreground flex-shrink-0">• {time}</span>
           </div>
-          <p className="text-base text-foreground mb-4 leading-relaxed">{content}</p>
+          <p className="text-sm md:text-base text-foreground mb-3 md:mb-4 leading-relaxed break-words">{content}</p>
           
           <div className="flex items-center gap-4">
             <Button 
@@ -223,9 +223,9 @@ const PostCard = ({ postId, author, avatar, time, content, likes, comments, onUp
               <MessageCircle className="h-4 w-4" />
               <span className="font-semibold">{comments}</span>
             </Button>
-            <Button variant="ghost" size="sm" className="gap-2 hover:text-success transition-colors">
-              <Share2 className="h-4 w-4" />
-              Share
+            <Button variant="ghost" size="sm" className="gap-1 md:gap-2 hover:text-success transition-colors px-1 md:px-2 text-xs md:text-sm">
+              <Share2 className="h-3 w-3 md:h-4 md:w-4" />
+              <span className="hidden sm:inline">Share</span>
             </Button>
           </div>
 
