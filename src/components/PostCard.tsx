@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { Card } from "./ui/card";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
@@ -45,6 +46,26 @@ const PostCard = ({ postId, author, avatar, time, content, likes, comments, onUp
   const [replyTo, setReplyTo] = useState<string | null>(null);
   const [replyContent, setReplyContent] = useState("");
   const { toast } = useToast();
+  const isMobile = useIsMobile();
+  const [showShareMenu, setShowShareMenu] = useState(false);
+  const postUrl = typeof window !== "undefined" ? `${window.location.origin}/post/${postId}` : "";
+
+  const handleShare = async () => {
+    const shareData = {
+      title: `${author} on KidSpace` ,
+      text: content,
+      url: postUrl,
+    };
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+      } catch (err) {
+        // user cancelled or error
+      }
+    } else {
+      setShowShareMenu((v) => !v);
+    }
+  };
 
   useEffect(() => {
     checkIfLiked();
@@ -223,10 +244,49 @@ const PostCard = ({ postId, author, avatar, time, content, likes, comments, onUp
               <MessageCircle className="h-4 w-4" />
               <span className="font-semibold">{comments}</span>
             </Button>
-            <Button variant="ghost" size="sm" className="gap-1 md:gap-2 hover:text-success transition-colors px-1 md:px-2 text-xs md:text-sm">
-              <Share2 className="h-3 w-3 md:h-4 md:w-4" />
-              <span className="hidden sm:inline">Share</span>
-            </Button>
+            <div className="relative">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="gap-1 md:gap-2 hover:text-success transition-colors px-1 md:px-2 text-xs md:text-sm"
+                onClick={handleShare}
+              >
+                <Share2 className="h-3 w-3 md:h-4 md:w-4" />
+                <span className="hidden sm:inline">Share</span>
+              </Button>
+              {showShareMenu && !isMobile && (
+                <div className="absolute z-10 bg-background border rounded shadow-md p-2 mt-2 right-0 min-w-[180px] flex flex-col gap-2">
+                  <a
+                    href={`https://wa.me/?text=${encodeURIComponent(content + '\n' + postUrl)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:underline text-green-600"
+                  >
+                    Share to WhatsApp
+                  </a>
+                  <a
+                    href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(postUrl)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:underline text-blue-600"
+                  >
+                    Share to Facebook
+                  </a>
+                  <a
+                    href={`mailto:?subject=Check this post on KidSpace!&body=${encodeURIComponent(content + '\n' + postUrl)}`}
+                    className="hover:underline text-gray-700"
+                  >
+                    Share via Email
+                  </a>
+                  <button
+                    className="text-xs text-muted-foreground mt-1 hover:underline"
+                    onClick={() => setShowShareMenu(false)}
+                  >
+                    Close
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
 
           {showComments && (

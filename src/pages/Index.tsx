@@ -96,7 +96,7 @@ const Index = () => {
                 </button>
               </div>
 
-              <div className="bg-card p-4 rounded-2xl shadow-playful border-2 border-secondary/20">
+              {/* <div className="bg-card p-4 rounded-2xl shadow-playful border-2 border-secondary/20">
                 <h3 className="font-bold text-base mb-3 flex items-center gap-2">
                   🏆 Top Contributors
                 </h3>
@@ -108,7 +108,7 @@ const Index = () => {
                     </div>
                   ))}
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
