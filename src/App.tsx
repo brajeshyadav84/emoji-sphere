@@ -12,6 +12,7 @@ import GroupPage from "./pages/GroupPage";
 import Chat from "./pages/Chat";
 import Idioms from "./pages/Idioms";
 import Exams from "./pages/Exams";
+import AskMe from "./pages/AskMe";
 import NotFound from "./pages/NotFound";
 
 // Exam imports
@@ -67,6 +68,7 @@ const App = () => {
           <Route path="/chat" element={<Chat />} />
           <Route path="/idioms" element={<Idioms />} />
           <Route path="/exams" element={<Exams />} />
+          <Route path="/ask-me" element={<AskMe />} />
           
           {/* Auth routes */}
           <Route path="/auth/login" element={<Login />} />

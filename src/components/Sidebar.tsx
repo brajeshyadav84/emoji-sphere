@@ -12,6 +12,7 @@ const Sidebar = () => {
     { icon: "👥", label: "My Groups", path: "/groups" },
     { icon: "💬", label: "Messages", path: "/chat" },
     { icon: "🎮", label: "Games", path: "/games" },
+    { icon: "🤔", label: "Ask Me", path: "/ask-me" },
     { icon: "🏆", label: "Achievements", path: "/" },
   ];
 
