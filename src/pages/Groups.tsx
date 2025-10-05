@@ -109,7 +109,11 @@ const Groups = () => {
                 </div>
 
                 <div className="flex gap-2">
-                  <Button variant="outline" className="flex-1">
+                  <Button 
+                    variant="outline" 
+                    className="flex-1"
+                    onClick={() => navigate(`/groups/${group.id}`)}
+                  >
                     View Group
                   </Button>
                   <Button

@@ -53,7 +53,7 @@ const Index = () => {
             <CreatePost />
             
             {samplePosts.map((post, index) => (
-              <PostCard key={index} {...post} />
+              <PostCard key={index} postId={`sample-${index}`} {...post} />
             ))}
           </div>
 

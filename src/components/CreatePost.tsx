@@ -6,12 +6,20 @@ import { Smile, AlertTriangle } from "lucide-react";
 import { validateContent, ContentValidationResult } from "@/utils/contentFilter";
 import useSecurity from "@/hooks/useSecurity";
 import SecurityNotice from "./SecurityNotice";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
-const CreatePost = () => {
+interface CreatePostProps {
+  groupId?: string;
+  onPostCreated?: () => void;
+}
+
+const CreatePost = ({ groupId, onPostCreated }: CreatePostProps = {}) => {
   const [postText, setPostText] = useState("");
   const [showMoreEmojis, setShowMoreEmojis] = useState(false);
   const [validationMessage, setValidationMessage] = useState<ContentValidationResult | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { toast } = useToast();
 
   // Apply security features
   useSecurity();
@@ -55,11 +63,36 @@ const CreatePost = () => {
       return;
     }
 
-    // If validation passes, you can proceed with posting
-    try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
+    // If groupId is provided, save to database
+    if (groupId) {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        toast({
+          title: "Error",
+          description: "You must be logged in to create a post",
+          variant: "destructive",
+        });
+        setIsSubmitting(false);
+        return;
+      }
+
+      const { error } = await supabase
+        .from("posts")
+        .insert({
+          group_id: groupId,
+          user_id: user.id,
+          content: postText,
+        });
+
+      if (error) {
+        setValidationMessage({
+          isValid: false,
+          message: "❌ Failed to create post. Please try again."
+        });
+        setIsSubmitting(false);
+        return;
+      }
+
       // Success - clear form
       setPostText("");
       setValidationMessage({
@@ -71,15 +104,32 @@ const CreatePost = () => {
       setTimeout(() => {
         setValidationMessage(null);
       }, 3000);
-      
-    } catch (error) {
-      setValidationMessage({
-        isValid: false,
-        message: "❌ Something went wrong. Please try again."
-      });
-    } finally {
-      setIsSubmitting(false);
+
+      onPostCreated?.();
+    } else {
+      // Original behavior for home page (simulated)
+      try {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        setPostText("");
+        setValidationMessage({
+          isValid: true,
+          message: "🎉 Your post has been shared successfully!"
+        });
+        
+        setTimeout(() => {
+          setValidationMessage(null);
+        }, 3000);
+        
+      } catch (error) {
+        setValidationMessage({
+          isValid: false,
+          message: "❌ Something went wrong. Please try again."
+        });
+      }
     }
+
+    setIsSubmitting(false);
   };
 
   // Prevent copy-paste in textarea
