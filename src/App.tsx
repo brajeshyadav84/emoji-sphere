@@ -14,6 +14,7 @@ import Idioms from "./pages/Idioms";
 import Exams from "./pages/Exams";
 import AskMe from "./pages/AskMe";
 import NotFound from "./pages/NotFound";
+import Room from "./pages/Room";
 
 // Exam imports
 import MathExam from "./pages/exam/MathExam";
@@ -70,6 +71,8 @@ const App = () => {
           <Route path="/exams" element={<Exams />} />
           <Route path="/ask-me" element={<AskMe />} />
           
+          {/* Room (video conference) route */}
+          <Route path="/room/:roomId" element={<Room />} />
           {/* Auth routes */}
           <Route path="/auth/login" element={<Login />} />
           <Route path="/auth/register" element={<Register />} />
