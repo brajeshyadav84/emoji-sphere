@@ -9,10 +9,10 @@ const Sidebar = () => {
 
   const menuItems = [
     { icon: "🏠", label: "My Feed", path: "/" },
-    { icon: "👥", label: "My Groups", path: "/groups" },
+    { icon: "👥", label: "Groups", path: "/groups" },
     { icon: "💬", label: "Messages", path: "/chat" },
-    { icon: "🎮", label: "Games", path: "/games" },
-    { icon: "🤔", label: "Ask Me", path: "/ask-me" },
+    { icon: "🎮", label: "Fun Games", path: "/games" },
+    { icon: "🤔", label: "Homework Help", path: "/ask-me" },
   ];
 
   return (

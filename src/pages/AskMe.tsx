@@ -74,9 +74,9 @@ const AskMe = () => {
               <Sparkles className="h-6 w-6 text-primary-foreground" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold">Ask Me Anything! 🤔</h1>
+              <h1 className="text-2xl font-bold">Homework help 🤔</h1>
               <p className="text-muted-foreground text-sm">
-                I'm here to help answer your questions!
+                Quick, clear guidance for your child's schoolwork and projects.
               </p>
             </div>
           </div>

@@ -1,4 +1,4 @@
-import { Bell, Menu, User, X, LogIn, LogOut } from "lucide-react";
+import { Bell, Menu, User, X, LogIn, LogOut, Video } from "lucide-react";
 import { Button } from "./ui/button";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
@@ -101,6 +101,19 @@ const Header = () => {
           >
             <span className="flex items-center gap-1">
               💬 <span className="hidden lg:inline">Messages</span>
+            </span>
+          </Button>
+          <Button 
+            variant={isActive("/onlinemeeting") ? "default" : "ghost"}
+            className={`text-sm lg:text-base font-medium whitespace-nowrap min-w-fit px-2 lg:px-3 ${
+              isActive("/onlinemeeting") 
+                ? "bg-gradient-to-r from-green-400 to-blue-500 text-white border-0" 
+                : "text-foreground hover:bg-accent hover:text-accent-foreground"
+            }`}
+            onClick={() => navigate("/onlinemeeting")}
+          >
+            <span className="flex items-center gap-1">
+              📹 <span className="hidden lg:inline">Meeting</span>
             </span>
           </Button>
           <Button 
@@ -228,6 +241,22 @@ const Header = () => {
             >
               <span className="flex items-center gap-2">
                 💬 <span>Messages</span>
+              </span>
+            </Button>
+            <Button 
+              variant={isActive("/onlinemeeting") ? "default" : "ghost"}
+              className={`text-base font-medium justify-start w-full ${
+                isActive("/onlinemeeting") 
+                  ? "bg-gradient-to-r from-green-400 to-blue-500 text-white border-0" 
+                  : "text-foreground hover:bg-accent hover:text-accent-foreground"
+              }`}
+              onClick={() => {
+                navigate("/onlinemeeting");
+                setIsMobileMenuOpen(false);
+              }}
+            >
+              <span className="flex items-center gap-2">
+                📹 <span>Online Meeting</span>
               </span>
             </Button>
             <Button 

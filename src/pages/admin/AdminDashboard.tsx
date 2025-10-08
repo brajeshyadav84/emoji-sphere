@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import Header from "@/components/Header";
 import { Card } from "@/components/ui/card";
-import { Users, BookOpen, Trophy, Calendar } from "lucide-react";
+import { Users, BookOpen, Trophy, Calendar, Video } from "lucide-react";
 
 const AdminDashboard = () => {
   const adminSections = [
@@ -39,6 +39,13 @@ const AdminDashboard = () => {
       icon: Calendar,
       path: "/admin/assignments",
       color: "text-purple-500",
+    },
+    {
+      title: "Zoom Portal Manager",
+      description: "Manage meetings from Zoom portal for web app joining",
+      icon: Video,
+      path: "/zoom-portal",
+      color: "text-blue-600",
     },
   ];
 

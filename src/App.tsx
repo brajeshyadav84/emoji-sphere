@@ -46,6 +46,11 @@ import QuizManagement from "./pages/admin/QuizManagement";
 import QuestionManagement from "./pages/admin/QuestionManagement";
 import ChallengeManagement from "./pages/admin/ChallengeManagement";
 import HolidayAssignments from "./pages/admin/HolidayAssignments";
+import ZoomPortalManager from "./pages/admin/ZoomPortalManager";
+
+// Online Meeting imports
+import OnlineMeeting from "./pages/OnlineMeetingSimple";
+import MeetingRoom from "./pages/MeetingRoom";
 
 const queryClient = new QueryClient();
 
@@ -69,6 +74,8 @@ const App = () => {
           <Route path="/idioms" element={<Idioms />} />
           <Route path="/exams" element={<Exams />} />
           <Route path="/ask-me" element={<AskMe />} />
+          <Route path="/onlinemeeting" element={<OnlineMeeting />} />
+          <Route path="/meeting-room" element={<MeetingRoom />} />
           
           {/* Auth routes */}
           <Route path="/auth/login" element={<Login />} />
@@ -102,6 +109,7 @@ const App = () => {
           <Route path="/admin/questions" element={<QuestionManagement />} />
           <Route path="/admin/challenges" element={<ChallengeManagement />} />
           <Route path="/admin/assignments" element={<HolidayAssignments />} />
+          <Route path="/zoom-portal" element={<ZoomPortalManager />} />
           
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
