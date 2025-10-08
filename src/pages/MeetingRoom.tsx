@@ -100,7 +100,7 @@ Password: ${password || 'Not required'}
   };
 
   const handleBackToMeetings = () => {
-    navigate('/onlinemeeting');
+    navigate('/onlineclasses');
   };
 
   if (!meetingId || !joinUrl) {

@@ -74,7 +74,7 @@ const App = () => {
           <Route path="/idioms" element={<Idioms />} />
           <Route path="/exams" element={<Exams />} />
           <Route path="/ask-me" element={<AskMe />} />
-          <Route path="/onlinemeeting" element={<OnlineMeeting />} />
+          <Route path="/onlineclasses" element={<OnlineMeeting />} />
           <Route path="/meeting-room" element={<MeetingRoom />} />
           
           {/* Auth routes */}
