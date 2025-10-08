@@ -126,73 +126,76 @@ const ZoomPortalManager = () => {
   return (
     <div className="min-h-screen bg-gray-100">
       <Header />
-      <div className="container mx-auto py-6">
-        <div className="flex justify-between items-center mb-6">
-          <div>
-            <h1 className="text-3xl font-bold flex items-center gap-2">
-              <Video className="h-8 w-8 text-blue-600" />
-              Zoom Portal Manager
-            </h1>
-            <p className="text-gray-600 mt-2">
-              Automatically sync meetings from your Zoom portal
-            </p>
-          </div>
-          <div className="flex items-center gap-3">
-            {/* Connection Status */}
-            <div className="flex items-center gap-2">
-              {isConnected ? (
-                <>
-                  <Wifi className="h-5 w-5 text-green-600" />
-                  <span className="text-sm text-green-600">Connected</span>
-                </>
-              ) : (
-                <>
-                  <WifiOff className="h-5 w-5 text-red-600" />
-                  <span className="text-sm text-red-600">Disconnected</span>
-                </>
-              )}
-            </div>
-            
-            <Button 
-              onClick={handleSyncMeetings}
-              disabled={isSyncing}
-              className="flex items-center gap-2"
-            >
-              <RefreshCw className={`h-4 w-4 ${isSyncing ? 'animate-spin' : ''}`} />
-              {isSyncing ? 'Syncing...' : 'Sync Meetings'}
-            </Button>
-          </div>
-        </div>
-
-        {/* API Status Card */}
-        {!statusLoading && (
-          <Card className="mb-6">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
+      <div className="container mx-auto px-3 md:px-4 py-4 md:py-6">
+        <div className="max-w-6xl mx-auto px-1 md:px-0">
+          <div className="px-2 md:px-0">
+            <div className="flex flex-col gap-4 mb-4 md:mb-6">
+              <div>
+                <h1 className="text-xl md:text-3xl font-bold flex items-center gap-2">
+                  <Video className="h-5 w-5 md:h-8 md:w-8 text-blue-600" />
+                  Zoom Portal Manager
+                </h1>
+                <p className="text-sm md:text-base text-gray-600 mt-1 md:mt-2">
+                  Automatically sync meetings from your Zoom portal
+                </p>
+              </div>
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+                {/* Connection Status */}
                 <div className="flex items-center gap-2">
                   {isConnected ? (
-                    <CheckCircle className="h-5 w-5 text-green-600" />
+                    <>
+                      <Wifi className="h-4 w-4 md:h-5 md:w-5 text-green-600" />
+                      <span className="text-xs md:text-sm text-green-600 font-medium">Connected</span>
+                    </>
                   ) : (
-                    <AlertCircle className="h-5 w-5 text-red-600" />
+                    <>
+                      <WifiOff className="h-4 w-4 md:h-5 md:w-5 text-red-600" />
+                      <span className="text-xs md:text-sm text-red-600 font-medium">Disconnected</span>
+                    </>
                   )}
-                  <span className="font-medium">
-                    Zoom API Status: {isConnected ? 'Connected' : 'Error'}
-                  </span>
                 </div>
-                {!isConnected && (
-                  <span className="text-sm text-red-600">
-                    Check API credentials in application.properties
-                  </span>
-                )}
+                
+                <Button 
+                  onClick={handleSyncMeetings}
+                  disabled={isSyncing}
+                  className="flex items-center gap-2 text-sm md:text-base w-full sm:w-auto"
+                  size="sm"
+                >
+                  <RefreshCw className={`h-3 w-3 md:h-4 md:w-4 ${isSyncing ? 'animate-spin' : ''}`} />
+                  {isSyncing ? 'Syncing...' : 'Sync Meetings'}
+                </Button>
               </div>
-            </CardContent>
-          </Card>
-        )}
+            </div>
+
+            {/* API Status Card */}
+            {!statusLoading && (
+              <Card className="mb-4 md:mb-6">
+                <CardContent className="p-3 md:p-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4">
+                    <div className="flex items-center gap-2">
+                      {isConnected ? (
+                        <CheckCircle className="h-4 w-4 md:h-5 md:w-5 text-green-600" />
+                      ) : (
+                        <AlertCircle className="h-4 w-4 md:h-5 md:w-5 text-red-600" />
+                      )}
+                      <span className="text-sm md:text-base font-medium">
+                        Zoom API Status: {isConnected ? 'Connected' : 'Error'}
+                      </span>
+                    </div>
+                    {!isConnected && (
+                      <span className="text-xs md:text-sm text-red-600">
+                        Check API credentials in application.properties
+                      </span>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
 
         {/* Auto-Sync Info */}
-        <Alert className="mb-6">
+        <Alert className="mb-4 md:mb-6">
           <Video className="h-4 w-4" />
-          <AlertDescription>
+          <AlertDescription className="text-sm md:text-base">
             <strong>Auto-Sync Enabled:</strong> This page automatically fetches meetings from your Zoom portal. 
             No need to manually add meetings - just create them in Zoom and they'll appear here!
           </AlertDescription>
@@ -211,18 +214,18 @@ const ZoomPortalManager = () => {
             </Card>
           ) : meetings.length === 0 ? (
             <Card>
-              <CardContent className="p-6 text-center">
-                <Video className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-semibold mb-2">No meetings found</h3>
-                <p className="text-gray-600 mb-4">
+              <CardContent className="p-4 md:p-6 text-center">
+                <Video className="h-8 w-8 md:h-12 md:w-12 text-gray-400 mx-auto mb-3 md:mb-4" />
+                <h3 className="text-base md:text-lg font-semibold mb-2">No meetings found</h3>
+                <p className="text-sm md:text-base text-gray-600 mb-3 md:mb-4">
                   {isConnected 
                     ? "No scheduled meetings found in your Zoom portal" 
                     : "Connect to Zoom API to see your meetings"
                   }
                 </p>
                 {isConnected && (
-                  <Button onClick={handleSyncMeetings} className="mt-2">
-                    <RefreshCw className="h-4 w-4 mr-2" />
+                  <Button onClick={handleSyncMeetings} className="mt-2" size="sm">
+                    <RefreshCw className="h-3 w-3 md:h-4 md:w-4 mr-2" />
                     Refresh Meetings
                   </Button>
                 )}
@@ -231,36 +234,36 @@ const ZoomPortalManager = () => {
           ) : (
             meetings.map((meeting: Meeting) => (
               <Card key={meeting.meetingId} className={`${isToday(meeting.scheduledDate || '') ? 'border-green-500 bg-green-50' : ''}`}>
-                <CardContent className="p-6">
-                  <div className="flex justify-between items-start">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-2">
-                        <h3 className="text-xl font-semibold">{meeting.meetingName}</h3>
+                <CardContent className="p-4 md:p-6">
+                  <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start gap-4">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex flex-wrap items-center gap-2 mb-3">
+                        <h3 className="text-lg md:text-xl font-semibold truncate">{meeting.meetingName}</h3>
                         {isToday(meeting.scheduledDate || '') && (
-                          <Badge className="bg-green-500">Today</Badge>
+                          <Badge className="bg-green-500 text-xs">Today</Badge>
                         )}
                         {meeting.status && (
-                          <Badge className={getStatusColor(meeting.status)}>
+                          <Badge className={`${getStatusColor(meeting.status)} text-xs`}>
                             {meeting.status}
                           </Badge>
                         )}
-                        <Badge variant="outline" className="text-blue-600 border-blue-600">
+                        <Badge variant="outline" className="text-blue-600 border-blue-600 text-xs">
                           Auto-Synced
                         </Badge>
                       </div>
                       
-                      <div className="space-y-1 text-sm text-gray-600">
+                      <div className="space-y-2 text-sm text-gray-600">
                         <p className="flex items-center gap-2">
-                          <Video className="h-4 w-4" />
-                          Meeting ID: {meeting.meetingId}
+                          <Video className="h-3 w-3 md:h-4 md:w-4 flex-shrink-0" />
+                          <span className="truncate">Meeting ID: {meeting.meetingId}</span>
                         </p>
                         {meeting.scheduledDate && (
                           <p className="flex items-center gap-2">
-                            <Calendar className="h-4 w-4" />
-                            {new Date(meeting.scheduledDate).toLocaleDateString()}
+                            <Calendar className="h-3 w-3 md:h-4 md:w-4 flex-shrink-0" />
+                            <span>{new Date(meeting.scheduledDate).toLocaleDateString()}</span>
                             {meeting.scheduledTime && (
                               <span className="flex items-center gap-1">
-                                <Clock className="h-4 w-4" />
+                                <Clock className="h-3 w-3 md:h-4 md:w-4 flex-shrink-0" />
                                 {formatTime(meeting.scheduledTime)}
                               </span>
                             )}
@@ -268,26 +271,27 @@ const ZoomPortalManager = () => {
                         )}
                         {meeting.duration && (
                           <p className="flex items-center gap-2">
-                            <Clock className="h-4 w-4" />
+                            <Clock className="h-3 w-3 md:h-4 md:w-4 flex-shrink-0" />
                             Duration: {meeting.duration} minutes
                           </p>
                         )}
                         {meeting.password && (
                           <p className="flex items-center gap-2">
-                            <Settings className="h-4 w-4" />
+                            <Settings className="h-3 w-3 md:h-4 md:w-4 flex-shrink-0" />
                             Password protected
                           </p>
                         )}
                       </div>
                     </div>
 
-                    <div className="flex gap-2">
+                    <div className="flex flex-col sm:flex-row gap-2 lg:flex-shrink-0">
                       <Button
                         onClick={() => handleStartMeeting(meeting)}
-                        className="flex items-center gap-2 bg-green-600 hover:bg-green-700"
+                        className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-sm"
                         disabled={!meeting.joinUrl}
+                        size="sm"
                       >
-                        <PlayCircle className="h-4 w-4" />
+                        <PlayCircle className="h-3 w-3 md:h-4 md:w-4" />
                         Start as Host
                       </Button>
                       <Button
@@ -297,10 +301,12 @@ const ZoomPortalManager = () => {
                           navigator.clipboard.writeText(url);
                           alert('Participant link copied to clipboard!');
                         }}
-                        className="flex items-center gap-2"
+                        className="flex items-center gap-2 text-sm"
+                        size="sm"
                       >
-                        <Users className="h-4 w-4" />
-                        Copy Participant Link
+                        <Users className="h-3 w-3 md:h-4 md:w-4" />
+                        <span className="hidden sm:inline">Copy Participant Link</span>
+                        <span className="sm:hidden">Copy Link</span>
                       </Button>
                     </div>
                   </div>
@@ -311,31 +317,31 @@ const ZoomPortalManager = () => {
         </div>
 
         {/* Instructions */}
-        <Card className="mt-6">
-          <CardHeader>
-            <CardTitle>How Auto-Sync Works</CardTitle>
+        <Card className="mt-4 md:mt-6">
+          <CardHeader className="p-4 md:p-6">
+            <CardTitle className="text-lg md:text-xl">How Auto-Sync Works</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-3">
-            <div className="bg-blue-50 p-4 rounded-lg">
-              <h4 className="font-semibold text-blue-900 mb-2">🚀 Automatic Meeting Sync</h4>
-              <ul className="list-disc list-inside text-blue-800 space-y-1">
+          <CardContent className="p-4 md:p-6 pt-0 space-y-3">
+            <div className="bg-blue-50 p-3 md:p-4 rounded-lg">
+              <h4 className="font-semibold text-blue-900 mb-2 text-sm md:text-base">🚀 Automatic Meeting Sync</h4>
+              <ul className="list-disc list-inside text-blue-800 space-y-1 text-sm md:text-base">
                 <li>Create meetings in your Zoom portal as usual</li>
                 <li>Meetings automatically appear here within minutes</li>
                 <li>Click "Sync Meetings" to refresh immediately</li>
                 <li>All meeting details are fetched automatically (name, time, password, etc.)</li>
               </ul>
             </div>
-            <div className="bg-green-50 p-4 rounded-lg">
-              <h4 className="font-semibold text-green-900 mb-2">👨‍🏫 For Admins (Hosts):</h4>
-              <ul className="list-disc list-inside text-green-800 space-y-1">
+            <div className="bg-green-50 p-3 md:p-4 rounded-lg">
+              <h4 className="font-semibold text-green-900 mb-2 text-sm md:text-base">👨‍🏫 For Admins (Hosts):</h4>
+              <ul className="list-disc list-inside text-green-800 space-y-1 text-sm md:text-base">
                 <li>Click "Start as Host" to join with host privileges</li>
                 <li>Copy participant links to share with students</li>
                 <li>No manual entry needed - everything syncs automatically</li>
               </ul>
             </div>
-            <div className="bg-orange-50 p-4 rounded-lg">
-              <h4 className="font-semibold text-orange-900 mb-2">⚙️ Setup Required:</h4>
-              <ul className="list-disc list-inside text-orange-800 space-y-1">
+            <div className="bg-orange-50 p-3 md:p-4 rounded-lg">
+              <h4 className="font-semibold text-orange-900 mb-2 text-sm md:text-base">⚙️ Setup Required:</h4>
+              <ul className="list-disc list-inside text-orange-800 space-y-1 text-sm md:text-base">
                 <li>Zoom API credentials must be configured in backend</li>
                 <li>Update zoom.api.key and zoom.api.secret in application.properties</li>
                 <li>Get credentials from Zoom Marketplace &gt; Build App &gt; JWT</li>
@@ -343,6 +349,8 @@ const ZoomPortalManager = () => {
             </div>
           </CardContent>
         </Card>
+          </div>
+        </div>
       </div>
     </div>
   );

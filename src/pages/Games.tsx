@@ -104,58 +104,62 @@ const Games = () => {
       <Header />
       
       <main className="container mx-auto px-3 md:px-4 py-4 md:py-6 max-w-full">
-        <div className="mb-6 md:mb-8 px-0">
-          <h1 className="text-2xl md:text-4xl font-bold mb-2">
-            <span className="gradient-text-primary">Fun Games!</span> 🎮
-          </h1>
-          <p className="text-base md:text-lg text-muted-foreground">
-            Play educational games and have fun while learning!
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
-          {games.map((game) => (
-            <Card
-              key={game.id}
-              className="p-4 md:p-6 shadow-playful hover:shadow-hover transition-all duration-300 hover:scale-105 w-full max-w-full"
-            >
-              <div className="text-4xl md:text-6xl mb-3 md:mb-4 text-center">{game.emoji}</div>
-              
-              <h3 className="text-lg md:text-xl font-bold mb-2 text-center">{game.title}</h3>
-              
-              <p className="text-xs md:text-sm text-muted-foreground mb-3 md:mb-4 text-center">
-                {game.description}
-              </p>
-
-              <div className="flex items-center justify-center gap-3 md:gap-4 mb-3 md:mb-4 text-xs md:text-sm text-muted-foreground">
-                <div className="flex items-center gap-1">
-                  <Users className="h-3 w-3 md:h-4 md:w-4" />
-                  <span>{game.players}</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <Star className="h-3 w-3 md:h-4 md:w-4 fill-secondary text-secondary" />
-                  <span>{game.rating}/5</span>
-                </div>
-              </div>
-
-              <Button 
-                className="w-full gradient-primary font-semibold gap-1 md:gap-2 text-xs md:text-sm py-2"
-                onClick={() => navigate(game.path)}
-              >
-                <Play className="h-3 w-3 md:h-4 md:w-4" />
-                Play Now
-              </Button>
-            </Card>
-          ))}
-        </div>
-
-        <div className="mt-8 md:mt-12">
-          <Card className="p-4 md:p-8 gradient-success text-success-foreground text-center w-full max-w-full">
-            <h2 className="text-xl md:text-2xl font-bold mb-2">Coming Soon! 🚀</h2>
-            <p className="text-base md:text-lg opacity-90">
-              More awesome games are being created just for you! Stay tuned! ✨
+        <div className="max-w-6xl mx-auto px-1 md:px-0">
+          <div className="mb-6 md:mb-8 px-2 md:px-0">
+            <h1 className="text-2xl md:text-4xl font-bold mb-2">
+              <span className="gradient-text-primary">Fun Games!</span> 🎮
+            </h1>
+            <p className="text-base md:text-lg text-muted-foreground">
+              Play educational games and have fun while learning!
             </p>
-          </Card>
+          </div>
+
+          <div className="px-2 md:px-0">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
+              {games.map((game) => (
+                <Card
+                  key={game.id}
+                  className="p-4 md:p-6 shadow-playful hover:shadow-hover transition-all duration-300 hover:scale-105 w-full max-w-full"
+                >
+                  <div className="text-4xl md:text-6xl mb-3 md:mb-4 text-center">{game.emoji}</div>
+                  
+                  <h3 className="text-lg md:text-xl font-bold mb-2 text-center">{game.title}</h3>
+                  
+                  <p className="text-xs md:text-sm text-muted-foreground mb-3 md:mb-4 text-center">
+                    {game.description}
+                  </p>
+
+                  <div className="flex items-center justify-center gap-3 md:gap-4 mb-3 md:mb-4 text-xs md:text-sm text-muted-foreground">
+                    <div className="flex items-center gap-1">
+                      <Users className="h-3 w-3 md:h-4 md:w-4" />
+                      <span>{game.players}</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Star className="h-3 w-3 md:h-4 md:w-4 fill-secondary text-secondary" />
+                      <span>{game.rating}/5</span>
+                    </div>
+                  </div>
+
+                  <Button 
+                    className="w-full gradient-primary font-semibold gap-1 md:gap-2 text-xs md:text-sm py-2"
+                    onClick={() => navigate(game.path)}
+                  >
+                    <Play className="h-3 w-3 md:h-4 md:w-4" />
+                    Play Now
+                  </Button>
+                </Card>
+              ))}
+            </div>
+
+            <div className="mt-6 md:mt-8 lg:mt-12">
+              <Card className="p-4 md:p-8 gradient-success text-success-foreground text-center w-full max-w-full">
+                <h2 className="text-xl md:text-2xl font-bold mb-2">Coming Soon! 🚀</h2>
+                <p className="text-base md:text-lg opacity-90">
+                  More awesome games are being created just for you! Stay tuned! ✨
+                </p>
+              </Card>
+            </div>
+          </div>
         </div>
       </main>
     </div>

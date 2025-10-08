@@ -102,37 +102,41 @@ const QuestionManagement = () => {
     <div className="min-h-screen bg-background">
       <Header />
       
-      <main className="container mx-auto px-4 py-6">
-        <Button
-          onClick={() => navigate("/admin")}
-          variant="ghost"
-          className="mb-4 gap-2"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          Back to Dashboard
-        </Button>
+      <main className="container mx-auto px-3 md:px-4 py-4 md:py-6">
+        <div className="max-w-6xl mx-auto px-1 md:px-0">
+          <div className="px-2 md:px-0">
+            <Button
+              onClick={() => navigate("/admin")}
+              variant="ghost"
+              className="mb-3 md:mb-4 gap-2 text-sm md:text-base"
+              size="sm"
+            >
+              <ArrowLeft className="h-3 w-3 md:h-4 md:w-4" />
+              Back to Dashboard
+            </Button>
 
-        <div className="mb-8 flex items-center justify-between">
-          <div>
-            <h1 className="text-4xl font-bold mb-2">
-              <span className="gradient-text-primary">Daily Questions</span>
-            </h1>
-            <p className="text-lg text-muted-foreground">
-              Manage daily knowledge questions for kids
-            </p>
-          </div>
-          <Button
-            onClick={() => setShowCreateForm(!showCreateForm)}
-            className="gradient-secondary gap-2"
-          >
-            <Plus className="h-5 w-5" />
-            Add Question
-          </Button>
-        </div>
+            <div className="mb-6 md:mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <div>
+                <h1 className="text-2xl md:text-4xl font-bold mb-2">
+                  <span className="gradient-text-primary">Daily Questions</span>
+                </h1>
+                <p className="text-base md:text-lg text-muted-foreground">
+                  Manage daily knowledge questions for kids
+                </p>
+              </div>
+              <Button
+                onClick={() => setShowCreateForm(!showCreateForm)}
+                className="gradient-secondary gap-2 text-sm md:text-base w-full sm:w-auto"
+                size="sm"
+              >
+                <Plus className="h-4 w-4 md:h-5 md:w-5" />
+                Add Question
+              </Button>
+            </div>
 
         {showCreateForm && (
-          <Card className="p-6 mb-8 shadow-playful">
-            <h2 className="text-2xl font-bold mb-4">Create Daily Question</h2>
+          <Card className="p-4 md:p-6 mb-6 md:mb-8 shadow-playful">
+            <h2 className="text-xl md:text-2xl font-bold mb-3 md:mb-4">Create Daily Question</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -302,6 +306,8 @@ const QuestionManagement = () => {
           videoId={selectedVideoId}
           title={selectedVideoTitle}
         />
+      </div>
+      </div>
       </main>
 
       <AlertDialog open={deleteTarget !== null} onOpenChange={() => setDeleteTarget(null)}>

@@ -83,22 +83,25 @@ const HolidayAssignments = () => {
     <div className="min-h-screen bg-background">
       <Header />
       
-      <main className="container mx-auto px-4 py-6">
-        <Button
-          onClick={() => navigate("/admin")}
-          variant="ghost"
-          className="mb-4 gap-2"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          Back to Dashboard
-        </Button>
+      <main className="container mx-auto px-3 md:px-4 py-4 md:py-6">
+        <div className="max-w-6xl mx-auto px-1 md:px-0">
+          <div className="px-2 md:px-0">
+            <Button
+              onClick={() => navigate("/admin")}
+              variant="ghost"
+              className="mb-3 md:mb-4 gap-2 text-sm md:text-base"
+              size="sm"
+            >
+              <ArrowLeft className="h-3 w-3 md:h-4 md:w-4" />
+              Back to Dashboard
+            </Button>
 
-        <div className="mb-8 flex items-center justify-between">
-          <div>
-            <h1 className="text-4xl font-bold mb-2">
-              <span className="gradient-text-primary">Holiday Assignments</span>
-            </h1>
-            <p className="text-lg text-muted-foreground">
+            <div className="mb-6 md:mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <div>
+                <h1 className="text-2xl md:text-4xl font-bold mb-2">
+                  <span className="gradient-text-primary">Holiday Assignments</span>
+                </h1>
+                <p className="text-base md:text-lg text-muted-foreground">
               Create summer and winter holiday tasks
             </p>
           </div>
@@ -303,6 +306,8 @@ const HolidayAssignments = () => {
               ))}
           </div>
         </div>
+      </div>
+      </div>
       </main>
 
       <AlertDialog open={deleteTarget !== null} onOpenChange={() => setDeleteTarget(null)}>
