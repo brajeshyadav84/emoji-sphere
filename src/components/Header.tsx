@@ -178,7 +178,17 @@ const Header = () => {
                 <Bell className="h-4 w-4 md:h-5 md:w-5" />
                 <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-secondary" />
               </Button>
-              <Button variant="default" size="icon" className="gradient-primary h-8 w-8 md:h-10 md:w-10">
+              <Button 
+                variant={isActive("/dashboard") ? "default" : "ghost"} 
+                size="icon" 
+                className={`h-8 w-8 md:h-10 md:w-10 ${
+                  isActive("/dashboard") 
+                    ? "bg-gradient-to-r from-primary to-purple-500 text-white border-0" 
+                    : ""
+                }`}
+                onClick={() => navigate("/dashboard")}
+                title="Dashboard"
+              >
                 <User className="h-4 w-4 md:h-5 md:w-5" />
               </Button>
               <Button 
@@ -321,6 +331,24 @@ const Header = () => {
                 📝 <span>Exams</span>
               </span>
             </Button>
+            {user && (
+              <Button 
+                variant={isActive("/dashboard") ? "default" : "ghost"}
+                className={`text-base font-medium justify-start w-full ${
+                  isActive("/dashboard") 
+                    ? "bg-gradient-to-r from-purple-500 to-indigo-500 text-white border-0" 
+                    : "text-foreground hover:bg-accent hover:text-accent-foreground"
+                }`}
+                onClick={() => {
+                  navigate("/dashboard");
+                  setIsMobileMenuOpen(false);
+                }}
+              >
+                <span className="flex items-center gap-2">
+                  👤 <span>My Profile</span>
+                </span>
+              </Button>
+            )}
             <Button 
               variant={isActive("/admin") || location.pathname.startsWith("/admin/") ? "default" : "ghost"}
               className={`text-base font-medium justify-start w-full ${
@@ -334,7 +362,7 @@ const Header = () => {
               }}
             >
               <span className="flex items-center gap-2">
-                👨‍💼 <span>Dashboard</span>
+                👨‍💼 <span>Admin</span>
               </span>
             </Button>
             {user && (

@@ -28,6 +28,9 @@ import Register from "./pages/auth/Register";
 import ForgotPassword from "./pages/auth/ForgotPassword";
 import VerifyOTP from "./pages/auth/VerifyOTP";
 
+// User imports
+import Dashboard from "./pages/users/Dashboard";
+
 // Knowledge imports
 import Planets from "./pages/knowledge/Planets";
 
@@ -91,6 +94,9 @@ const App = () => {
           <Route path="/auth/register" element={<Register />} />
           <Route path="/auth/forgot-password" element={<ForgotPassword />} />
           <Route path="/auth/verify-otp" element={<VerifyOTP />} />
+          
+          {/* User routes */}
+          <Route path="/dashboard" element={<Dashboard />} />
           
           {/* Game routes */}
           <Route path="/games/word-builder" element={<WordBuilder />} />

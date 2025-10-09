@@ -11,11 +11,11 @@ serve(async (req) => {
   }
 
   try {
-    const { message } = await req.json();
+    const { message, image } = await req.json();
     
-    if (!message) {
+    if (!message && !image) {
       return new Response(
-        JSON.stringify({ error: "Message is required" }),
+        JSON.stringify({ error: "Message or image is required" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
@@ -36,11 +36,22 @@ serve(async (req) => {
         messages: [
           {
             role: "system",
-            content: "You are a friendly, helpful AI tutor for students. Provide clear, age-appropriate answers to their questions. Be encouraging and make learning fun! Keep your responses concise and easy to understand. Use emojis occasionally to make it engaging. 😊"
+            content: "You are a friendly, helpful AI tutor for students. Provide clear, age-appropriate answers to their questions. When analyzing homework images, carefully read any text, math problems, or diagrams shown and provide step-by-step explanations. Be encouraging and make learning fun! Keep your responses concise and easy to understand. Use emojis occasionally to make it engaging. 😊"
           },
           {
             role: "user",
-            content: message
+            content: image ? [
+              {
+                type: "text",
+                text: message || "Please help me understand this homework problem:"
+              },
+              {
+                type: "image_url",
+                image_url: {
+                  url: image
+                }
+              }
+            ] : message
           }
         ],
       }),
