@@ -88,7 +88,7 @@ const Index = () => {
                     <span className="text-lg">🧩</span>
                     <span className="font-medium">Puzzle Quiz</span>
                   </div>
-                  <div className="flex items-center gap-2 text-sm p-2 rounded-lg bg-indigo-50 hover:bg-indigo-100 cursor-pointer transition-colors" onClick={() => navigate('/exam/computer')}>
+                  <div className="flex items-center gap-2 text-sm p-2 rounded-lg bg-indigo-50 hover:bg-indigo-100 cursor-pointer transition-colors" onClick={() => navigate('/exam/ict')}>
                     <span className="text-lg">💻</span>
                     <span className="font-medium">ICT Quiz</span>
                   </div>

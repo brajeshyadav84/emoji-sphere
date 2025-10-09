@@ -1,4 +1,5 @@
 import { Toaster } from "@/components/ui/toaster";
+import ICTExam from './pages/exam/ICTExam';
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -20,7 +21,6 @@ import MathExam from "./pages/exam/MathExam";
 import ScienceExam from "./pages/exam/ScienceExam";
 import EnglishExam from "./pages/exam/EnglishExam";
 import PuzzleExam from "./pages/exam/PuzzleExam";
-import ComputerExam from "./pages/exam/ComputerExam";
 
 // Auth imports
 import Login from "./pages/auth/Login";
@@ -105,7 +105,7 @@ const App = () => {
           <Route path="/exam/science" element={<ScienceExam />} />
           <Route path="/exam/english" element={<EnglishExam />} />
           <Route path="/exam/puzzles" element={<PuzzleExam />} />
-          <Route path="/exam/ict" element={<ComputerExam />} />
+          <Route path="/exam/ict" element={<ICTExam />} />
           
           {/* Admin routes */}
           <Route path="/admin" element={<AdminDashboard />} />

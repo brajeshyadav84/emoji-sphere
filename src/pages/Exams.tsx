@@ -61,8 +61,8 @@ const Exams: React.FC = () => {
       color: 'from-orange-400 to-orange-600'
     },
     {
-      id: 'computer',
-      name: 'Computer Science',
+      id: 'ict',
+      name: 'ICT / Computer Science',
       icon: <Monitor className="h-8 w-8" />,
       description: 'Learn about computers, technology, and digital literacy with ICT questions.',
       questionsCount: 25,
