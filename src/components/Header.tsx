@@ -44,7 +44,7 @@ const Header = () => {
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 w-full border-b border-border/50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 shadow-md">
       <div className="container flex h-14 md:h-16 items-center justify-between px-2 md:px-4">
         <div className="flex items-center gap-2 md:gap-4">
           <Button 
@@ -115,6 +115,19 @@ const Header = () => {
           >
             <span className="flex items-center gap-1">
               🎮 <span className="hidden lg:inline">Fun Games!</span>
+            </span>
+          </Button>
+          <Button 
+            variant={isActive("/knowledge/planets") ? "default" : "ghost"}
+            className={`text-sm lg:text-base font-medium whitespace-nowrap min-w-fit px-2 lg:px-3 ${
+              isActive("/knowledge/planets") 
+                ? "bg-gradient-to-r from-purple-400 to-pink-500 text-white border-0" 
+                : "text-foreground hover:bg-accent hover:text-accent-foreground"
+            }`}
+            onClick={() => navigate("/knowledge/planets")}
+          >
+            <span className="flex items-center gap-1">
+              🪐 <span className="hidden lg:inline">Planets</span>
             </span>
           </Button>
           <Button 
@@ -274,6 +287,22 @@ const Header = () => {
             >
               <span className="flex items-center gap-2">
                 🎮 <span>Fun Games!</span>
+              </span>
+            </Button>
+            <Button 
+              variant={isActive("/knowledge/planets") ? "default" : "ghost"}
+              className={`text-base font-medium justify-start w-full ${
+                isActive("/knowledge/planets") 
+                  ? "bg-gradient-to-r from-purple-400 to-pink-500 text-white border-0" 
+                  : "text-foreground hover:bg-accent hover:text-accent-foreground"
+              }`}
+              onClick={() => {
+                navigate("/knowledge/planets");
+                setIsMobileMenuOpen(false);
+              }}
+            >
+              <span className="flex items-center gap-2">
+                🪐 <span>Planets</span>
               </span>
             </Button>
             <Button 

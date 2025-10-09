@@ -28,6 +28,9 @@ import Register from "./pages/auth/Register";
 import ForgotPassword from "./pages/auth/ForgotPassword";
 import VerifyOTP from "./pages/auth/VerifyOTP";
 
+// Knowledge imports
+import Planets from "./pages/knowledge/Planets";
+
 // Game imports
 import WordBuilder from "./games/WordBuilder";
 import MathQuest from "./games/MathQuest";
@@ -79,6 +82,9 @@ const App = () => {
           <Route path="/ask-me" element={<AskMe />} />
           <Route path="/onlineclasses" element={<OnlineMeeting />} />
           <Route path="/meeting-room" element={<MeetingRoom />} />
+          
+          {/* Knowledge routes */}
+          <Route path="/knowledge/planets" element={<Planets />} />
           
           {/* Auth routes */}
           <Route path="/auth/login" element={<Login />} />
