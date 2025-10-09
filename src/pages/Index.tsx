@@ -5,6 +5,7 @@ import CreatePost from "@/components/CreatePost";
 import PostCard from "@/components/PostCard";
 import TodaysChallenge from "@/components/TodaysChallenge";
 import TopIdioms from "@/components/TopIdioms";
+import HomeworkHelper from "@/components/HomeworkHelper";
 import { useNavigate } from "react-router-dom";
 
 const Index = () => {
@@ -87,6 +88,10 @@ const Index = () => {
                     <span className="text-lg">🧩</span>
                     <span className="font-medium">Puzzle Quiz</span>
                   </div>
+                  <div className="flex items-center gap-2 text-sm p-2 rounded-lg bg-indigo-50 hover:bg-indigo-100 cursor-pointer transition-colors" onClick={() => navigate('/exam/computer')}>
+                    <span className="text-lg">💻</span>
+                    <span className="font-medium">ICT Quiz</span>
+                  </div>
                 </div>
                 <button
                   onClick={() => navigate('/exams')}
@@ -113,6 +118,9 @@ const Index = () => {
           </div>
         </div>
       </main>
+      
+      {/* Homework Helper Component */}
+      <HomeworkHelper />
     </div>
   );
 };

@@ -45,6 +45,24 @@ const Games = () => {
     },
     {
       id: 5,
+      title: "Alphabet Animals",
+      emoji: "🔤",
+      description: "Learn the alphabet with fun animals!",
+      players: 567,
+      rating: 5,
+      path: "/games/alphabet",
+    },
+    {
+      id: 6,
+      title: "हिंदी वर्णमाला",
+      emoji: "🕉️",
+      description: "Learn Hindi consonants with words!",
+      players: 423,
+      rating: 5,
+      path: "/games/hindi-alphabet",
+    },
+    {
+      id: 7,
       title: "Memory Match",
       emoji: "🧠",
       description: "Test your memory with this classic game!",
@@ -53,7 +71,7 @@ const Games = () => {
       path: "/games/memory-match",
     },
     {
-      id: 6,
+      id: 8,
       title: "Puzzle Game",
       emoji: "🧩",
       description: "Solve sliding puzzles!",
@@ -62,7 +80,7 @@ const Games = () => {
       path: "/games/puzzle-game",
     },
     {
-      id: 7,
+      id: 9,
       title: "Shape Sorter",
       emoji: "🔷",
       description: "Match the shapes correctly!",
@@ -71,7 +89,7 @@ const Games = () => {
       path: "/games/shape-sorter",
     },
     {
-      id: 8,
+      id: 10,
       title: "Number Race",
       emoji: "🔢",
       description: "Race against time to find numbers!",
@@ -80,7 +98,7 @@ const Games = () => {
       path: "/games/number-race",
     },
     {
-      id: 9,
+      id: 11,
       title: "Drawing Board",
       emoji: "🎨",
       description: "Create your own masterpieces!",
@@ -89,7 +107,7 @@ const Games = () => {
       path: "/games/drawing-board",
     },
     {
-      id: 10,
+      id: 12,
       title: "Rhyme Time",
       emoji: "🎵",
       description: "Learn words that rhyme!",

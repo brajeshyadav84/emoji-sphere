@@ -20,6 +20,7 @@ import MathExam from "./pages/exam/MathExam";
 import ScienceExam from "./pages/exam/ScienceExam";
 import EnglishExam from "./pages/exam/EnglishExam";
 import PuzzleExam from "./pages/exam/PuzzleExam";
+import ComputerExam from "./pages/exam/ComputerExam";
 
 // Auth imports
 import Login from "./pages/auth/Login";
@@ -32,6 +33,8 @@ import WordBuilder from "./games/WordBuilder";
 import MathQuest from "./games/MathQuest";
 import ColorMatch from "./games/ColorMatch";
 import AnimalQuiz from "./games/AnimalQuiz";
+import Alphabet from "./games/Alphabet";
+import HindiAlphabet from "./games/HindiAlphabet";
 import MemoryMatch from "./games/MemoryMatch";
 import PuzzleGame from "./games/PuzzleGame";
 import ShapeSorter from "./games/ShapeSorter";
@@ -88,6 +91,8 @@ const App = () => {
           <Route path="/games/math-quest" element={<MathQuest />} />
           <Route path="/games/color-match" element={<ColorMatch />} />
           <Route path="/games/animal-quiz" element={<AnimalQuiz />} />
+          <Route path="/games/alphabet" element={<Alphabet />} />
+          <Route path="/games/hindi-alphabet" element={<HindiAlphabet />} />
           <Route path="/games/memory-match" element={<MemoryMatch />} />
           <Route path="/games/puzzle-game" element={<PuzzleGame />} />
           <Route path="/games/shape-sorter" element={<ShapeSorter />} />
@@ -100,6 +105,7 @@ const App = () => {
           <Route path="/exam/science" element={<ScienceExam />} />
           <Route path="/exam/english" element={<EnglishExam />} />
           <Route path="/exam/puzzles" element={<PuzzleExam />} />
+          <Route path="/exam/ict" element={<ComputerExam />} />
           
           {/* Admin routes */}
           <Route path="/admin" element={<AdminDashboard />} />

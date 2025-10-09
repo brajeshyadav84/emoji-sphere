@@ -1,0 +1,185 @@
+{
+  "subject": "Computer Science / ICT",
+  "grades": {
+    "grade5": {
+      "name": "Grade 5",
+      "questions": [
+        {
+          "id": 1,
+          "question": "What does CPU stand for?",
+          "options": ["Central Processing Unit", "Computer Personal Unit", "Central Personal Unit", "Computer Processing Unit"],
+          "correctAnswer": "Central Processing Unit",
+          "explanation": "CPU stands for Central Processing Unit, which is the brain of the computer."
+        },
+        {
+          "id": 2,
+          "question": "Which of the following is an input device?",
+          "options": ["Monitor", "Printer", "Keyboard", "Speaker"],
+          "correctAnswer": "Keyboard",
+          "explanation": "A keyboard is an input device used to enter data into the computer."
+        },
+        {
+          "id": 3,
+          "question": "What is the main function of RAM?",
+          "options": ["Store data permanently", "Process data", "Temporary storage of data", "Connect to internet"],
+          "correctAnswer": "Temporary storage of data",
+          "explanation": "RAM (Random Access Memory) temporarily stores data that the computer is currently using."
+        },
+        {
+          "id": 4,
+          "question": "Which software is used to browse the internet?",
+          "options": ["Microsoft Word", "Web Browser", "Calculator", "Paint"],
+          "correctAnswer": "Web Browser",
+          "explanation": "A web browser like Chrome, Firefox, or Safari is used to browse the internet."
+        },
+        {
+          "id": 5,
+          "question": "What does WWW stand for?",
+          "options": ["World Wide Web", "World Wide Website", "Wide World Web", "World Web Wide"],
+          "correctAnswer": "World Wide Web",
+          "explanation": "WWW stands for World Wide Web, the system of internet servers."
+        },
+        {
+          "id": 6,
+          "question": "Which key is used to delete characters to the left of the cursor?",
+          "options": ["Delete", "Backspace", "Enter", "Space"],
+          "correctAnswer": "Backspace",
+          "explanation": "The Backspace key deletes characters to the left of the cursor."
+        },
+        {
+          "id": 7,
+          "question": "What is a computer virus?",
+          "options": ["A hardware component", "A helpful program", "A harmful software program", "A type of monitor"],
+          "correctAnswer": "A harmful software program",
+          "explanation": "A computer virus is a harmful software program that can damage files and systems."
+        },
+        {
+          "id": 8,
+          "question": "Which of the following is an output device?",
+          "options": ["Mouse", "Microphone", "Monitor", "Keyboard"],
+          "correctAnswer": "Monitor",
+          "explanation": "A monitor is an output device that displays information from the computer."
+        },
+        {
+          "id": 9,
+          "question": "What is the brain of a computer called?",
+          "options": ["RAM", "Hard Drive", "CPU", "Monitor"],
+          "correctAnswer": "CPU",
+          "explanation": "The CPU (Central Processing Unit) is often called the brain of the computer."
+        },
+        {
+          "id": 10,
+          "question": "Which file format is commonly used for images?",
+          "options": [".txt", ".mp3", ".jpg", ".exe"],
+          "correctAnswer": ".jpg",
+          "explanation": ".jpg is a common image file format."
+        },
+        {
+          "id": 11,
+          "question": "What does 'Save As' option do?",
+          "options": ["Delete the file", "Save file with a new name or location", "Close the file", "Print the file"],
+          "correctAnswer": "Save file with a new name or location",
+          "explanation": "'Save As' allows you to save a file with a different name or in a different location."
+        },
+        {
+          "id": 12,
+          "question": "Which key combination is used to copy text?",
+          "options": ["Ctrl + X", "Ctrl + C", "Ctrl + V", "Ctrl + Z"],
+          "correctAnswer": "Ctrl + C",
+          "explanation": "Ctrl + C is the keyboard shortcut to copy selected text or objects."
+        },
+        {
+          "id": 13,
+          "question": "What is an email?",
+          "options": ["Electronic mail", "Emergency mail", "Express mail", "Extra mail"],
+          "correctAnswer": "Electronic mail",
+          "explanation": "Email stands for electronic mail, a way to send messages over the internet."
+        },
+        {
+          "id": 14,
+          "question": "Which of these is a search engine?",
+          "options": ["Microsoft Word", "Google", "Calculator", "Paint"],
+          "correctAnswer": "Google",
+          "explanation": "Google is a popular search engine used to find information on the internet."
+        },
+        {
+          "id": 15,
+          "question": "What is a folder used for?",
+          "options": ["Playing music", "Organizing files", "Connecting to internet", "Typing documents"],
+          "correctAnswer": "Organizing files",
+          "explanation": "A folder is used to organize and store files in a structured way."
+        },
+        {
+          "id": 16,
+          "question": "Which device is used to take pictures digitally?",
+          "options": ["Scanner", "Printer", "Digital Camera", "Speaker"],
+          "correctAnswer": "Digital Camera",
+          "explanation": "A digital camera is used to take digital photographs."
+        },
+        {
+          "id": 17,
+          "question": "What does 'Ctrl + Z' do?",
+          "options": ["Copy", "Paste", "Undo", "Save"],
+          "correctAnswer": "Undo",
+          "explanation": "Ctrl + Z is the keyboard shortcut to undo the last action."
+        },
+        {
+          "id": 18,
+          "question": "Which part of the computer stores data permanently?",
+          "options": ["RAM", "CPU", "Hard Drive", "Monitor"],
+          "correctAnswer": "Hard Drive",
+          "explanation": "The hard drive stores data permanently, even when the computer is turned off."
+        },
+        {
+          "id": 19,
+          "question": "What is software?",
+          "options": ["Physical parts of computer", "Programs and applications", "Computer screen", "Keyboard keys"],
+          "correctAnswer": "Programs and applications",
+          "explanation": "Software refers to programs and applications that run on a computer."
+        },
+        {
+          "id": 20,
+          "question": "Which key is used to start a new line in a document?",
+          "options": ["Space", "Tab", "Enter", "Shift"],
+          "correctAnswer": "Enter",
+          "explanation": "The Enter key is used to start a new line or paragraph in a document."
+        },
+        {
+          "id": 21,
+          "question": "What is the purpose of antivirus software?",
+          "options": ["Create viruses", "Protect from viruses", "Speed up computer", "Connect to internet"],
+          "correctAnswer": "Protect from viruses",
+          "explanation": "Antivirus software protects the computer from harmful viruses and malware."
+        },
+        {
+          "id": 22,
+          "question": "Which of these is NOT a computer component?",
+          "options": ["CPU", "RAM", "Refrigerator", "Hard Drive"],
+          "correctAnswer": "Refrigerator",
+          "explanation": "A refrigerator is not a computer component."
+        },
+        {
+          "id": 23,
+          "question": "What does URL stand for?",
+          "options": ["Universal Resource Locator", "Uniform Resource Locator", "Universal Reference Link", "Uniform Reference Locator"],
+          "correctAnswer": "Uniform Resource Locator",
+          "explanation": "URL stands for Uniform Resource Locator, which is a web address."
+        },
+        {
+          "id": 24,
+          "question": "Which program is used to create presentations?",
+          "options": ["Notepad", "Calculator", "PowerPoint", "Paint"],
+          "correctAnswer": "PowerPoint",
+          "explanation": "Microsoft PowerPoint is commonly used to create presentations."
+        },
+        {
+          "id": 25,
+          "question": "What is the function of a mouse?",
+          "options": ["Type text", "Point and click", "Store data", "Display images"],
+          "correctAnswer": "Point and click",
+          "explanation": "A mouse is used to point, click, and navigate on the computer screen."
+        }
+      ]
+    }
+  }
+}
