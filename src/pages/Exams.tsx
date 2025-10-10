@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
-import { BookOpen, Calculator, Beaker, PuzzleIcon, Trophy, Clock, Users } from 'lucide-react';
+import { BookOpen, Calculator, Beaker, PuzzleIcon, Trophy, Clock, Users, Monitor } from 'lucide-react';
 
 interface Subject {
   id: string;
@@ -59,6 +59,16 @@ const Exams: React.FC = () => {
       timeLimit: '30 minutes',
       difficulty: 'Elementary',
       color: 'from-orange-400 to-orange-600'
+    },
+    {
+      id: 'ict',
+      name: 'ICT / Computer Science',
+      icon: <Monitor className="h-8 w-8" />,
+      description: 'Learn about computers, technology, and digital literacy with ICT questions.',
+      questionsCount: 25,
+      timeLimit: '30 minutes',
+      difficulty: 'Elementary',
+      color: 'from-indigo-400 to-indigo-600'
     }
   ];
 
@@ -87,13 +97,13 @@ const Exams: React.FC = () => {
               <div className="bg-white rounded-lg shadow-sm p-4">
                 <div className="flex items-center justify-center gap-2">
                   <BookOpen className="h-5 w-5 text-blue-500" />
-                  <span className="text-sm font-medium text-gray-700">4 Subjects</span>
+                  <span className="text-sm font-medium text-gray-700">5 Subjects</span>
                 </div>
               </div>
               <div className="bg-white rounded-lg shadow-sm p-4">
                 <div className="flex items-center justify-center gap-2">
                   <Clock className="h-5 w-5 text-green-500" />
-                  <span className="text-sm font-medium text-gray-700">60 Questions</span>
+                  <span className="text-sm font-medium text-gray-700">85 Questions</span>
                 </div>
               </div>
               <div className="bg-white rounded-lg shadow-sm p-4">

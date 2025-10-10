@@ -1,4 +1,5 @@
 import { Toaster } from "@/components/ui/toaster";
+import ICTExam from './pages/exam/ICTExam';
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -27,11 +28,19 @@ import Register from "./pages/auth/Register";
 import ForgotPassword from "./pages/auth/ForgotPassword";
 import VerifyOTP from "./pages/auth/VerifyOTP";
 
+// User imports
+import Dashboard from "./pages/users/Dashboard";
+
+// Knowledge imports
+import Planets from "./pages/knowledge/Planets";
+
 // Game imports
 import WordBuilder from "./games/WordBuilder";
 import MathQuest from "./games/MathQuest";
 import ColorMatch from "./games/ColorMatch";
 import AnimalQuiz from "./games/AnimalQuiz";
+import Alphabet from "./games/Alphabet";
+import HindiAlphabet from "./games/HindiAlphabet";
 import MemoryMatch from "./games/MemoryMatch";
 import PuzzleGame from "./games/PuzzleGame";
 import ShapeSorter from "./games/ShapeSorter";
@@ -46,6 +55,11 @@ import QuizManagement from "./pages/admin/QuizManagement";
 import QuestionManagement from "./pages/admin/QuestionManagement";
 import ChallengeManagement from "./pages/admin/ChallengeManagement";
 import HolidayAssignments from "./pages/admin/HolidayAssignments";
+import ZoomPortalManager from "./pages/admin/ZoomPortalManager";
+
+// Online Meeting imports
+import OnlineMeeting from "./pages/OnlineMeetingSimple";
+import MeetingRoom from "./pages/MeetingRoom";
 
 const queryClient = new QueryClient();
 
@@ -69,6 +83,11 @@ const App = () => {
           <Route path="/idioms" element={<Idioms />} />
           <Route path="/exams" element={<Exams />} />
           <Route path="/ask-me" element={<AskMe />} />
+          <Route path="/onlineclasses" element={<OnlineMeeting />} />
+          <Route path="/meeting-room" element={<MeetingRoom />} />
+          
+          {/* Knowledge routes */}
+          <Route path="/knowledge/planets" element={<Planets />} />
           
           {/* Auth routes */}
           <Route path="/auth/login" element={<Login />} />
@@ -76,11 +95,16 @@ const App = () => {
           <Route path="/auth/forgot-password" element={<ForgotPassword />} />
           <Route path="/auth/verify-otp" element={<VerifyOTP />} />
           
+          {/* User routes */}
+          <Route path="/dashboard" element={<Dashboard />} />
+          
           {/* Game routes */}
           <Route path="/games/word-builder" element={<WordBuilder />} />
           <Route path="/games/math-quest" element={<MathQuest />} />
           <Route path="/games/color-match" element={<ColorMatch />} />
           <Route path="/games/animal-quiz" element={<AnimalQuiz />} />
+          <Route path="/games/alphabet" element={<Alphabet />} />
+          <Route path="/games/hindi-alphabet" element={<HindiAlphabet />} />
           <Route path="/games/memory-match" element={<MemoryMatch />} />
           <Route path="/games/puzzle-game" element={<PuzzleGame />} />
           <Route path="/games/shape-sorter" element={<ShapeSorter />} />
@@ -93,6 +117,7 @@ const App = () => {
           <Route path="/exam/science" element={<ScienceExam />} />
           <Route path="/exam/english" element={<EnglishExam />} />
           <Route path="/exam/puzzles" element={<PuzzleExam />} />
+          <Route path="/exam/ict" element={<ICTExam />} />
           
           {/* Admin routes */}
           <Route path="/admin" element={<AdminDashboard />} />
@@ -102,6 +127,7 @@ const App = () => {
           <Route path="/admin/questions" element={<QuestionManagement />} />
           <Route path="/admin/challenges" element={<ChallengeManagement />} />
           <Route path="/admin/assignments" element={<HolidayAssignments />} />
+          <Route path="/zoom-portal" element={<ZoomPortalManager />} />
           
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

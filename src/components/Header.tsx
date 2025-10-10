@@ -1,4 +1,4 @@
-import { Bell, Menu, User, X, LogIn, LogOut } from "lucide-react";
+import { Bell, Menu, User, X, LogIn, LogOut, Video } from "lucide-react";
 import { Button } from "./ui/button";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
@@ -44,7 +44,7 @@ const Header = () => {
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 w-full border-b border-border/50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 shadow-md">
       <div className="container flex h-14 md:h-16 items-center justify-between px-2 md:px-4">
         <div className="flex items-center gap-2 md:gap-4">
           <Button 
@@ -103,6 +103,7 @@ const Header = () => {
               💬 <span className="hidden lg:inline">Messages</span>
             </span>
           </Button>
+          
           <Button 
             variant={isActive("/games") ? "default" : "ghost"}
             className={`text-sm lg:text-base font-medium whitespace-nowrap min-w-fit px-2 lg:px-3 ${
@@ -117,16 +118,16 @@ const Header = () => {
             </span>
           </Button>
           <Button 
-            variant={isActive("/exams") || location.pathname.startsWith("/exam/") ? "default" : "ghost"}
+            variant={isActive("/knowledge/planets") ? "default" : "ghost"}
             className={`text-sm lg:text-base font-medium whitespace-nowrap min-w-fit px-2 lg:px-3 ${
-              isActive("/exams") || location.pathname.startsWith("/exam/") 
-                ? "bg-gradient-to-r from-indigo-400 to-blue-500 text-white border-0" 
+              isActive("/knowledge/planets") 
+                ? "bg-gradient-to-r from-purple-400 to-pink-500 text-white border-0" 
                 : "text-foreground hover:bg-accent hover:text-accent-foreground"
             }`}
-            onClick={() => navigate("/exams")}
+            onClick={() => navigate("/knowledge/planets")}
           >
             <span className="flex items-center gap-1">
-              📝 <span className="hidden lg:inline">Exams</span>
+              🪐 <span className="hidden lg:inline">Planets</span>
             </span>
           </Button>
           <Button 
@@ -151,7 +152,17 @@ const Header = () => {
                 <Bell className="h-4 w-4 md:h-5 md:w-5" />
                 <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-secondary" />
               </Button>
-              <Button variant="default" size="icon" className="gradient-primary h-8 w-8 md:h-10 md:w-10">
+              <Button 
+                variant={isActive("/dashboard") ? "default" : "ghost"} 
+                size="icon" 
+                className={`h-8 w-8 md:h-10 md:w-10 ${
+                  isActive("/dashboard") 
+                    ? "bg-gradient-to-r from-primary to-purple-500 text-white border-0" 
+                    : ""
+                }`}
+                onClick={() => navigate("/dashboard")}
+                title="Dashboard"
+              >
                 <User className="h-4 w-4 md:h-5 md:w-5" />
               </Button>
               <Button 
@@ -247,21 +258,39 @@ const Header = () => {
               </span>
             </Button>
             <Button 
-              variant={isActive("/exams") || location.pathname.startsWith("/exam/") ? "default" : "ghost"}
+              variant={isActive("/knowledge/planets") ? "default" : "ghost"}
               className={`text-base font-medium justify-start w-full ${
-                isActive("/exams") || location.pathname.startsWith("/exam/") 
-                  ? "bg-gradient-to-r from-indigo-400 to-blue-500 text-white border-0" 
+                isActive("/knowledge/planets") 
+                  ? "bg-gradient-to-r from-purple-400 to-pink-500 text-white border-0" 
                   : "text-foreground hover:bg-accent hover:text-accent-foreground"
               }`}
               onClick={() => {
-                navigate("/exams");
+                navigate("/knowledge/planets");
                 setIsMobileMenuOpen(false);
               }}
             >
               <span className="flex items-center gap-2">
-                📝 <span>Exams</span>
+                🪐 <span>Planets</span>
               </span>
             </Button>
+            {user && (
+              <Button 
+                variant={isActive("/dashboard") ? "default" : "ghost"}
+                className={`text-base font-medium justify-start w-full ${
+                  isActive("/dashboard") 
+                    ? "bg-gradient-to-r from-purple-500 to-indigo-500 text-white border-0" 
+                    : "text-foreground hover:bg-accent hover:text-accent-foreground"
+                }`}
+                onClick={() => {
+                  navigate("/dashboard");
+                  setIsMobileMenuOpen(false);
+                }}
+              >
+                <span className="flex items-center gap-2">
+                  👤 <span>My Profile</span>
+                </span>
+              </Button>
+            )}
             <Button 
               variant={isActive("/admin") || location.pathname.startsWith("/admin/") ? "default" : "ghost"}
               className={`text-base font-medium justify-start w-full ${
@@ -275,7 +304,7 @@ const Header = () => {
               }}
             >
               <span className="flex items-center gap-2">
-                👨‍💼 <span>Dashboard</span>
+                👨‍💼 <span>Admin</span>
               </span>
             </Button>
             {user && (
