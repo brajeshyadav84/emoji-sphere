@@ -6,6 +6,7 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Heart, MessageCircle, Share2, Send } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { getAvatarByGender } from "@/utils/avatarUtils";
 import { 
   useGetCommentsByPostQuery, 
   useCreateCommentMutation,
@@ -21,6 +22,7 @@ interface PostCardProps {
   likes: number;
   comments: number;
   userId?: string;
+  userGender?: string; // Add gender prop
   isLikedByCurrentUser?: boolean; // Add this prop
   onUpdate?: () => void;
 }
@@ -41,7 +43,8 @@ interface Comment {
     email: string;
     age: number;
     country: string;
-    gender: string;
+    gender?: string; // Add gender field
+    // gender: string; // Removed, as it does not exist on UserResponse
     isVerified: boolean;
     role: string;
     createdAt: string;
@@ -66,7 +69,7 @@ interface Reply {
     email: string;
     age: number;
     country: string;
-    gender: string;
+    gender?: string; // Add gender field
     isVerified: boolean;
     role: string;
     createdAt: string;
@@ -84,6 +87,7 @@ const PostCard = ({
   likes, 
   comments, 
   userId, 
+  userGender, // Add gender prop
   isLikedByCurrentUser = false,
   onUpdate 
 }: PostCardProps) => {
@@ -111,14 +115,6 @@ const PostCard = ({
   
   const [createComment] = useCreateCommentMutation();
   const [togglePostLike] = useTogglePostLikeMutation();
-
-  const getGenderEmoji = (gender: string) => {
-    switch (gender?.toLowerCase()) {
-      case 'male': return '👨';
-      case 'female': return '👩';
-      default: return '👤';
-    }
-  };
 
   const handleShare = async () => {
     const shareData = {
@@ -230,7 +226,7 @@ const PostCard = ({
           onClick={handleAvatarClick}
           title={`View ${author}'s profile`}
         >
-          {avatar}
+          {getAvatarByGender(userGender)}
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-2">
@@ -334,17 +330,17 @@ const PostCard = ({
                       <div 
                         className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-50 to-purple-50 border border-gray-200 shadow-sm flex items-center justify-center text-sm cursor-pointer hover:scale-105 transition-transform"
                         onClick={() => comment.user?.id && navigate(`/user/${comment.user.id}`)}
-                        title={`View ${comment.user?.fullName || comment.user?.name}'s profile`}
+                        title={`View ${comment.user?.name}'s profile`}
                       >
-                        {getGenderEmoji(comment.user?.gender)}
+                        {getAvatarByGender(comment.user?.gender)}
                       </div>
                       <div className="flex-1">
                         <p 
                           className="text-sm font-semibold cursor-pointer hover:text-primary transition-colors"
                           onClick={() => comment.user?.id && navigate(`/user/${comment.user.id}`)}
-                          title={`View ${comment.user?.fullName || comment.user?.name}'s profile`}
+                          title={`View ${comment.user?.name}'s profile`}
                         >
-                          {comment.user?.fullName || comment.user?.name}
+                          {comment.user?.name}
                         </p>
                         <p className="text-sm text-foreground">{comment.commentText}</p>
                         <div className="flex items-center gap-2 mt-1">
@@ -384,17 +380,17 @@ const PostCard = ({
                                   <div 
                                     className="w-6 h-6 rounded-full bg-gradient-to-br from-green-50 to-yellow-50 border border-gray-200 shadow-sm flex items-center justify-center text-xs cursor-pointer hover:scale-105 transition-transform"
                                     onClick={() => reply.user?.id && navigate(`/user/${reply.user.id}`)}
-                                    title={`View ${reply.user?.fullName || reply.user?.name}'s profile`}
+                                    title={`View ${reply.user?.name}'s profile`}
                                   >
-                                    {getGenderEmoji(reply.user?.gender)}
+                                    {getAvatarByGender(reply.user?.gender)}
                                   </div>
                                   <div className="flex-1">
                                     <p 
                                       className="text-xs font-semibold cursor-pointer hover:text-primary transition-colors"
                                       onClick={() => reply.user?.id && navigate(`/user/${reply.user.id}`)}
-                                      title={`View ${reply.user?.fullName || reply.user?.name}'s profile`}
+                                      title={`View ${reply.user?.name}'s profile`}
                                     >
-                                      {reply.user?.fullName || reply.user?.name}
+                                      {reply.user?.name}
                                     </p>
                                     <p className="text-xs text-foreground">{reply.commentText}</p>
                                     <span className="text-xs text-muted-foreground">

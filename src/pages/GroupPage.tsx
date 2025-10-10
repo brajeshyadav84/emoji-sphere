@@ -9,6 +9,7 @@ import GroupSidebar from "@/components/GroupSidebar";
 import AdvertisementSpace from "@/components/AdvertisementSpace";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { getAvatarByGender } from "@/utils/avatarUtils";
 
 interface Post {
   id: string;
@@ -17,6 +18,7 @@ interface Post {
   user_id: string; // Add user_id field
   profiles: {
     name: string;
+    gender?: string; // Add gender field
   };
   post_likes: { id: string }[];
   post_comments: { id: string }[];
@@ -85,14 +87,14 @@ const GroupPage = () => {
       const userIds = data.map(post => post.user_id);
       const { data: profilesData } = await supabase
         .from("profiles")
-        .select("id, name")
+        .select("id, name, gender")
         .in("id", userIds);
 
       const profilesMap = new Map(profilesData?.map(p => [p.id, p]) || []);
       
       const postsWithProfiles = data.map(post => ({
         ...post,
-        profiles: profilesMap.get(post.user_id) || { name: "Unknown" }
+        profiles: profilesMap.get(post.user_id) || { name: "Unknown", gender: undefined }
       }));
 
       setPosts(postsWithProfiles as any);
@@ -143,12 +145,13 @@ const GroupPage = () => {
                   key={post.id}
                   postId={post.id}
                   author={post.profiles?.name || "Unknown"}
-                  avatar="👤"
+                  avatar={getAvatarByGender(post.profiles?.gender)}
                   time={new Date(post.created_at).toLocaleDateString()}
                   content={post.content}
                   likes={post.post_likes?.length || 0}
                   comments={post.post_comments?.length || 0}
                   userId={post.user_id}
+                  userGender={post.profiles?.gender}
                   onUpdate={fetchPosts}
                 />
               ))

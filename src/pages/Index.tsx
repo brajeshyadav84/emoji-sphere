@@ -3,7 +3,7 @@ import Hero from "@/components/Hero";
 import Sidebar from "@/components/Sidebar";
 import CreatePost from "@/components/CreatePost";
 import PostCard from "@/components/PostCard";
-import PostsFeed from "@/components/PostsFeed";
+import PostsFeedSwitcher from "@/components/PostsFeedSwitcher";
 import TodaysChallenge from "@/components/TodaysChallenge";
 import TopIdioms from "@/components/TopIdioms";
 import HomeworkHelper from "@/components/HomeworkHelper";
@@ -27,8 +27,8 @@ const Index = () => {
           <div className="lg:col-span-6 space-y-3 md:space-y-6 min-w-0 w-full">
             <CreatePost />
             
-            {/* Real posts from backend API */}
-            <PostsFeed />
+            {/* Posts feed with switching capability between regular and stored procedure */}
+            <PostsFeedSwitcher />
             
             
           </div>

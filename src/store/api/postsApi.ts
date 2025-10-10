@@ -74,6 +74,48 @@ export interface CommentResponse {
   updatedAt: string;
 }
 
+// New types for detailed posts from stored procedure
+export interface ReplyWithDetailsResponse {
+  replyId: number;
+  replyText: string;
+  repliedBy: string;
+  replyCreatedAt: string;
+}
+
+export interface CommentWithDetailsResponse {
+  commentId: number;
+  commentText: string;
+  commentedBy: string;
+  commentCreatedAt: string;
+  likeCount: number;
+  replies: ReplyWithDetailsResponse[];
+}
+
+export interface PostWithDetailsResponse {
+  postId: number;
+  userId: number;
+  userName: string;
+  gender: string;
+  country: string;
+  content: string;
+  mediaUrl?: string;
+  createdAt: string;
+  updatedAt: string;
+  likeCount: number;
+  commentCount: number;
+  comments: CommentWithDetailsResponse[];
+}
+
+export interface PostsWithDetailsResponse {
+  content: PostWithDetailsResponse[];
+  totalElements: number;
+  totalPages: number;
+  size: number;
+  number: number;
+  first: boolean;
+  last: boolean;
+}
+
 // Extended API slice with posts endpoints
 export const postsApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -83,9 +125,25 @@ export const postsApi = apiSlice.injectEndpoints({
       size?: number;
       sortBy?: string;
       sortDir?: string;
+      useStoredProcedure?: boolean;
+    }>({
+      query: ({ page = 0, size = 10, sortBy = 'createdAt', sortDir = 'desc', useStoredProcedure = false } = {}) => ({
+        url: '/posts',
+        method: 'GET',
+        params: { page, size, sortBy, sortDir, useStoredProcedure },
+      }),
+      providesTags: ['Post'],
+    }),
+
+    // Get posts with complete details using stored procedure
+    getPostsWithDetails: builder.query<PostsWithDetailsResponse, {
+      page?: number;
+      size?: number;
+      sortBy?: string;
+      sortDir?: string;
     }>({
       query: ({ page = 0, size = 10, sortBy = 'createdAt', sortDir = 'desc' } = {}) => ({
-        url: '/posts',
+        url: '/posts/with-details',
         method: 'GET',
         params: { page, size, sortBy, sortDir },
       }),
@@ -195,6 +253,7 @@ export const postsApi = apiSlice.injectEndpoints({
 // Export hooks for usage in functional components
 export const {
   useGetPostsQuery,
+  useGetPostsWithDetailsQuery,
   useGetPostByIdQuery,
   useGetPostWithCommentsQuery,
   useCreatePostMutation,

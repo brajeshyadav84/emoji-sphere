@@ -12,6 +12,7 @@ export interface UserResponse {
   name: string;
   email?: string;
   profilePictureUrl?: string;
+  gender?: string;
 }
 
 export interface CommentResponse {

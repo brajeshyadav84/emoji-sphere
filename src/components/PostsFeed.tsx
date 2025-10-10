@@ -7,9 +7,10 @@ import { getAvatarByGender } from "@/utils/avatarUtils";
 
 interface PostsFeedProps {
   className?: string;
+  useStoredProcedure?: boolean;
 }
 
-const PostsFeed = ({ className = "" }: PostsFeedProps) => {
+const PostsFeed = ({ className = "", useStoredProcedure = false }: PostsFeedProps) => {
   const [page, setPage] = useState(0);
   const [size] = useState(10);
   
@@ -24,6 +25,7 @@ const PostsFeed = ({ className = "" }: PostsFeedProps) => {
     size,
     sortBy: 'createdAt',
     sortDir: 'desc',
+    useStoredProcedure,
   });
 
   const handleRefresh = () => {
@@ -117,6 +119,7 @@ const PostsFeed = ({ className = "" }: PostsFeedProps) => {
           likes={post.likesCount}
           comments={post.commentsCount}
           userId={post.author.id.toString()}
+          userGender={post.author.gender}
           isLikedByCurrentUser={post.isLikedByCurrentUser}
           onUpdate={refetch}
         />
