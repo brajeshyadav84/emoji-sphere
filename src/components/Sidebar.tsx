@@ -12,7 +12,8 @@ const Sidebar = () => {
     { icon: "👥", label: "Groups", path: "/groups" },
     { icon: "💬", label: "Messages", path: "/chat" },
     { icon: "🎮", label: "Fun Games", path: "/games" },
-    { icon: "📹", label: "Online Classes", path: "/onlineclasses" },
+    { icon: "�", label: "Exams", path: "/exams" },
+    { icon: "�📹", label: "Online Classes", path: "/onlineclasses" },
     { icon: "🤔", label: "Homework Help", path: "/ask-me" },
   ];
 
@@ -27,9 +28,17 @@ const Sidebar = () => {
           {menuItems.map((item, index) => (
             <Button
               key={index}
-              variant={location.pathname === item.path ? "default" : "ghost"}
+              variant={
+                (item.path === "/exams" && (location.pathname === item.path || location.pathname.startsWith("/exam/"))) ||
+                (item.path !== "/exams" && location.pathname === item.path) 
+                  ? "default" 
+                  : "ghost"
+              }
               className={`w-full justify-start gap-3 text-base ${
-                location.pathname === item.path ? "gradient-primary font-semibold" : ""
+                (item.path === "/exams" && (location.pathname === item.path || location.pathname.startsWith("/exam/"))) ||
+                (item.path !== "/exams" && location.pathname === item.path)
+                  ? "gradient-primary font-semibold" 
+                  : ""
               }`}
               onClick={() => navigate(item.path)}
             >

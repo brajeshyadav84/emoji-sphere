@@ -54,7 +54,7 @@ const Dashboard: React.FC = () => {
         <div className="flex flex-col gap-4">
           <div className="flex items-center justify-between">
             <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-600 via-blue-600 to-indigo-600 bg-clip-text text-transparent">
-              User Dashboard! 🎯
+              User Dashboard!
             </h1>
             <Badge variant="outline" className="text-sm bg-gradient-to-r from-purple-100 to-blue-100 text-purple-700 border-purple-300">
               Welcome back! 👋

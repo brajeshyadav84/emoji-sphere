@@ -131,32 +131,6 @@ const Header = () => {
             </span>
           </Button>
           <Button 
-            variant={isActive("/exams") || location.pathname.startsWith("/exam/") ? "default" : "ghost"}
-            className={`text-sm lg:text-base font-medium whitespace-nowrap min-w-fit px-2 lg:px-3 ${
-              isActive("/exams") || location.pathname.startsWith("/exam/") 
-                ? "bg-gradient-to-r from-indigo-400 to-blue-500 text-white border-0" 
-                : "text-foreground hover:bg-accent hover:text-accent-foreground"
-            }`}
-            onClick={() => navigate("/exams")}
-          >
-            <span className="flex items-center gap-1">
-              📝 <span className="hidden lg:inline">Exams</span>
-            </span>
-          </Button>
-          <Button 
-            variant={isActive("/onlineclasses") ? "default" : "ghost"}
-            className={`text-sm lg:text-base font-medium whitespace-nowrap min-w-fit px-2 lg:px-3 ${
-              isActive("/onlineclasses") 
-                ? "bg-gradient-to-r from-green-400 to-blue-500 text-white border-0" 
-                : "text-foreground hover:bg-accent hover:text-accent-foreground"
-            }`}
-            onClick={() => navigate("/onlineclasses")}
-          >
-            <span className="flex items-center gap-1">
-              📹 <span className="hidden lg:inline">Online Classes</span>
-            </span>
-          </Button>
-          <Button 
             variant={isActive("/admin") || location.pathname.startsWith("/admin/") ? "default" : "ghost"}
             className={`text-sm lg:text-base font-medium whitespace-nowrap min-w-fit px-2 lg:px-3 ${
               isActive("/admin") || location.pathname.startsWith("/admin/") 
@@ -268,22 +242,6 @@ const Header = () => {
               </span>
             </Button>
             <Button 
-              variant={isActive("/onlineclasses") ? "default" : "ghost"}
-              className={`text-base font-medium justify-start w-full ${
-                isActive("/onlineclasses") 
-                  ? "bg-gradient-to-r from-green-400 to-blue-500 text-white border-0" 
-                  : "text-foreground hover:bg-accent hover:text-accent-foreground"
-              }`}
-              onClick={() => {
-                navigate("/onlineclasses");
-                setIsMobileMenuOpen(false);
-              }}
-            >
-              <span className="flex items-center gap-2">
-                📹 <span>Online Classes</span>
-              </span>
-            </Button>
-            <Button 
               variant={isActive("/games") ? "default" : "ghost"}
               className={`text-base font-medium justify-start w-full ${
                 isActive("/games") 
@@ -313,22 +271,6 @@ const Header = () => {
             >
               <span className="flex items-center gap-2">
                 🪐 <span>Planets</span>
-              </span>
-            </Button>
-            <Button 
-              variant={isActive("/exams") || location.pathname.startsWith("/exam/") ? "default" : "ghost"}
-              className={`text-base font-medium justify-start w-full ${
-                isActive("/exams") || location.pathname.startsWith("/exam/") 
-                  ? "bg-gradient-to-r from-indigo-400 to-blue-500 text-white border-0" 
-                  : "text-foreground hover:bg-accent hover:text-accent-foreground"
-              }`}
-              onClick={() => {
-                navigate("/exams");
-                setIsMobileMenuOpen(false);
-              }}
-            >
-              <span className="flex items-center gap-2">
-                📝 <span>Exams</span>
               </span>
             </Button>
             {user && (
