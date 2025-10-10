@@ -41,7 +41,7 @@ const baseQueryWithErrorHandling: BaseQueryFn = async (args, api, extraOptions) 
 export const apiSlice = createApi({
   reducerPath: 'api',
   baseQuery: baseQueryWithErrorHandling,
-  tagTypes: ['User', 'Post', 'Group', 'Zoom'],
+  tagTypes: ['User', 'Post', 'Group', 'Zoom', 'Comment'],
   endpoints: () => ({}),
 });
 

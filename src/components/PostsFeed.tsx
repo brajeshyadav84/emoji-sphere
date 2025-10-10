@@ -109,7 +109,7 @@ const PostsFeed = ({ className = "" }: PostsFeedProps) => {
       {postsData.content.map((post) => (
         <PostCard
           key={post.id}
-          postId={post.id.toString()}
+          postId={post.id}
           author={post.author.name}
           avatar={getAvatarByGender(post.author.gender)}
           time={new Date(post.createdAt).toLocaleDateString()}
@@ -117,6 +117,7 @@ const PostsFeed = ({ className = "" }: PostsFeedProps) => {
           likes={post.likesCount}
           comments={post.commentsCount}
           userId={post.author.id.toString()}
+          isLikedByCurrentUser={post.isLikedByCurrentUser}
           onUpdate={refetch}
         />
       ))}

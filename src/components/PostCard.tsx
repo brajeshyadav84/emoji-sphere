@@ -5,55 +5,120 @@ import { Card } from "./ui/card";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Heart, MessageCircle, Share2, Send } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { 
+  useGetCommentsByPostQuery, 
+  useCreateCommentMutation,
+  useTogglePostLikeMutation 
+} from "@/store/api/commentsApi";
 
 interface PostCardProps {
-  postId: string;
+  postId: number; // Changed from string to number
   author: string;
   avatar: string;
   time: string;
   content: string;
   likes: number;
   comments: number;
-  userId?: string; // Add userId prop
+  userId?: string;
+  isLikedByCurrentUser?: boolean; // Add this prop
   onUpdate?: () => void;
 }
 
+// Update the Comment interface to match backend response
 interface Comment {
-  id: string;
-  content: string;
-  created_at: string;
-  user_id: string; // Add user_id
-  profiles: {
+  id: number;
+  commentText: string;
+  createdAt: string;
+  updatedAt: string;
+  postId: number;
+  parentCommentId: number | null;
+  user: {
+    id: string;
+    fullName: string;
     name: string;
+    mobile: string;
+    email: string;
+    age: number;
+    country: string;
+    gender: string;
+    isVerified: boolean;
+    role: string;
+    createdAt: string;
   };
-  comment_replies: Reply[];
+  replies: Reply[];
+  likesCount: number;
+  isLikedByCurrentUser: boolean;
 }
 
 interface Reply {
-  id: string;
-  content: string;
-  created_at: string;
-  user_id: string; // Add user_id
-  profiles: {
+  id: number;
+  commentText: string;
+  createdAt: string;
+  updatedAt: string;
+  postId: number;
+  parentCommentId: number;
+  user: {
+    id: string;
+    fullName: string;
     name: string;
+    mobile: string;
+    email: string;
+    age: number;
+    country: string;
+    gender: string;
+    isVerified: boolean;
+    role: string;
+    createdAt: string;
   };
+  likesCount: number;
+  isLikedByCurrentUser: boolean;
 }
 
-const PostCard = ({ postId, author, avatar, time, content, likes, comments, userId, onUpdate }: PostCardProps) => {
+const PostCard = ({ 
+  postId, 
+  author, 
+  avatar, 
+  time, 
+  content, 
+  likes, 
+  comments, 
+  userId, 
+  isLikedByCurrentUser = false,
+  onUpdate 
+}: PostCardProps) => {
   const navigate = useNavigate();
-  const [liked, setLiked] = useState(false);
+  const [liked, setLiked] = useState(isLikedByCurrentUser);
   const [likeCount, setLikeCount] = useState(likes);
   const [showComments, setShowComments] = useState(false);
-  const [commentsList, setCommentsList] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState("");
-  const [replyTo, setReplyTo] = useState<string | null>(null);
+  const [replyTo, setReplyTo] = useState<number | null>(null);
   const [replyContent, setReplyContent] = useState("");
   const { toast } = useToast();
   const isMobile = useIsMobile();
   const [showShareMenu, setShowShareMenu] = useState(false);
   const postUrl = typeof window !== "undefined" ? `${window.location.origin}/post/${postId}` : "";
+
+  // API hooks
+  const { 
+    data: commentsData, 
+    isLoading: commentsLoading,
+    refetch: refetchComments 
+  } = useGetCommentsByPostQuery(
+    { postId, page: 0, size: 10 }, 
+    { skip: !showComments }
+  );
+  
+  const [createComment] = useCreateCommentMutation();
+  const [togglePostLike] = useTogglePostLikeMutation();
+
+  const getGenderEmoji = (gender: string) => {
+    switch (gender?.toLowerCase()) {
+      case 'male': return '👨';
+      case 'female': return '👩';
+      default: return '👤';
+    }
+  };
 
   const handleShare = async () => {
     const shareData = {
@@ -73,150 +138,81 @@ const PostCard = ({ postId, author, avatar, time, content, likes, comments, user
   };
 
   useEffect(() => {
-    checkIfLiked();
-    if (showComments) {
-      fetchComments();
-    }
-  }, [showComments]);
-
-  const checkIfLiked = async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return;
-
-    const { data } = await supabase
-      .from("post_likes")
-      .select("id")
-      .eq("post_id", postId)
-      .eq("user_id", user.id)
-      .single();
-
-    setLiked(!!data);
-  };
+    setLiked(isLikedByCurrentUser);
+    setLikeCount(likes);
+  }, [isLikedByCurrentUser, likes]);
 
   const handleLike = async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
+    try {
+      await togglePostLike(postId).unwrap();
+      setLiked(!liked);
+      setLikeCount(prev => liked ? prev - 1 : prev + 1);
+      onUpdate?.();
+    } catch (error) {
       toast({
         title: "Error",
-        description: "You must be logged in to like posts",
+        description: "Failed to update like. Please try again.",
         variant: "destructive",
       });
-      return;
-    }
-
-    if (liked) {
-      const { error } = await supabase
-        .from("post_likes")
-        .delete()
-        .eq("post_id", postId)
-        .eq("user_id", user.id);
-
-      if (!error) {
-        setLiked(false);
-        setLikeCount(likeCount - 1);
-      }
-    } else {
-      const { error } = await supabase
-        .from("post_likes")
-        .insert({ post_id: postId, user_id: user.id });
-
-      if (!error) {
-        setLiked(true);
-        setLikeCount(likeCount + 1);
-      }
-    }
-  };
-
-  const fetchComments = async () => {
-    const { data, error } = await supabase
-      .from("post_comments")
-      .select(`
-        id,
-        content,
-        created_at,
-        user_id,
-        profiles:user_id (name),
-        comment_replies (
-          id,
-          content,
-          created_at,
-          user_id,
-          profiles:user_id (name)
-        )
-      `)
-      .eq("post_id", postId)
-      .order("created_at", { ascending: true });
-
-    if (!error && data) {
-      setCommentsList(data as any);
     }
   };
 
   const handleAddComment = async () => {
     if (!newComment.trim()) return;
 
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
-      toast({
-        title: "Error",
-        description: "You must be logged in to comment",
-        variant: "destructive",
-      });
-      return;
-    }
+    try {
+      await createComment({
+        postId,
+        data: {
+          content: newComment.trim(),
+          parentCommentId: replyTo || undefined,
+        }
+      }).unwrap();
 
-    const { error } = await supabase
-      .from("post_comments")
-      .insert({
-        post_id: postId,
-        user_id: user.id,
-        content: newComment,
-      });
-
-    if (error) {
-      toast({
-        title: "Error",
-        description: "Failed to add comment",
-        variant: "destructive",
-      });
-    } else {
       setNewComment("");
-      fetchComments();
+      setReplyTo(null);
+      refetchComments();
       onUpdate?.();
+      
+      toast({
+        title: "Success",
+        description: "Comment added successfully!",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to add comment. Please try again.",
+        variant: "destructive",
+      });
     }
   };
 
-  const handleAddReply = async (commentId: string) => {
+  const handleAddReply = async (commentId: number) => {
     if (!replyContent.trim()) return;
 
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
-      toast({
-        title: "Error",
-        description: "You must be logged in to reply",
-        variant: "destructive",
-      });
-      return;
-    }
+    try {
+      await createComment({
+        postId,
+        data: {
+          content: replyContent.trim(),
+          parentCommentId: commentId,
+        }
+      }).unwrap();
 
-    const { error } = await supabase
-      .from("comment_replies")
-      .insert({
-        comment_id: commentId,
-        user_id: user.id,
-        content: replyContent,
-      });
-
-    if (error) {
-      toast({
-        title: "Error",
-        description: "Failed to add reply",
-        variant: "destructive",
-      });
-    } else {
       setReplyContent("");
       setReplyTo(null);
-      fetchComments();
+      refetchComments();
+      
+      toast({
+        title: "Success",
+        description: "Reply added successfully!",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to add reply. Please try again.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -327,34 +323,43 @@ const PostCard = ({ postId, author, avatar, time, content, likes, comments, user
                 </Button>
               </div>
 
+              {commentsLoading && (
+                <div className="text-center text-muted-foreground">Loading comments...</div>
+              )}
+
               <div className="space-y-3">
-                {commentsList.map((comment) => (
+                {commentsData?.content?.map((comment) => (
                   <div key={comment.id} className="bg-muted/50 rounded-lg p-3">
                     <div className="flex items-start gap-2">
                       <div 
                         className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-50 to-purple-50 border border-gray-200 shadow-sm flex items-center justify-center text-sm cursor-pointer hover:scale-105 transition-transform"
-                        onClick={() => comment.user_id && navigate(`/user/${comment.user_id}`)}
-                        title={`View ${comment.profiles?.name}'s profile`}
+                        onClick={() => comment.user?.id && navigate(`/user/${comment.user.id}`)}
+                        title={`View ${comment.user?.fullName || comment.user?.name}'s profile`}
                       >
-                        👤
+                        {getGenderEmoji(comment.user?.gender)}
                       </div>
                       <div className="flex-1">
                         <p 
                           className="text-sm font-semibold cursor-pointer hover:text-primary transition-colors"
-                          onClick={() => comment.user_id && navigate(`/user/${comment.user_id}`)}
-                          title={`View ${comment.profiles?.name}'s profile`}
+                          onClick={() => comment.user?.id && navigate(`/user/${comment.user.id}`)}
+                          title={`View ${comment.user?.fullName || comment.user?.name}'s profile`}
                         >
-                          {comment.profiles?.name}
+                          {comment.user?.fullName || comment.user?.name}
                         </p>
-                        <p className="text-sm text-foreground">{comment.content}</p>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="text-xs mt-1"
-                          onClick={() => setReplyTo(comment.id)}
-                        >
-                          Reply
-                        </Button>
+                        <p className="text-sm text-foreground">{comment.commentText}</p>
+                        <div className="flex items-center gap-2 mt-1">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="text-xs"
+                            onClick={() => setReplyTo(comment.id)}
+                          >
+                            Reply
+                          </Button>
+                          <span className="text-xs text-muted-foreground">
+                            {comment.likesCount} {comment.likesCount === 1 ? 'like' : 'likes'}
+                          </span>
+                        </div>
 
                         {replyTo === comment.id && (
                           <div className="flex gap-2 mt-2">
@@ -371,27 +376,30 @@ const PostCard = ({ postId, author, avatar, time, content, likes, comments, user
                           </div>
                         )}
 
-                        {comment.comment_replies && comment.comment_replies.length > 0 && (
+                        {comment.replies && comment.replies.length > 0 && (
                           <div className="ml-4 mt-2 space-y-2">
-                            {comment.comment_replies.map((reply) => (
+                            {comment.replies.map((reply) => (
                               <div key={reply.id} className="bg-background/50 rounded-lg p-2">
                                 <div className="flex items-start gap-2">
                                   <div 
                                     className="w-6 h-6 rounded-full bg-gradient-to-br from-green-50 to-yellow-50 border border-gray-200 shadow-sm flex items-center justify-center text-xs cursor-pointer hover:scale-105 transition-transform"
-                                    onClick={() => reply.user_id && navigate(`/user/${reply.user_id}`)}
-                                    title={`View ${reply.profiles?.name}'s profile`}
+                                    onClick={() => reply.user?.id && navigate(`/user/${reply.user.id}`)}
+                                    title={`View ${reply.user?.fullName || reply.user?.name}'s profile`}
                                   >
-                                    👤
+                                    {getGenderEmoji(reply.user?.gender)}
                                   </div>
                                   <div className="flex-1">
                                     <p 
                                       className="text-xs font-semibold cursor-pointer hover:text-primary transition-colors"
-                                      onClick={() => reply.user_id && navigate(`/user/${reply.user_id}`)}
-                                      title={`View ${reply.profiles?.name}'s profile`}
+                                      onClick={() => reply.user?.id && navigate(`/user/${reply.user.id}`)}
+                                      title={`View ${reply.user?.fullName || reply.user?.name}'s profile`}
                                     >
-                                      {reply.profiles?.name}
+                                      {reply.user?.fullName || reply.user?.name}
                                     </p>
-                                    <p className="text-xs text-foreground">{reply.content}</p>
+                                    <p className="text-xs text-foreground">{reply.commentText}</p>
+                                    <span className="text-xs text-muted-foreground">
+                                      {reply.likesCount} {reply.likesCount === 1 ? 'like' : 'likes'}
+                                    </span>
                                   </div>
                                 </div>
                               </div>
