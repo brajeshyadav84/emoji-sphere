@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { User, Settings, Users, BookOpen, MessageSquare, BarChart3 } from 'lucide-react';
 import { useGetDashboardStatsQuery } from '@/store/api/userApi';
+import { useAppSelector } from '@/store/hooks';
 import Header from '@/components/Header';
 
 // Import the separate components
@@ -15,9 +16,28 @@ import FeedbackSystem from './FeedbackSystem';
 
 const Dashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState('profile');
-  const [userId] = useState('current-user-id'); // This should come from auth context
+  const [currentTime, setCurrentTime] = useState(new Date());
+  const user = useAppSelector((state) => state.auth.user);
+  const userId = user?.id || 'current-user-id';
   
   const { data: dashboardStats, isLoading: statsLoading } = useGetDashboardStatsQuery(userId);
+
+  // Update time every minute
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 60000); // Update every 60 seconds (1 minute)
+
+    return () => clearInterval(timer); // Cleanup on component unmount
+  }, []);
+
+  // Function to get greeting based on current time
+  const getGreeting = () => {
+    const hour = currentTime.getHours();
+    if (hour < 12) return "Good morning! 🌅";
+    if (hour < 17) return "Good afternoon! ☀️";
+    return "Good evening! 🌙";
+  };
 
   const tabs = [
     { id: 'profile', label: 'Profile', icon: User },
@@ -57,7 +77,7 @@ const Dashboard: React.FC = () => {
               User Dashboard!
             </h1>
             <Badge variant="outline" className="text-sm bg-gradient-to-r from-purple-100 to-blue-100 text-purple-700 border-purple-300">
-              Welcome back! 👋
+              {getGreeting()}
             </Badge>
           </div>
           <p className="text-lg text-gray-600">

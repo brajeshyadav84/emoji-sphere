@@ -2,43 +2,31 @@ import { Bell, Menu, User, X, LogIn, LogOut, Video } from "lucide-react";
 import { Button } from "./ui/button";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import type { User as SupabaseUser } from "@supabase/supabase-js";
+import { useDispatch } from "react-redux";
 import { toast } from "./ui/use-toast";
+import { useAppSelector } from "@/store/hooks";
+import { logout, loadUserFromStorage } from "@/store/authSlice";
+import UserDropdown from "./UserDropdown";
 
 const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const dispatch = useDispatch();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [user, setUser] = useState<SupabaseUser | null>(null);
+  const { user, isAuthenticated } = useAppSelector((state) => state.auth);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
+    // Load user from localStorage on component mount
+    dispatch(loadUserFromStorage());
+  }, [dispatch]);
+
+  const handleLogout = () => {
+    dispatch(logout());
+    toast({
+      title: "Logged out",
+      description: "You have been successfully logged out.",
     });
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
-
-  const handleLogout = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-      toast({
-        title: "Error",
-        description: "Failed to logout. Please try again.",
-        variant: "destructive",
-      });
-    } else {
-      toast({
-        title: "Logged out",
-        description: "You have been successfully logged out.",
-      });
-      navigate("/auth/login");
-    }
+    navigate("/");
   };
 
   const isActive = (path: string) => location.pathname === path;
@@ -146,34 +134,14 @@ const Header = () => {
         </nav>
 
         <div className="flex items-center gap-1 md:gap-2">
-          {user ? (
+          {isAuthenticated && user ? (
             <>
               <Button variant="ghost" size="icon" className="relative h-8 w-8 md:h-10 md:w-10">
                 <Bell className="h-4 w-4 md:h-5 md:w-5" />
                 <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-secondary" />
               </Button>
-              <Button 
-                variant={isActive("/dashboard") ? "default" : "ghost"} 
-                size="icon" 
-                className={`h-8 w-8 md:h-10 md:w-10 ${
-                  isActive("/dashboard") 
-                    ? "bg-gradient-to-r from-primary to-purple-500 text-white border-0" 
-                    : ""
-                }`}
-                onClick={() => navigate("/dashboard")}
-                title="Dashboard"
-              >
-                <User className="h-4 w-4 md:h-5 md:w-5" />
-              </Button>
-              <Button 
-                variant="ghost" 
-                size="sm"
-                onClick={handleLogout}
-                className="hidden md:flex"
-              >
-                <LogOut className="h-4 w-4 mr-2" />
-                Logout
-              </Button>
+              <UserDropdown />
+              
             </>
           ) : (
             <Button 
@@ -273,7 +241,7 @@ const Header = () => {
                 🪐 <span>Planets</span>
               </span>
             </Button>
-            {user && (
+            {isAuthenticated && user && (
               <Button 
                 variant={isActive("/dashboard") ? "default" : "ghost"}
                 className={`text-base font-medium justify-start w-full ${
@@ -307,7 +275,7 @@ const Header = () => {
                 👨‍💼 <span>Admin</span>
               </span>
             </Button>
-            {user && (
+            {isAuthenticated && user && (
               <Button 
                 variant="ghost"
                 className="text-base font-medium justify-start w-full text-foreground hover:bg-accent hover:text-accent-foreground"

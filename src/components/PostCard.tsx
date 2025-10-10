@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Card } from "./ui/card";
 import { Button } from "./ui/button";
@@ -15,6 +16,7 @@ interface PostCardProps {
   content: string;
   likes: number;
   comments: number;
+  userId?: string; // Add userId prop
   onUpdate?: () => void;
 }
 
@@ -22,6 +24,7 @@ interface Comment {
   id: string;
   content: string;
   created_at: string;
+  user_id: string; // Add user_id
   profiles: {
     name: string;
   };
@@ -32,12 +35,14 @@ interface Reply {
   id: string;
   content: string;
   created_at: string;
+  user_id: string; // Add user_id
   profiles: {
     name: string;
   };
 }
 
-const PostCard = ({ postId, author, avatar, time, content, likes, comments, onUpdate }: PostCardProps) => {
+const PostCard = ({ postId, author, avatar, time, content, likes, comments, userId, onUpdate }: PostCardProps) => {
+  const navigate = useNavigate();
   const [liked, setLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(likes);
   const [showComments, setShowComments] = useState(false);
@@ -129,11 +134,13 @@ const PostCard = ({ postId, author, avatar, time, content, likes, comments, onUp
         id,
         content,
         created_at,
+        user_id,
         profiles:user_id (name),
         comment_replies (
           id,
           content,
           created_at,
+          user_id,
           profiles:user_id (name)
         )
       `)
@@ -212,15 +219,32 @@ const PostCard = ({ postId, author, avatar, time, content, likes, comments, onUp
       fetchComments();
     }
   };
+
+  const handleAvatarClick = () => {
+    if (userId) {
+      navigate(`/user/${userId}`);
+    }
+  };
+  
   return (
     <Card className="p-3 md:p-6 shadow-playful hover:shadow-hover transition-all duration-300 mx-0 w-full max-w-full">
       <div className="flex items-start gap-2 md:gap-4">
-        <div className="w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center text-xl md:text-2xl flex-shrink-0 gradient-primary">
+        <div 
+          className="w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center text-xl md:text-2xl flex-shrink-0 bg-gradient-to-br from-orange-50 to-pink-50 border border-gray-200 shadow-sm cursor-pointer hover:scale-105 transition-transform"
+          onClick={handleAvatarClick}
+          title={`View ${author}'s profile`}
+        >
           {avatar}
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-2">
-            <h3 className="font-bold text-foreground text-sm md:text-base truncate">{author}</h3>
+            <h3 
+              className="font-bold text-foreground text-sm md:text-base truncate cursor-pointer hover:text-primary transition-colors"
+              onClick={handleAvatarClick}
+              title={`View ${author}'s profile`}
+            >
+              {author}
+            </h3>
             <span className="text-xs md:text-sm text-muted-foreground flex-shrink-0">• {time}</span>
           </div>
           <p className="text-sm md:text-base text-foreground mb-3 md:mb-4 leading-relaxed break-words">{content}</p>
@@ -307,11 +331,21 @@ const PostCard = ({ postId, author, avatar, time, content, likes, comments, onUp
                 {commentsList.map((comment) => (
                   <div key={comment.id} className="bg-muted/50 rounded-lg p-3">
                     <div className="flex items-start gap-2">
-                      <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-sm">
+                      <div 
+                        className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-50 to-purple-50 border border-gray-200 shadow-sm flex items-center justify-center text-sm cursor-pointer hover:scale-105 transition-transform"
+                        onClick={() => comment.user_id && navigate(`/user/${comment.user_id}`)}
+                        title={`View ${comment.profiles?.name}'s profile`}
+                      >
                         👤
                       </div>
                       <div className="flex-1">
-                        <p className="text-sm font-semibold">{comment.profiles?.name}</p>
+                        <p 
+                          className="text-sm font-semibold cursor-pointer hover:text-primary transition-colors"
+                          onClick={() => comment.user_id && navigate(`/user/${comment.user_id}`)}
+                          title={`View ${comment.profiles?.name}'s profile`}
+                        >
+                          {comment.profiles?.name}
+                        </p>
                         <p className="text-sm text-foreground">{comment.content}</p>
                         <Button
                           variant="ghost"
@@ -342,11 +376,21 @@ const PostCard = ({ postId, author, avatar, time, content, likes, comments, onUp
                             {comment.comment_replies.map((reply) => (
                               <div key={reply.id} className="bg-background/50 rounded-lg p-2">
                                 <div className="flex items-start gap-2">
-                                  <div className="w-6 h-6 rounded-full bg-secondary/10 flex items-center justify-center text-xs">
+                                  <div 
+                                    className="w-6 h-6 rounded-full bg-gradient-to-br from-green-50 to-yellow-50 border border-gray-200 shadow-sm flex items-center justify-center text-xs cursor-pointer hover:scale-105 transition-transform"
+                                    onClick={() => reply.user_id && navigate(`/user/${reply.user_id}`)}
+                                    title={`View ${reply.profiles?.name}'s profile`}
+                                  >
                                     👤
                                   </div>
                                   <div className="flex-1">
-                                    <p className="text-xs font-semibold">{reply.profiles?.name}</p>
+                                    <p 
+                                      className="text-xs font-semibold cursor-pointer hover:text-primary transition-colors"
+                                      onClick={() => reply.user_id && navigate(`/user/${reply.user_id}`)}
+                                      title={`View ${reply.profiles?.name}'s profile`}
+                                    >
+                                      {reply.profiles?.name}
+                                    </p>
                                     <p className="text-xs text-foreground">{reply.content}</p>
                                   </div>
                                 </div>

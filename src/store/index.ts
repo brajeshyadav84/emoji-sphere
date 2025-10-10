@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/query';
 import { zoomApi } from './api/zoomApi';
 import apiSlice from './api/apiSlice';
+import authReducer from './authSlice';
 
 export const store = configureStore({
   reducer: {
@@ -9,9 +10,8 @@ export const store = configureStore({
     [zoomApi.reducerPath]: zoomApi.reducer,
     [apiSlice.reducerPath]: apiSlice.reducer,
     
-    // Regular slices would go here
-    // auth: authSlice.reducer,
-    // ui: uiSlice.reducer,
+    // Regular slices
+    auth: authReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

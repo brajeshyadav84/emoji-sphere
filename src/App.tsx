@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import useSecurity from "@/hooks/useSecurity";
+import ProtectedRoute from "@/components/ProtectedRoute";
 import Index from "./pages/Index";
 import Games from "./pages/Games";
 import Groups from "./pages/Groups";
@@ -30,6 +31,8 @@ import VerifyOTP from "./pages/auth/VerifyOTP";
 
 // User imports
 import Dashboard from "./pages/users/Dashboard";
+import UserInfo from "./pages/UserInfo";
+import ApiTest from "./pages/ApiTest";
 
 // Knowledge imports
 import Planets from "./pages/knowledge/Planets";
@@ -96,7 +99,13 @@ const App = () => {
           <Route path="/auth/verify-otp" element={<VerifyOTP />} />
           
           {/* User routes */}
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard" element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          } />
+          <Route path="/user/:userId" element={<UserInfo />} />
+          <Route path="/api-test" element={<ApiTest />} />
           
           {/* Game routes */}
           <Route path="/games/word-builder" element={<WordBuilder />} />

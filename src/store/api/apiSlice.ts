@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery, BaseQueryFn } from '@reduxjs/toolkit/query/react';
+import type { RootState } from '../index';
 
 const API_BASE_URL = 'http://localhost:8081/api';
 
@@ -11,10 +12,10 @@ const baseQueryWithErrorHandling: BaseQueryFn = async (args, api, extraOptions) 
       headers.set('Content-Type', 'application/json');
       
       // Add auth token if available
-      // const token = (getState() as RootState).auth?.token;
-      // if (token) {
-      //   headers.set('authorization', `Bearer ${token}`);
-      // }
+      const token = (getState() as RootState).auth?.token;
+      if (token) {
+        headers.set('authorization', `Bearer ${token}`);
+      }
       
       return headers;
     },

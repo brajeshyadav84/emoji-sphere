@@ -3,6 +3,7 @@ import Hero from "@/components/Hero";
 import Sidebar from "@/components/Sidebar";
 import CreatePost from "@/components/CreatePost";
 import PostCard from "@/components/PostCard";
+import PostsFeed from "@/components/PostsFeed";
 import TodaysChallenge from "@/components/TodaysChallenge";
 import TopIdioms from "@/components/TopIdioms";
 import HomeworkHelper from "@/components/HomeworkHelper";
@@ -11,33 +12,6 @@ import { useNavigate } from "react-router-dom";
 const Index = () => {
   const navigate = useNavigate();
   
-  const samplePosts = [
-    {
-      author: "Alex the Artist",
-      avatar: "🎨",
-      time: "2 hours ago",
-      content: "Just finished my rainbow painting! 🌈 It has all my favorite colors. What's your favorite color? 💜💙💚💛🧡❤️",
-      likes: 24,
-      comments: 8,
-    },
-    {
-      author: "Music Maker Maya",
-      avatar: "🎵",
-      time: "5 hours ago",
-      content: "Learning to play a new song on my keyboard today! Practice makes perfect! 🎹✨ Anyone else learning an instrument?",
-      likes: 18,
-      comments: 5,
-    },
-    {
-      author: "Science Sam",
-      avatar: "🔬",
-      time: "1 day ago",
-      content: "Did you know butterflies can taste with their feet?! 🦋 Science is so cool! What's your favorite science fact?",
-      likes: 42,
-      comments: 12,
-    },
-  ];
-
   return (
     <div className="min-h-screen bg-background overflow-x-hidden">
       <Header />
@@ -53,9 +27,10 @@ const Index = () => {
           <div className="lg:col-span-6 space-y-3 md:space-y-6 min-w-0 w-full">
             <CreatePost />
             
-            {samplePosts.map((post, index) => (
-              <PostCard key={index} postId={`sample-${index}`} {...post} />
-            ))}
+            {/* Real posts from backend API */}
+            <PostsFeed />
+            
+            
           </div>
 
           <div className="lg:col-span-3 hidden lg:block">

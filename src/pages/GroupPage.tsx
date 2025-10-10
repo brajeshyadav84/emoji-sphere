@@ -14,6 +14,7 @@ interface Post {
   id: string;
   content: string;
   created_at: string;
+  user_id: string; // Add user_id field
   profiles: {
     name: string;
   };
@@ -147,6 +148,7 @@ const GroupPage = () => {
                   content={post.content}
                   likes={post.post_likes?.length || 0}
                   comments={post.post_comments?.length || 0}
+                  userId={post.user_id}
                   onUpdate={fetchPosts}
                 />
               ))

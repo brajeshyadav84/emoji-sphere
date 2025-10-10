@@ -1,118 +1,79 @@
-// Content filtering utility
+// Content filtering utility - More reasonable filtering for educational platform
 const abusiveWords = [
-  'fuck',
-  'ass', 'hell', 'crap', 'suck', 'loser', 'dumb', 'moron', 'retard',
-  'shut up', 'go away', 'ugly', 'fat', 'weird', 'freak', 'nerd', 'jerk',
-  'asshole', 'bastard', 'dickhead',
-  'screw you', 'wtf', 
-  'noob', 'trash', 'garbage', 'worthless', 'pathetic', 'lame', 'gay',
-  'retarded', 'autistic', 'cancer', 'aids', 'disease', 'plague',
-  'kill yourself', 'kys', 'neck yourself', 'rope', 'an hero',
-  'fag', 'faggot', 'dyke', 'homo',
+  'fuck', 'fucking', 'fucked', 'fucker',
+  'shit', 'shitting', 'shitty',
+  'asshole', 'bastard', 'dickhead', 'bitch',
+  'retard', 'retarded',
+  'kill yourself', 'kys', 'neck yourself',
+  'fag', 'faggot', 'dyke',
   'nigger', 'nigga', 'spic', 'chink', 'gook', 'kike', 'wetback',
-  'terrorist', 'jihad', 'allahu akbar', 'bomb', 'explosion', 'massacre',
+  'terrorist', 'bomb threat', 'massacre', 'school shooting'
 ];
 
 const sexualContent = [
-  'sex', 'sexy', 'nude', 'naked', 'porn', 'breast', 'penis', 'vagina',
-  'orgasm', 'masturbate', 'horny', 'aroused', 'erotic', 'intimate',
-  'boobs', 'tits', 'dick', 'cock', 'pussy', 'ass', 'butt', 'booty',
-  'anal', 'oral', 'blow job', 'blowjob', 'handjob', 'cumshot', 'cum',
-  'jerk off', 'jack off', 'finger', 'fondle', 'grope', 'molest',
-  'rape', 'sexual', 'intercourse', 'threesome', 'foursome', 'orgy',
-  'dildo', 'vibrator', 'condom', 'lubricant', 'fetish', 'kinky',
-  'stripper', 'prostitute', 'whore', 'slut', 'bitch', 'milf',
-  'sexting', 'nudes', 'panties', 'bra', 'underwear', 'lingerie',
-  'makeout', 'hook up', 'one night stand', 'friends with benefits',
-  'boner', 'hard on', 'wet', 'moist', 'climax', 'squirt', 'spread',
-  'thrust', 'pound', 'bang', 'screw', 'ride', 'mount', 'hump',
-  'suck', 'lick', 'kiss', 'touch', 'feel', 'caress', 'stroke',
-  '69', 'missionary', 'doggy', 'cowgirl', 'spooning', 'bdsm',
-  'bondage', 'dominance', 'submission', 'sadism', 'masochism',
-  'porn hub', 'xvideos', 'redtube', 'youporn', 'adult', 'xxx',
-  'onlyfans', 'cam girl', 'escort', 'sugar daddy', 'sugar baby',
-  'netflix and chill', 'dtf', 'fwb', 'nsa', 'ons', 'sti', 'std'
+  'porn', 'pornography', 'nude', 'naked', 'nudes',
+  'penis', 'vagina', 'cock', 'pussy', 'dick',
+  'masturbate', 'masturbation', 'orgasm',
+  'blow job', 'blowjob', 'handjob', 'cumshot',
+  'jerk off', 'jack off',
+  'rape', 'sexual assault', 'molest',
+  'threesome', 'foursome', 'orgy',
+  'dildo', 'vibrator', 'sex toy',
+  'prostitute', 'whore', 'slut',
+  'sexting', 'send nudes',
+  'porn hub', 'pornhub', 'xvideos', 'redtube', 'youporn', 'xxx videos',
+  'onlyfans', 'cam girl', 'escort',
+  'netflix and chill', 'dtf', 'friends with benefits'
 ];
 
-// Function to normalize text and detect obfuscated words
+// Function to normalize text for better matching
 const normalizeText = (text: string): string => {
   return text
     .toLowerCase()
     .replace(/[^a-z0-9\s]/g, '') // Remove special characters
     .replace(/\s+/g, ' ') // Replace multiple spaces with single space
-    .replace(/[0-9]/g, '') // Remove numbers used as obfuscation
-    .replace(/(.)\1+/g, '$1') // Replace repeated characters (e.g., "seeeex" -> "sex")
     .trim();
 };
 
-// Function to detect obfuscated words (like s.e.x, f-u-c-k, s3x, etc.)
-const detectObfuscatedWord = (text: string, word: string): boolean => {
-  const normalizedText = normalizeText(text);
-  const normalizedWord = normalizeText(word);
-  
-  // Direct match after normalization
-  if (normalizedText.includes(normalizedWord)) {
-    return true;
-  }
-  
-  // Create pattern for obfuscated detection
-  const obfuscatedPattern = word
-    .split('')
-    .join('[^a-z]*') // Allow any non-letter characters between letters
-    .replace(/[aeiou]/g, '[aeiou0-9@#$%^&*]*'); // Vowels can be replaced with numbers or symbols
-  
-  const regex = new RegExp(obfuscatedPattern, 'gi');
-  return regex.test(text);
-};
-
-// Enhanced word detection that checks for various obfuscation techniques
+// Enhanced word detection with better precision to avoid false positives
 const containsInappropriateWord = (text: string, wordList: string[]): boolean => {
   const normalizedText = normalizeText(text);
   
   for (const word of wordList) {
-    // Check direct match
-    if (normalizedText.includes(word)) {
+    // Only check for exact word matches with word boundaries
+    // This prevents false positives like "assessment" triggering on "ass"
+    const exactWordRegex = new RegExp(`\\b${word}\\b`, 'gi');
+    if (exactWordRegex.test(normalizedText)) {
       return true;
     }
     
-    // Check obfuscated versions
-    if (detectObfuscatedWord(text, word)) {
-      return true;
+    // Check for obvious obfuscation with special characters between letters
+    // Only for words longer than 3 characters to avoid false positives
+    if (word.length > 3) {
+      const obfuscatedPattern = word
+        .split('')
+        .join('[\\s\\-_\\.\\*\\+\\#\\@\\$\\%\\^\\&]*');
+      const obfuscatedRegex = new RegExp(`\\b${obfuscatedPattern}\\b`, 'gi');
+      if (obfuscatedRegex.test(text)) {
+        return true;
+      }
     }
     
-    // Check common substitutions and leetspeak
-    const substitutedText = text
-      .replace(/[0@]/g, 'o')
-      .replace(/[1!|]/g, 'i')
-      .replace(/[3]/g, 'e')
-      .replace(/[4@]/g, 'a')
-      .replace(/[5$]/g, 's')
-      .replace(/[7]/g, 't')
-      .replace(/[8]/g, 'b')
-      .replace(/[+]/g, 't')
-      .replace(/[*]/g, 'a')
-      .replace(/[6]/g, 'g')
-      .replace(/[9]/g, 'g')
-      .replace(/[2]/g, 'z')
-      .replace(/[#]/g, 'h')
-      .replace(/[&]/g, 'and')
-      .toLowerCase();
-    
-    if (substitutedText.includes(word)) {
-      return true;
-    }
-    
-    // Check for words split by spaces, dots, dashes, underscores, etc.
-    const spacedPattern = word.split('').join('[\\s\\-_\\.\\*\\+\\#\\@\\$\\%\\^\\&\\(\\)]*');
-    const spacedRegex = new RegExp(spacedPattern, 'gi');
-    if (spacedRegex.test(text)) {
-      return true;
-    }
-    
-    // Check for backwards writing
-    const reversedWord = word.split('').reverse().join('');
-    if (normalizedText.includes(reversedWord)) {
-      return true;
+    // Check for leetspeak substitutions for explicit words only
+    if (word.length > 4 && (word.includes('fuck') || word.includes('shit') || word === 'porn')) {
+      const substitutedText = text
+        .replace(/[0@]/g, 'o')
+        .replace(/[1!|]/g, 'i')
+        .replace(/[3]/g, 'e')
+        .replace(/[4@]/g, 'a')
+        .replace(/[5$]/g, 's')
+        .replace(/[7]/g, 't')
+        .toLowerCase();
+      
+      const substitutedRegex = new RegExp(`\\b${word}\\b`, 'gi');
+      if (substitutedRegex.test(substitutedText)) {
+        return true;
+      }
     }
   }
   
@@ -191,21 +152,21 @@ export const sanitizeContent = (content: string): string => {
     .replace(/\//g, '&#x2F;');
 };
 
-// Test function to demonstrate enhanced filtering (for development only)
+// Test function to demonstrate filtering (for development only)
 export const testContentFilter = () => {
   if (process.env.NODE_ENV === 'development') {
     const testCases = [
-      's.e.x',
-      'f-u-c-k',
-      's3x',
-      'seeeex',
-      'f_u_c_k',
-      'f*u*c*k',
-      'sex spelled backwards: xes',
-      'F.U.C.K',
-      'S E X',
-      'normal content',
-      'educational content about biology'
+      'just finish my color work now moving to math homework',
+      'I need to assess my work',
+      'This class sucks', // Should be allowed as it's mild
+      'fuck this homework', // Should be blocked
+      'I love this assignment',
+      'send nudes', // Should be blocked
+      'normal educational content',
+      'working on my assessment',
+      'I feel good about this project', // Should be allowed
+      'porn websites', // Should be blocked
+      'intimate conversation' // Should be allowed as it can be educational
     ];
     
     console.log('Content Filter Test Results:');

@@ -6,8 +6,8 @@ import { Smile, AlertTriangle } from "lucide-react";
 import { validateContent, ContentValidationResult } from "@/utils/contentFilter";
 import useSecurity from "@/hooks/useSecurity";
 import SecurityNotice from "./SecurityNotice";
-import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useCreatePostMutation } from "@/store/api/postsApi";
 
 interface CreatePostProps {
   groupId?: string;
@@ -20,6 +20,7 @@ const CreatePost = ({ groupId, onPostCreated }: CreatePostProps = {}) => {
   const [validationMessage, setValidationMessage] = useState<ContentValidationResult | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
+  const [createPost] = useCreatePostMutation();
 
   // Apply security features
   useSecurity();
@@ -63,35 +64,16 @@ const CreatePost = ({ groupId, onPostCreated }: CreatePostProps = {}) => {
       return;
     }
 
-    // If groupId is provided, save to database
-    if (groupId) {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        toast({
-          title: "Error",
-          description: "You must be logged in to create a post",
-          variant: "destructive",
-        });
-        setIsSubmitting(false);
-        return;
-      }
-
-      const { error } = await supabase
-        .from("posts")
-        .insert({
-          group_id: groupId,
-          user_id: user.id,
-          content: postText,
-        });
-
-      if (error) {
-        setValidationMessage({
-          isValid: false,
-          message: "❌ Failed to create post. Please try again."
-        });
-        setIsSubmitting(false);
-        return;
-      }
+    try {
+      // Use RTK Query to create post via backend API
+      await createPost({
+        content: postText,
+        isPublic: true,
+        // Add categoryId if needed
+        // categoryId: 1,
+        // Add tags if any emojis are detected
+        tags: extractEmojisAsTags(postText),
+      }).unwrap();
 
       // Success - clear form
       setPostText("");
@@ -106,30 +88,34 @@ const CreatePost = ({ groupId, onPostCreated }: CreatePostProps = {}) => {
       }, 3000);
 
       onPostCreated?.();
-    } else {
-      // Original behavior for home page (simulated)
-      try {
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        
-        setPostText("");
-        setValidationMessage({
-          isValid: true,
-          message: "🎉 Your post has been shared successfully!"
-        });
-        
-        setTimeout(() => {
-          setValidationMessage(null);
-        }, 3000);
-        
-      } catch (error) {
-        setValidationMessage({
-          isValid: false,
-          message: "❌ Something went wrong. Please try again."
-        });
-      }
+      
+      toast({
+        title: "Success",
+        description: "Your post has been created successfully!",
+      });
+
+    } catch (error: any) {
+      console.error("Error creating post:", error);
+      setValidationMessage({
+        isValid: false,
+        message: "❌ Failed to create post. Please try again."
+      });
+      
+      toast({
+        title: "Error",
+        description: error?.data?.message || "Failed to create post. Please try again.",
+        variant: "destructive",
+      });
     }
 
     setIsSubmitting(false);
+  };
+
+  // Helper function to extract emojis as tags
+  const extractEmojisAsTags = (text: string): string[] => {
+    const emojiRegex = /[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/gu;
+    const emojis = text.match(emojiRegex) || [];
+    return [...new Set(emojis)]; // Remove duplicates
   };
 
   // Prevent copy-paste in textarea

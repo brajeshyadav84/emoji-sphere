@@ -3,12 +3,15 @@ import { useNavigate, Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { supabase } from "@/integrations/supabase/client";
+import { useDispatch } from "react-redux";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { toast } from "@/components/ui/use-toast";
 import { Loader2, LogIn } from "lucide-react";
+import { useLoginMutation } from "@/store/api/authApi";
+import { loginSuccess } from "@/store/authSlice";
+import { useAppSelector } from "@/store/hooks";
 
 const loginSchema = z.object({
   mobile: z
@@ -27,7 +30,10 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 
 export default function Login() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
+  const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
+  const [login] = useLoginMutation();
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -38,73 +44,43 @@ export default function Login() {
   });
 
   useEffect(() => {
-    const checkUser = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session) {
-        navigate("/");
-      }
-    };
-    checkUser();
-  }, [navigate]);
+    if (isAuthenticated) {
+      navigate("/");
+    }
+  }, [isAuthenticated, navigate]);
 
   const onSubmit = async (values: LoginFormValues) => {
     setIsLoading(true);
     try {
-      // First check if user exists and is verified
-      const { data: profileData, error: profileError } = await supabase
-        .from("profiles")
-        .select("id, is_verified")
-        .eq("mobile", values.mobile)
-        .single();
-
-      if (profileError || !profileData) {
-        toast({
-          title: "Login Failed",
-          description: "Invalid mobile number or password.",
-          variant: "destructive",
-        });
-        setIsLoading(false);
-        return;
-      }
-
-      if (!profileData.is_verified) {
-        toast({
-          title: "Account Not Verified",
-          description: "Please verify your mobile number before logging in.",
-          variant: "destructive",
-        });
-        setIsLoading(false);
-        return;
-      }
-
-      // Create email from mobile for Supabase auth
-      const email = `${values.mobile.replace(/[^0-9]/g, "")}@app.internal`;
-
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
+      const response = await login({
+        mobile: values.mobile,
         password: values.password,
+      }).unwrap();
+
+      // Dispatch login success action
+      dispatch(loginSuccess({
+        user: {
+          id: response.id,
+          fullName: response.fullName,
+          name: response.name,
+          mobile: response.mobile,
+          email: response.email,
+          role: response.role,
+          roles: response.roles,
+        },
+        token: response.token,
+      }));
+
+      toast({
+        title: "Welcome back!",
+        description: "You have successfully logged in.",
       });
 
-      if (error) {
-        toast({
-          title: "Login Failed",
-          description: "Invalid mobile number or password.",
-          variant: "destructive",
-        });
-        return;
-      }
-
-      if (data.session) {
-        toast({
-          title: "Welcome back!",
-          description: "You have successfully logged in.",
-        });
-        navigate("/");
-      }
-    } catch (error) {
+      navigate("/dashboard");
+    } catch (error: any) {
       toast({
-        title: "Error",
-        description: "An unexpected error occurred. Please try again.",
+        title: "Login Failed",
+        description: error?.data?.message || "Invalid mobile number or password.",
         variant: "destructive",
       });
     } finally {
