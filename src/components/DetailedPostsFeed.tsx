@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { useGetPostsWithDetailsQuery } from "@/store/api/postsApi";
+import { useTogglePostLikeMutation, useToggleCommentLikeMutation } from "@/store/api/commentsApi";
 import { Button } from "./ui/button";
 import { RefreshCw, AlertCircle, Heart, MessageCircle, User, MapPin } from "lucide-react";
 import { Card, CardContent, CardHeader } from "./ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { getAvatarByGender } from "@/utils/avatarUtils";
+import { useToast } from "@/hooks/use-toast";
 
 interface DetailedPostsFeedProps {
   className?: string;
@@ -13,6 +15,7 @@ interface DetailedPostsFeedProps {
 const DetailedPostsFeed = ({ className = "" }: DetailedPostsFeedProps) => {
   const [page, setPage] = useState(0);
   const [size] = useState(10);
+  const { toast } = useToast();
   
   const {
     data: postsData,
@@ -27,6 +30,9 @@ const DetailedPostsFeed = ({ className = "" }: DetailedPostsFeedProps) => {
     sortDir: 'desc',
   });
 
+  const [togglePostLike] = useTogglePostLikeMutation();
+  const [toggleCommentLike] = useToggleCommentLikeMutation();
+
   const handleRefresh = () => {
     refetch();
   };
@@ -34,6 +40,40 @@ const DetailedPostsFeed = ({ className = "" }: DetailedPostsFeedProps) => {
   const handleLoadMore = () => {
     if (postsData && !postsData.last) {
       setPage(prev => prev + 1);
+    }
+  };
+
+  const handlePostLike = async (postId: number) => {
+    try {
+      const result = await togglePostLike(postId).unwrap();
+      refetch(); // Refresh the data to get updated like counts
+      toast({
+        title: "Success",
+        description: result.message || "Post like updated successfully!",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to update post like. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleCommentLike = async (commentId: number) => {
+    try {
+      const result = await toggleCommentLike(commentId).unwrap();
+      refetch(); // Refresh the data to get updated like counts
+      toast({
+        title: "Success",
+        description: result.message || "Comment like updated successfully!",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to update comment like. Please try again.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -129,12 +169,17 @@ const DetailedPostsFeed = ({ className = "" }: DetailedPostsFeedProps) => {
             </div>
 
             {/* Post Stats */}
-            <div className="flex items-center gap-4 mb-4 text-sm text-muted-foreground">
-              <span className="flex items-center gap-1">
+            <div className="flex items-center gap-4 mb-4 text-sm">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="gap-1 hover:text-destructive transition-colors p-1"
+                onClick={() => handlePostLike(post.postId)}
+              >
                 <Heart className="h-4 w-4" />
-                {post.likeCount} likes
-              </span>
-              <span className="flex items-center gap-1">
+                <span>{post.likeCount} likes</span>
+              </Button>
+              <span className="flex items-center gap-1 text-muted-foreground">
                 <MessageCircle className="h-4 w-4" />
                 {post.commentCount} comments
               </span>
@@ -155,21 +200,26 @@ const DetailedPostsFeed = ({ className = "" }: DetailedPostsFeedProps) => {
                         </Avatar>
                         <div className="flex-1">
                           <div className="flex items-center gap-2 mb-1">
-                            <span className="font-medium text-sm">{comment.commentedBy}</span>
+                            <span className="font-medium text-base">{comment.commentedBy}</span>
                             <span className="text-xs text-muted-foreground">
                               {new Date(comment.commentCreatedAt).toLocaleDateString()}
                             </span>
                           </div>
-                          <p className="text-sm">{comment.commentText}</p>
+                          <p className="text-base">{comment.commentText}</p>
                           
                           {/* Comment Stats */}
-                          <div className="flex items-center gap-2 mt-2 text-xs text-muted-foreground">
-                            <span className="flex items-center gap-1">
+                          <div className="flex items-center gap-2 mt-2 text-xs">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="gap-1 hover:text-destructive transition-colors p-1 h-auto"
+                              onClick={() => handleCommentLike(comment.commentId)}
+                            >
                               <Heart className="h-3 w-3" />
-                              {comment.likeCount}
-                            </span>
+                              <span>{comment.likeCount}</span>
+                            </Button>
                             {comment.replies && comment.replies.length > 0 && (
-                              <span>{comment.replies.length} replies</span>
+                              <span className="text-muted-foreground">{comment.replies.length} replies</span>
                             )}
                           </div>
 
@@ -179,12 +229,12 @@ const DetailedPostsFeed = ({ className = "" }: DetailedPostsFeedProps) => {
                               {comment.replies.map((reply) => (
                                 <div key={reply.replyId} className="bg-white rounded p-2 ml-4">
                                   <div className="flex items-center gap-2 mb-1">
-                                    <span className="font-medium text-xs">{reply.repliedBy}</span>
-                                    <span className="text-xs text-muted-foreground">
+                                    <span className="font-medium text-base">{reply.repliedBy}</span>
+                                    <span className="text-sm text-muted-foreground">
                                       {new Date(reply.replyCreatedAt).toLocaleDateString()}
                                     </span>
                                   </div>
-                                  <p className="text-xs">{reply.replyText}</p>
+                                  <p className="text-base">{reply.replyText}</p>
                                 </div>
                               ))}
                             </div>

@@ -10,7 +10,8 @@ import { getAvatarByGender } from "@/utils/avatarUtils";
 import { 
   useGetCommentsByPostQuery, 
   useCreateCommentMutation,
-  useTogglePostLikeMutation 
+  useTogglePostLikeMutation,
+  useToggleCommentLikeMutation 
 } from "@/store/api/commentsApi";
 
 interface PostCardProps {
@@ -115,6 +116,7 @@ const PostCard = ({
   
   const [createComment] = useCreateCommentMutation();
   const [togglePostLike] = useTogglePostLikeMutation();
+  const [toggleCommentLike] = useToggleCommentLikeMutation();
 
   const handleShare = async () => {
     const shareData = {
@@ -140,14 +142,45 @@ const PostCard = ({
 
   const handleLike = async () => {
     try {
-      await togglePostLike(postId).unwrap();
-      setLiked(!liked);
-      setLikeCount(prev => liked ? prev - 1 : prev + 1);
+      console.log('Attempting to like post:', postId);
+      const result = await togglePostLike(postId).unwrap();
+      console.log('Like API result:', result);
+      
+      // The backend now returns {liked: boolean, status: string, message: string}
+      const isNowLiked = result.liked;
+      setLiked(isNowLiked);
+      setLikeCount(prev => isNowLiked ? prev + 1 : prev - 1);
       onUpdate?.();
+      
+      toast({
+        title: "Success",
+        description: result.message || `Post ${isNowLiked ? 'liked' : 'unliked'} successfully!`,
+      });
     } catch (error) {
+      console.error('Like API error:', error);
       toast({
         title: "Error",
         description: "Failed to update like. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleCommentLike = async (commentId: number) => {
+    try {
+      const result = await toggleCommentLike(commentId).unwrap();
+      console.log('Comment like result:', result);
+      refetchComments();
+      
+      toast({
+        title: "Success",
+        description: result.message || `Comment ${result.liked ? 'liked' : 'unliked'} successfully!`,
+      });
+    } catch (error) {
+      console.error('Comment like error:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update comment like. Please try again.",
         variant: "destructive",
       });
     }
@@ -342,8 +375,17 @@ const PostCard = ({
                         >
                           {comment.user?.name}
                         </p>
-                        <p className="text-sm text-foreground">{comment.commentText}</p>
+                        <p className="text-sm md:text-base text-foreground">{comment.commentText}</p>
                         <div className="flex items-center gap-2 mt-1">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className={`text-xs gap-1 transition-colors ${comment.isLikedByCurrentUser ? "text-destructive" : "hover:text-destructive"}`}
+                            onClick={() => handleCommentLike(comment.id)}
+                          >
+                            <Heart className={`h-3 w-3 ${comment.isLikedByCurrentUser ? "fill-current" : ""}`} />
+                            <span>{comment.likesCount}</span>
+                          </Button>
                           <Button
                             variant="ghost"
                             size="sm"
@@ -352,9 +394,6 @@ const PostCard = ({
                           >
                             Reply
                           </Button>
-                          <span className="text-xs text-muted-foreground">
-                            {comment.likesCount} {comment.likesCount === 1 ? 'like' : 'likes'}
-                          </span>
                         </div>
 
                         {replyTo === comment.id && (
@@ -386,16 +425,24 @@ const PostCard = ({
                                   </div>
                                   <div className="flex-1">
                                     <p 
-                                      className="text-xs font-semibold cursor-pointer hover:text-primary transition-colors"
+                                      className="text-sm md:text-base font-semibold cursor-pointer hover:text-primary transition-colors"
                                       onClick={() => reply.user?.id && navigate(`/user/${reply.user.id}`)}
                                       title={`View ${reply.user?.name}'s profile`}
                                     >
                                       {reply.user?.name}
                                     </p>
-                                    <p className="text-xs text-foreground">{reply.commentText}</p>
-                                    <span className="text-xs text-muted-foreground">
-                                      {reply.likesCount} {reply.likesCount === 1 ? 'like' : 'likes'}
-                                    </span>
+                                    <p className="text-sm md:text-base text-foreground">{reply.commentText}</p>
+                                    <div className="flex items-center gap-2 mt-1">
+                                      <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        className={`text-xs gap-1 transition-colors ${reply.isLikedByCurrentUser ? "text-destructive" : "hover:text-destructive"}`}
+                                        onClick={() => handleCommentLike(reply.id)}
+                                      >
+                                        <Heart className={`h-3 w-3 ${reply.isLikedByCurrentUser ? "fill-current" : ""}`} />
+                                        <span>{reply.likesCount}</span>
+                                      </Button>
+                                    </div>
                                   </div>
                                 </div>
                               </div>

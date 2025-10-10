@@ -6,9 +6,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { 
   useGetPostsQuery, 
-  useCreatePostMutation,
-  useToggleLikePostMutation 
+  useCreatePostMutation
 } from "@/store/api/postsApi";
+import { useTogglePostLikeMutation } from "@/store/api/commentsApi";
 import Header from "@/components/Header";
 
 const ApiTest = () => {
@@ -23,7 +23,7 @@ const ApiTest = () => {
   } = useGetPostsQuery({ page: 0, size: 5 });
 
   const [createPost, { isLoading: isCreating }] = useCreatePostMutation();
-  const [toggleLike] = useToggleLikePostMutation();
+  const [toggleLike] = useTogglePostLikeMutation();
 
   const handleCreateTestPost = async () => {
     if (!testContent.trim()) {
@@ -61,10 +61,10 @@ const ApiTest = () => {
 
   const handleToggleLike = async (postId: number) => {
     try {
-      await toggleLike(postId).unwrap();
+      const result = await toggleLike(postId).unwrap();
       toast({
         title: "Success",
-        description: "Like toggled successfully!",
+        description: result.message || "Like toggled successfully!",
       });
       refetchPosts();
     } catch (error: any) {
