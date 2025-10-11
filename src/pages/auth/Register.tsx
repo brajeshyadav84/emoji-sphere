@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { supabase } from "@/integrations/supabase/client";
+import { useSignupMutation } from "@/store/api/authApi";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -24,16 +24,19 @@ const registerSchema = z.object({
     .min(1, "Age is required")
     .refine((val) => !isNaN(Number(val)), "Age must be a number")
     .refine((val) => Number(val) >= 1 && Number(val) <= 150, "Age must be between 1 and 150"),
-  gender: z.enum(["male", "female", "other"], {
+  gender: z.enum(["Male", "Female", "Other"], {
     required_error: "Please select a gender",
   }),
   location: z.string().min(1, "Please select a country"),
   mobile: z
     .string()
     .trim()
-    .min(10, "Mobile number must be at least 10 digits")
+    .min(8, "Mobile number must be at least 8 digits")
     .max(20, "Mobile number must be less than 20 digits")
-    .regex(/^\+?[0-9\s\-()]+$/, "Invalid mobile number format"),
+    .regex(/^[0-9]+$/, "Mobile number can only contain digits"),
+  email: z
+    .string()
+    .email("Please enter a valid email address"),
   password: z
     .string()
     .min(8, "Password must be at least 8 characters")
@@ -51,7 +54,7 @@ type RegisterFormValues = z.infer<typeof registerSchema>;
 
 export default function Register() {
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(false);
+  const [signup, { isLoading }] = useSignupMutation();
 
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
@@ -61,104 +64,59 @@ export default function Register() {
       gender: undefined,
       location: "",
       mobile: "",
+      email: "",
       password: "",
       confirmPassword: "",
     },
   });
 
-  useEffect(() => {
-    const checkUser = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session) {
-        navigate("/");
-      }
-    };
-    checkUser();
-  }, [navigate]);
-
   const onSubmit = async (values: RegisterFormValues) => {
-    setIsLoading(true);
     try {
-      // Check if mobile already exists
-      const { data: existingProfile } = await supabase
-        .from("profiles")
-        .select("id")
-        .eq("mobile", values.mobile)
-        .single();
-
-      if (existingProfile) {
-        toast({
-          title: "Registration Failed",
-          description: "This mobile number is already registered.",
-          variant: "destructive",
-        });
-        setIsLoading(false);
-        return;
-      }
-
-      // Create email from mobile number for Supabase auth
-      const email = `${values.mobile.replace(/[^0-9]/g, "")}@app.internal`;
-
-      const { data, error } = await supabase.auth.signUp({
-        email,
+      const result = await signup({
+        fullName: values.name,
+        mobile: values.mobile,
+        email: values.email,
         password: values.password,
-        options: {
-          data: {
-            name: values.name,
-            age: Number(values.age),
-            location: values.location,
-            mobile: values.mobile,
-            gender: values.gender,
-            is_verified: false,
-          },
-          emailRedirectTo: `${window.location.origin}/`,
-        },
+        confirmPassword: values.confirmPassword,
+        age: Number(values.age),
+        country: values.location,
+        gender: values.gender,
+      }).unwrap();
+
+      toast({
+        title: "Registration Successful",
+        description: "Please verify your mobile number with the OTP sent to you",
       });
 
-      if (error) {
-        toast({
-          title: "Error",
-          description: error.message,
-          variant: "destructive",
-        });
-        return;
+      navigate("/auth/verify-otp", {
+        state: { mobile: values.mobile },
+      });
+    } catch (error: any) {
+      console.error("Registration error:", error);
+      
+      // Extract error message from the response
+      const errorMessage = error?.data?.message || error?.message || "An unexpected error occurred. Please try again.";
+      
+      // Handle specific error cases with user-friendly messages
+      let title = "Registration Failed";
+      let description = errorMessage;
+      
+      if (errorMessage.toLowerCase().includes("mobile number is already registered")) {
+        title = "Mobile Number Already Registered";
+        description = `The mobile number ${values.mobile} is already registered. Please use a different mobile number or sign in to your existing account.`;
+      } else if (errorMessage.toLowerCase().includes("email") && errorMessage.toLowerCase().includes("already")) {
+        title = "Email Already Registered";
+        description = `The email ${values.email} is already registered. Please use a different email address or sign in to your existing account.`;
+      } else if (errorMessage.toLowerCase().includes("validation") || errorMessage.toLowerCase().includes("invalid")) {
+        title = "Invalid Information";
+        description = "Please check your information and try again.";
       }
-
-      if (data.user) {
-        // Send OTP via WhatsApp
-        const otpResponse = await fetch(
-          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-whatsapp-otp`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
-            },
-            body: JSON.stringify({ mobile: values.mobile }),
-          }
-        );
-
-        if (!otpResponse.ok) {
-          throw new Error("Failed to send OTP");
-        }
-
-        toast({
-          title: "Registration Successful",
-          description: "Please verify your mobile number with the OTP sent to WhatsApp",
-        });
-
-        navigate("/auth/verify-otp", {
-          state: { mobile: values.mobile, userId: data.user.id },
-        });
-      }
-    } catch (error) {
+      
       toast({
-        title: "Error",
-        description: "An unexpected error occurred. Please try again.",
+        title,
+        description,
         variant: "destructive",
       });
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -231,9 +189,9 @@ export default function Register() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="male">Male</SelectItem>
-                          <SelectItem value="female">Female</SelectItem>
-                          <SelectItem value="other">Other</SelectItem>
+                          <SelectItem value="Male">Male</SelectItem>
+                          <SelectItem value="Female">Female</SelectItem>
+                          <SelectItem value="Other">Other</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -274,15 +232,35 @@ export default function Register() {
                   control={form.control}
                   name="mobile"
                   render={({ field }) => (
-                    <FormItem className="md:col-span-2">
-                      <FormLabel>Mobile Number (with country code)</FormLabel>
+                    <FormItem>
+                      <FormLabel>Mobile Number</FormLabel>
                       <FormControl>
                         <Input
                           {...field}
                           type="tel"
-                          placeholder="+1 (555) 123-4567"
+                          placeholder="1234567890"
                           disabled={isLoading}
                           autoComplete="tel"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email Address</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          type="email"
+                          placeholder="john@example.com"
+                          disabled={isLoading}
+                          autoComplete="email"
                         />
                       </FormControl>
                       <FormMessage />

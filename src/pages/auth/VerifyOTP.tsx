@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
+import { useVerifyOtpMutation, useSendOtpMutation } from "@/store/api/authApi";
 import { Button } from "@/components/ui/button";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import { toast } from "@/components/ui/use-toast";
@@ -10,17 +10,16 @@ export default function VerifyOTP() {
   const navigate = useNavigate();
   const location = useLocation();
   const mobile = location.state?.mobile;
-  const userId = location.state?.userId;
   const [otp, setOtp] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [isResending, setIsResending] = useState(false);
+  const [verifyOtp, { isLoading }] = useVerifyOtpMutation();
+  const [sendOtp, { isLoading: isResending }] = useSendOtpMutation();
 
-  if (!mobile || !userId) {
+  if (!mobile) {
     navigate("/auth/register");
     return null;
   }
 
-  const verifyOTP = async () => {
+  const verifyOTPHandler = async () => {
     if (otp.length !== 6) {
       toast({
         title: "Invalid OTP",
@@ -30,44 +29,11 @@ export default function VerifyOTP() {
       return;
     }
 
-    setIsLoading(true);
     try {
-      // Verify OTP from database
-      const { data: otpData, error: otpError } = await supabase
-        .from("otp_verifications")
-        .select("*")
-        .eq("mobile", mobile)
-        .eq("otp", otp)
-        .eq("verified", false)
-        .gt("expires_at", new Date().toISOString())
-        .order("created_at", { ascending: false })
-        .limit(1)
-        .single();
-
-      if (otpError || !otpData) {
-        toast({
-          title: "Invalid OTP",
-          description: "The OTP you entered is incorrect or has expired",
-          variant: "destructive",
-        });
-        return;
-      }
-
-      // Mark OTP as verified
-      await supabase
-        .from("otp_verifications")
-        .update({ verified: true })
-        .eq("id", otpData.id);
-
-      // Update user profile to verified
-      const { error: updateError } = await supabase
-        .from("profiles")
-        .update({ is_verified: true })
-        .eq("id", userId);
-
-      if (updateError) {
-        throw updateError;
-      }
+      await verifyOtp({
+        mobile,
+        otp,
+      }).unwrap();
 
       toast({
         title: "Success!",
@@ -75,48 +41,31 @@ export default function VerifyOTP() {
       });
 
       navigate("/auth/login");
-    } catch (error) {
+    } catch (error: any) {
+      console.error("OTP verification error:", error);
       toast({
-        title: "Error",
-        description: "Failed to verify OTP. Please try again.",
+        title: "Invalid OTP",
+        description: error?.data?.message || "The OTP you entered is incorrect or has expired",
         variant: "destructive",
       });
-    } finally {
-      setIsLoading(false);
     }
   };
 
   const resendOTP = async () => {
-    setIsResending(true);
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-whatsapp-otp`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
-          },
-          body: JSON.stringify({ mobile }),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to resend OTP");
-      }
+      await sendOtp({ mobile }).unwrap();
 
       toast({
         title: "OTP Resent",
-        description: "A new OTP has been sent to your WhatsApp",
+        description: "A new OTP has been sent to your mobile number",
       });
-    } catch (error) {
+    } catch (error: any) {
+      console.error("Resend OTP error:", error);
       toast({
         title: "Error",
-        description: "Failed to resend OTP. Please try again.",
+        description: error?.data?.message || "Failed to resend OTP. Please try again.",
         variant: "destructive",
       });
-    } finally {
-      setIsResending(false);
     }
   };
 
@@ -131,7 +80,7 @@ export default function VerifyOTP() {
           </div>
           <h1 className="text-4xl font-bold tracking-tight">Verify OTP</h1>
           <p className="text-muted-foreground mt-2">
-            Enter the 6-digit code sent to your WhatsApp
+            Enter the 6-digit code sent to your mobile number
           </p>
           <p className="text-sm font-medium mt-1">{mobile}</p>
         </div>
@@ -157,7 +106,7 @@ export default function VerifyOTP() {
             </div>
 
             <Button
-              onClick={verifyOTP}
+              onClick={verifyOTPHandler}
               className="w-full"
               disabled={isLoading || otp.length !== 6}
             >

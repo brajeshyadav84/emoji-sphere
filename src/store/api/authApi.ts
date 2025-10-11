@@ -42,10 +42,11 @@ export const authApi = apiSlice.injectEndpoints({
       }),
     }),
     signup: builder.mutation<{ message: string }, {
-      mobile: string;
       fullName: string;
-      password: string;
+      mobile: string;
       email: string;
+      password: string;
+      confirmPassword: string;
       age: number;
       country: string;
       gender: string;
