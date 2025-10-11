@@ -118,19 +118,22 @@ const Header = () => {
               🪐 <span className="hidden lg:inline">Planets</span>
             </span>
           </Button>
-          <Button 
-            variant={isActive("/admin") || location.pathname.startsWith("/admin/") ? "default" : "ghost"}
-            className={`text-sm lg:text-base font-medium whitespace-nowrap min-w-fit px-2 lg:px-3 ${
-              isActive("/admin") || location.pathname.startsWith("/admin/") 
-                ? "bg-gradient-to-r from-orange-400 to-yellow-500 text-white border-0" 
-                : "text-foreground hover:bg-accent hover:text-accent-foreground"
-            }`}
-            onClick={() => navigate("/admin")}
-          >
-            <span className="flex items-center gap-1">
-              👨‍💼 <span className="hidden lg:inline">Dashboard</span>
-            </span>
-          </Button>
+          {/* Only show Dashboard for Admin users */}
+          {isAuthenticated && user && user.role === 'ADMIN' && (
+            <Button 
+              variant={isActive("/admin") || location.pathname.startsWith("/admin/") ? "default" : "ghost"}
+              className={`text-sm lg:text-base font-medium whitespace-nowrap min-w-fit px-2 lg:px-3 ${
+                isActive("/admin") || location.pathname.startsWith("/admin/") 
+                  ? "bg-gradient-to-r from-orange-400 to-yellow-500 text-white border-0" 
+                  : "text-foreground hover:bg-accent hover:text-accent-foreground"
+              }`}
+              onClick={() => navigate("/admin")}
+            >
+              <span className="flex items-center gap-1">
+                👨‍💼 <span className="hidden lg:inline">Dashboard</span>
+              </span>
+            </Button>
+          )}
         </nav>
 
         <div className="flex items-center gap-1 md:gap-2">
@@ -259,22 +262,25 @@ const Header = () => {
                 </span>
               </Button>
             )}
-            <Button 
-              variant={isActive("/admin") || location.pathname.startsWith("/admin/") ? "default" : "ghost"}
-              className={`text-base font-medium justify-start w-full ${
-                isActive("/admin") || location.pathname.startsWith("/admin/") 
-                  ? "bg-gradient-to-r from-orange-400 to-yellow-500 text-white border-0" 
-                  : "text-foreground hover:bg-accent hover:text-accent-foreground"
-              }`}
-              onClick={() => {
-                navigate("/admin");
-                setIsMobileMenuOpen(false);
-              }}
-            >
-              <span className="flex items-center gap-2">
-                👨‍💼 <span>Admin</span>
-              </span>
-            </Button>
+            {/* Only show Admin Dashboard for Admin users */}
+            {isAuthenticated && user && user.role === 'ADMIN' && (
+              <Button 
+                variant={isActive("/admin") || location.pathname.startsWith("/admin/") ? "default" : "ghost"}
+                className={`text-base font-medium justify-start w-full ${
+                  isActive("/admin") || location.pathname.startsWith("/admin/") 
+                    ? "bg-gradient-to-r from-orange-400 to-yellow-500 text-white border-0" 
+                    : "text-foreground hover:bg-accent hover:text-accent-foreground"
+                }`}
+                onClick={() => {
+                  navigate("/admin");
+                  setIsMobileMenuOpen(false);
+                }}
+              >
+                <span className="flex items-center gap-2">
+                  👨‍💼 <span>Admin</span>
+                </span>
+              </Button>
+            )}
             {isAuthenticated && user && (
               <Button 
                 variant="ghost"

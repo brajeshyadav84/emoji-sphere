@@ -50,6 +50,7 @@ export const authApi = apiSlice.injectEndpoints({
       country: string;
       gender: string;
       schoolName?: string;
+      role?: string[];
     }>({
       query: (body) => ({
         url: '/auth/signup',

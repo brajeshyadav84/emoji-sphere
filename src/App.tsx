@@ -6,9 +6,11 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import useSecurity from "@/hooks/useSecurity";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import AdminRoute from "@/components/AdminRoute";
 import Index from "./pages/Index";
 import Games from "./pages/Games";
 import Groups from "./pages/Groups";
+import GroupManagement from "./pages/GroupManagement";
 import GroupMembers from "./pages/GroupMembers";
 import GroupPage from "./pages/GroupPage";
 import Chat from "./pages/Chat";
@@ -53,7 +55,6 @@ import RhymeTime from "./games/RhymeTime";
 
 // Admin imports
 import AdminDashboard from "./pages/admin/AdminDashboard";
-import GroupManagement from "./pages/admin/GroupManagement";
 import QuizManagement from "./pages/admin/QuizManagement";
 import QuestionManagement from "./pages/admin/QuestionManagement";
 import ChallengeManagement from "./pages/admin/ChallengeManagement";
@@ -80,6 +81,11 @@ const App = () => {
           <Route path="/" element={<Index />} />
           <Route path="/games" element={<Games />} />
           <Route path="/groups" element={<Groups />} />
+          <Route path="/groups/manage" element={
+            <ProtectedRoute>
+              <GroupManagement />
+            </ProtectedRoute>
+          } />
           <Route path="/groups/:groupId" element={<GroupPage />} />
           <Route path="/groups/:groupId/members" element={<GroupMembers />} />
           <Route path="/chat" element={<Chat />} />
@@ -128,15 +134,47 @@ const App = () => {
           <Route path="/exam/puzzles" element={<PuzzleExam />} />
           <Route path="/exam/ict" element={<ICTExam />} />
           
-          {/* Admin routes */}
-          <Route path="/admin" element={<AdminDashboard />} />
-          <Route path="/admin/groups" element={<GroupManagement />} />
-          <Route path="/admin/groups/:groupId/members" element={<GroupMembers />} />
-          <Route path="/admin/quizzes" element={<QuizManagement />} />
-          <Route path="/admin/questions" element={<QuestionManagement />} />
-          <Route path="/admin/challenges" element={<ChallengeManagement />} />
-          <Route path="/admin/assignments" element={<HolidayAssignments />} />
-          <Route path="/zoom-portal" element={<ZoomPortalManager />} />
+          {/* Admin routes - Protected with AdminRoute */}
+          <Route path="/admin" element={
+            <AdminRoute>
+              <AdminDashboard />
+            </AdminRoute>
+          } />
+          <Route path="/admin/groups" element={
+            <AdminRoute>
+              <GroupManagement />
+            </AdminRoute>
+          } />
+          <Route path="/admin/groups/:groupId/members" element={
+            <AdminRoute>
+              <GroupMembers />
+            </AdminRoute>
+          } />
+          <Route path="/admin/quizzes" element={
+            <AdminRoute>
+              <QuizManagement />
+            </AdminRoute>
+          } />
+          <Route path="/admin/questions" element={
+            <AdminRoute>
+              <QuestionManagement />
+            </AdminRoute>
+          } />
+          <Route path="/admin/challenges" element={
+            <AdminRoute>
+              <ChallengeManagement />
+            </AdminRoute>
+          } />
+          <Route path="/admin/assignments" element={
+            <AdminRoute>
+              <HolidayAssignments />
+            </AdminRoute>
+          } />
+          <Route path="/zoom-portal" element={
+            <AdminRoute>
+              <ZoomPortalManager />
+            </AdminRoute>
+          } />
           
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

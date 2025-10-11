@@ -31,7 +31,12 @@ const UserDropdown: React.FC = () => {
   };
 
   const handleMyProfile = () => {
-    navigate('/dashboard');
+    // Route based on user role
+    if (user?.role === 'ADMIN') {
+      navigate('/admin');
+    } else {
+      navigate('/dashboard');
+    }
   };
 
   const handleChangePassword = () => {
@@ -81,7 +86,7 @@ const UserDropdown: React.FC = () => {
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleMyProfile} className="cursor-pointer">
           <User className="mr-2 h-4 w-4" />
-          <span>Dashboard</span>
+          <span>{user?.role === 'ADMIN' ? 'Admin Dashboard' : 'Dashboard'}</span>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleLogout} className="cursor-pointer text-red-600 focus:text-red-600">
