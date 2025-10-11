@@ -198,7 +198,15 @@ const UserInfo: React.FC = () => {
         return (
           <div className="flex space-x-2">
             <button
-              onClick={() => navigate(`/messages/${userId}`)}
+              onClick={() => navigate('/chat', { 
+                state: { 
+                  selectedFriend: {
+                    id: userProfile.id,
+                    name: userProfile.fullName,
+                    gender: userProfile.gender
+                  }
+                }
+              })}
               className="flex items-center px-3 py-2 bg-gradient-to-r from-purple-400 to-purple-500 text-white rounded-lg hover:opacity-90 transition-opacity text-sm font-medium"
             >
               <FaComment className="mr-2" />

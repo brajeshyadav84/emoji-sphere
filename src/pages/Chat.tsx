@@ -1,19 +1,24 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Menu, ChevronRight, ChevronLeft } from "lucide-react";
+import { useLocation } from "react-router-dom";
 import Header from "@/components/Header";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search, Send, Smile } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useGetFriendsQuery } from "@/store/api/userApi";
+import { getAvatarByGender } from "@/utils/avatarUtils";
+import { FriendshipResponse } from "@/store/api/userApi";
 
 interface Friend {
   id: number;
   name: string;
-  emoji: string;
+  avatar: string;
   lastMessage: string;
   time: string;
   online: boolean;
+  gender?: string;
 }
 
 interface Message {
@@ -24,64 +29,59 @@ interface Message {
 }
 
 const Chat = () => {
+  const location = useLocation();
   const [selectedFriend, setSelectedFriend] = useState<Friend | null>(null);
   const [messageText, setMessageText] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   // Collapsible sidebar state for mobile
   const [sidebarCollapsed, setSidebarCollapsed] = useState(true);
+  // Animation state for highlighting friend from route
+  const [showHighlightAnimation, setShowHighlightAnimation] = useState(false);
 
   // Emoji picker state
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  // Get selected friend from navigation state
+  const routeSelectedFriend = location.state?.selectedFriend;
+
+  // Get friends from API
+  const { data: friendsResponse, isLoading: friendsLoading, error: friendsError } = useGetFriendsQuery({ page: 0, size: 50 });
+
+  // Transform API response to Friend interface
+  const friends: Friend[] = friendsResponse?.friends?.map((friendship: FriendshipResponse) => ({
+    id: friendship.otherUserId,
+    name: friendship.otherUser?.fullName || 'Unknown User',
+    avatar: getAvatarByGender(friendship.otherUser?.gender),
+    lastMessage: "Start a conversation", // Could be enhanced with real last message
+    time: new Date(friendship.createdAt).toLocaleDateString(),
+    online: Math.random() > 0.5, // Random online status for demo
+    gender: friendship.otherUser?.gender
+  })) || [];
+
+  // Auto-select friend from route state when friends load
+  useEffect(() => {
+    if (routeSelectedFriend && friends.length > 0 && !selectedFriend) {
+      const friendFromRoute = friends.find(friend => friend.id === routeSelectedFriend.id);
+      if (friendFromRoute) {
+        setSelectedFriend(friendFromRoute);
+        setShowHighlightAnimation(true);
+        // On mobile, keep sidebar collapsed when auto-selecting
+        setSidebarCollapsed(true);
+        
+        // Stop the highlight animation after 3 seconds
+        setTimeout(() => {
+          setShowHighlightAnimation(false);
+        }, 3000);
+      }
+    }
+  }, [routeSelectedFriend, friends, selectedFriend]);
+
   // Emoji list (static)
   const emojiList = [
-    "😊", "❤️", "🎉", "⭐", "🌈", "🎨", "🎮", "🎵", "🌞", "🦄", "🌸",
+    "😊", "❤️", "🎉", "⭐", "🌈", "🎨", "🎮", "🎵", "🌞", "🦄", "�",
     "🚀", "🎯", "🏆", "🎪", "🦷", "🎬", "📚", "🔥", "🪐", "🌟", "🍇", "🎈",
     "🍰", "🎂", "🌺"
-  ];
-
-  const friends: Friend[] = [
-    {
-      id: 1,
-      name: "Alex the Artist",
-      emoji: "🎨",
-      lastMessage: "That's so cool!",
-      time: "2 min ago",
-      online: true,
-    },
-    {
-      id: 2,
-      name: "Music Maker Maya",
-      emoji: "🎵",
-      lastMessage: "Want to play together?",
-      time: "10 min ago",
-      online: true,
-    },
-    {
-      id: 3,
-      name: "Science Sam",
-      emoji: "🔬",
-      lastMessage: "Did you see my post?",
-      time: "1 hour ago",
-      online: false,
-    },
-    {
-      id: 4,
-      name: "Book Buddy Ben",
-      emoji: "📚",
-      lastMessage: "I love that story too!",
-      time: "2 hours ago",
-      online: false,
-    },
-    {
-      id: 5,
-      name: "Game Master Gina",
-      emoji: "🎮",
-      lastMessage: "See you later!",
-      time: "Yesterday",
-      online: false,
-    },
   ];
 
   const sampleMessages: Message[] = selectedFriend
@@ -112,6 +112,12 @@ const Chat = () => {
         },
       ]
     : [];
+
+  const handleSelectFriend = (friend: Friend) => {
+    setSelectedFriend(friend);
+    setShowHighlightAnimation(false); // Stop animation when manually selecting
+    setSearchQuery("");
+  };
 
   const filteredFriends = friends.filter((friend) =>
     friend.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -149,7 +155,38 @@ const Chat = () => {
           <span className="gradient-text-primary">Messages</span> 💬
         </h1>
 
-        <div className="flex flex-1 min-h-0 gap-2">
+        {friendsLoading && (
+          <div className="flex-1 flex items-center justify-center">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+              <p className="text-muted-foreground">Loading your friends...</p>
+            </div>
+          </div>
+        )}
+
+        {friendsError && (
+          <div className="flex-1 flex items-center justify-center">
+            <div className="text-center">
+              <div className="text-4xl mb-4">❌</div>
+              <p className="text-muted-foreground">Failed to load friends. Please try again.</p>
+            </div>
+          </div>
+        )}
+
+        {!friendsLoading && !friendsError && friends.length === 0 && (
+          <div className="flex-1 flex items-center justify-center">
+            <div className="text-center">
+              <div className="text-6xl mb-4">👥</div>
+              <h2 className="text-2xl font-bold mb-2">No Friends Yet</h2>
+              <p className="text-muted-foreground">
+                Start making friends to begin chatting!
+              </p>
+            </div>
+          </div>
+        )}
+
+        {!friendsLoading && !friendsError && friends.length > 0 && (
+          <div className="flex flex-1 min-h-0 gap-2">
           {/* Sidebar: Collapsible only on mobile, always visible on md+ */}
           {/* Mobile (below md): collapsible sidebar */}
           <div className="relative h-full flex flex-col z-20 md:hidden">
@@ -159,8 +196,7 @@ const Chat = () => {
                 <button
                   key={friend.id}
                   onClick={() => {
-                    setSelectedFriend(friend);
-                    setSearchQuery("");
+                    handleSelectFriend(friend);
                   }}
                   className={`flex items-center justify-center w-10 h-10 rounded-full mb-1
                     ${selectedFriend?.id === friend.id ? 'ring-2 ring-primary' : ''}
@@ -169,7 +205,7 @@ const Chat = () => {
                   `}
                   title={friend.name}
                 >
-                  <span className="text-2xl">{friend.emoji}</span>
+                  <span className="text-2xl">{friend.avatar}</span>
                 </button>
               ))}
             </div>
@@ -217,17 +253,16 @@ const Chat = () => {
                         <button
                           key={friend.id}
                           onClick={() => {
-                            setSelectedFriend(friend);
+                            handleSelectFriend(friend);
                             setSidebarCollapsed(true);
-                            setSearchQuery("");
                           }}
                           className={`w-full p-2 rounded-xl text-left flex items-center gap-2 transition-all duration-200 ${
                             selectedFriend?.id === friend.id
-                              ? 'bg-primary/10 border-2 border-primary'
+                              ? `bg-primary/10 border-2 border-primary ${showHighlightAnimation ? 'ring-2 ring-primary/20 animate-pulse' : ''}`
                               : 'bg-muted/50 hover:bg-muted'
                           }`}
                         >
-                          <span className="text-2xl">{friend.emoji}</span>
+                          <span className="text-2xl">{friend.avatar}</span>
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center justify-between mb-1">
                               <h3 className="font-semibold text-sm truncate">{friend.name}</h3>
@@ -271,17 +306,16 @@ const Chat = () => {
                   <button
                     key={friend.id}
                     onClick={() => {
-                      setSelectedFriend(friend);
-                      setSearchQuery("");
+                      handleSelectFriend(friend);
                     }}
                     className={`w-full p-4 rounded-xl text-left flex items-center gap-3 transition-all duration-200 ${
                       selectedFriend?.id === friend.id
-                        ? 'bg-primary/10 border-2 border-primary'
+                        ? `bg-primary/10 border-2 border-primary ${showHighlightAnimation ? 'ring-2 ring-primary/20 animate-pulse' : ''}`
                         : 'bg-muted/50 hover:bg-muted'
                     }`}
                   >
                     <div className="relative">
-                      <span className="text-3xl">{friend.emoji}</span>
+                      <span className="text-3xl">{friend.avatar}</span>
                       {friend.online && (
                         <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-success rounded-full border-2 border-background" />
                       )}
@@ -305,7 +339,7 @@ const Chat = () => {
                 <>
                   {/* Chat Header */}
                   <div className="p-4 border-b border-border flex items-center gap-3">
-                    <div className="text-3xl">{selectedFriend.emoji}</div>
+                    <div className="text-3xl">{selectedFriend.avatar}</div>
                     <div>
                       <h2 className="font-bold text-lg">{selectedFriend.name}</h2>
                       <p className="text-sm text-muted-foreground">
@@ -409,6 +443,7 @@ const Chat = () => {
             </Card>
           </div>
         </div>
+        )}
       </main>
     </div>
   );

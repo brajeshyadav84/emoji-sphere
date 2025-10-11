@@ -27,6 +27,51 @@ export interface Friend {
   };
 }
 
+export interface FriendshipResponse {
+  id: number;
+  user1Id: number;
+  user2Id: number;
+  status: 'PENDING' | 'ACCEPTED' | 'DECLINED' | 'BLOCKED';
+  requesterId: number;
+  responderId?: number;
+  createdAt: string;
+  updatedAt: string;
+  respondedAt?: string;
+  
+  // User details
+  user1?: UserBasicInfo;
+  user2?: UserBasicInfo;
+  requester?: UserBasicInfo;
+  responder?: UserBasicInfo;
+  
+  // Helper fields
+  otherUserId: number;
+  otherUser?: UserBasicInfo;
+  canRespond: boolean;
+  isSentByCurrentUser: boolean;
+}
+
+export interface UserBasicInfo {
+  id: number;
+  fullName: string;
+  email?: string;
+  mobileNumber?: string;
+  country?: string;
+  schoolName?: string;
+  age?: number;
+  gender?: string;
+  isActive: boolean;
+}
+
+export interface FriendsListResponse {
+  friends: FriendshipResponse[];
+  currentPage: number;
+  totalItems: number;
+  totalPages: number;
+  hasNext: boolean;
+  hasPrevious: boolean;
+}
+
 export interface FriendshipStatus {
   areFriends: boolean;
   friendshipExists: boolean;
@@ -98,8 +143,13 @@ export const userApi = apiSlice.injectEndpoints({
       }),
     }),
 
-    // Friends endpoints
-    getFriends: builder.query<Friend[], string>({
+    // Friends endpoints - using friendship API
+    getFriends: builder.query<FriendsListResponse, { page?: number; size?: number }>({
+      query: ({ page = 0, size = 50 }) => `/friendships/friends?page=${page}&size=${size}`,
+      providesTags: ['Friendship'],
+    }),
+
+    getFriendsList: builder.query<Friend[], string>({
       query: (userId) => `/users/${userId}/friends`,
       providesTags: ['User'],
     }),
@@ -221,6 +271,7 @@ export const {
   useUpdateUserProfileMutation,
   useUpdatePasswordMutation,
   useGetFriendsQuery,
+  useGetFriendsListQuery,
   useSendFriendRequestMutation,
   useRemoveFriendMutation,
   useGetExamScoresQuery,
