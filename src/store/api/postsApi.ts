@@ -21,10 +21,17 @@ export interface PostResponse {
   likesCount: number;
   commentsCount: number;
   author: {
-    id: number;
+    id: string;
+    fullName: string;
     name: string;
     mobile: string;
-    gender?: string;
+    email: string;
+    age: number;
+    country: string;
+    gender: string;
+    isVerified: boolean;
+    role: string;
+    createdAt: string;
   };
   category?: {
     id: number;
@@ -210,7 +217,7 @@ export const postsApi = apiSlice.injectEndpoints({
       invalidatesTags: (result, error, { postId }) => [{ type: 'Post', id: postId }],
     }),
 
-    // Get user's posts
+    // Get user's posts by mobile
     getUserPosts: builder.query<PostsResponse, {
       mobile: string;
       page?: number;
@@ -218,6 +225,19 @@ export const postsApi = apiSlice.injectEndpoints({
     }>({
       query: ({ mobile, page = 0, size = 10 }) => ({
         url: `/posts/user/${mobile}`,
+        params: { page, size },
+      }),
+      providesTags: ['Post'],
+    }),
+
+    // Get user's posts by ID
+    getUserPostsById: builder.query<PostsResponse, {
+      userId: string;
+      page?: number;
+      size?: number;
+    }>({
+      query: ({ userId, page = 0, size = 10 }) => ({
+        url: `/posts/user-id/${userId}`,
         params: { page, size },
       }),
       providesTags: ['Post'],
@@ -262,6 +282,7 @@ export const {
   useToggleLikePostMutation,
   useAddCommentMutation,
   useGetUserPostsQuery,
+  useGetUserPostsByIdQuery,
   useSearchPostsQuery,
   useGetTrendingPostsQuery,
 } = postsApi;

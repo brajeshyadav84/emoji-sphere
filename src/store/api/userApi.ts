@@ -2,13 +2,18 @@ import { apiSlice } from './apiSlice';
 
 export interface UserProfile {
   id: string;
-  name: string;
+  mobileNumber?: string;
+  fullName: string;
   age: number;
   gender: string;
-  location: string;
-  mobile: string;
+  country: string;
+  schoolName?: string;
+  email?: string;
   isVerified: boolean;
+  isActive: boolean;
+  role?: string;
   createdAt: string;
+  updatedAt?: string;
 }
 
 export interface Friend {
@@ -20,6 +25,28 @@ export interface Friend {
     name: string;
     age: number;
   };
+}
+
+export interface FriendshipStatus {
+  areFriends: boolean;
+  friendshipExists: boolean;
+  friendship?: {
+    id: number;
+    status: 'PENDING' | 'ACCEPTED' | 'DECLINED' | 'BLOCKED';
+    canRespond: boolean;
+    isSentByCurrentUser: boolean;
+  };
+}
+
+export interface UserGroup {
+  id: number;
+  name: string;
+  description: string;
+  privacy: string;
+  memberCount: number;
+  isUserMember: boolean;
+  isUserAdmin: boolean;
+  createdByName?: string;
 }
 
 export interface ExamScore {
@@ -44,7 +71,13 @@ export const userApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     // Profile endpoints
     getUserProfile: builder.query<UserProfile, string>({
-      query: (userId) => `/users/${userId}/profile`,
+      query: (userId) => `/api/user/profile/${userId}`,
+      providesTags: ['User'],
+    }),
+
+    // Get current user profile (authenticated user)
+    getCurrentUserProfile: builder.query<UserProfile, void>({
+      query: () => `/api/user/profile`,
       providesTags: ['User'],
     }),
     
@@ -86,6 +119,57 @@ export const userApi = apiSlice.injectEndpoints({
         method: 'DELETE',
       }),
       invalidatesTags: ['User'],
+    }),
+
+    // Friendship status for user profile
+    getFriendshipStatus: builder.query<FriendshipStatus, { userId: string }>({
+      query: ({ userId }) => `/friendships/status/${userId}`,
+      providesTags: ['Friendship'],
+      transformResponse: (response: any) => {
+        // Handle backend response format
+        if (response?.areFriends !== undefined) {
+          return response;
+        }
+        return { areFriends: false, friendshipExists: false };
+      },
+    }),
+
+    // Send friend request using friendship API
+    sendFriendRequestById: builder.mutation<void, { targetUserId: string }>({
+      query: ({ targetUserId }) => ({
+        url: '/friendships/send-request',
+        method: 'POST',
+        body: { targetUserId: parseInt(targetUserId) },
+      }),
+      invalidatesTags: ['Friendship', 'User'],
+    }),
+
+    // Respond to friend request
+    respondToFriendRequest: builder.mutation<void, { friendshipId: number; response: string }>({
+      query: ({ friendshipId, response }) => ({
+        url: '/friendships/respond',
+        method: 'POST',
+        body: { friendshipId, response },
+      }),
+      invalidatesTags: ['Friendship', 'User'],
+    }),
+
+    // Cancel friend request (remove pending friendship)
+    cancelFriendRequest: builder.mutation<void, { friendId: string }>({
+      query: ({ friendId }) => ({
+        url: `/friendships/remove/${friendId}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['Friendship', 'User'],
+    }),
+
+    // Get user groups
+    getUserGroups: builder.query<UserGroup[], string>({
+      query: (userId) => `/groups/my-groups`, // Use existing endpoint that gets current user's groups
+      providesTags: ['User'],
+      transformResponse: (response: { success: boolean; data: UserGroup[] }) => {
+        return response?.data || [];
+      },
     }),
 
     // Exam scores endpoints
@@ -133,6 +217,7 @@ export const userApi = apiSlice.injectEndpoints({
 
 export const {
   useGetUserProfileQuery,
+  useGetCurrentUserProfileQuery,
   useUpdateUserProfileMutation,
   useUpdatePasswordMutation,
   useGetFriendsQuery,
@@ -143,4 +228,9 @@ export const {
   useGetFeedbacksQuery,
   useSubmitFeedbackMutation,
   useGetDashboardStatsQuery,
+  useGetFriendshipStatusQuery,
+  useSendFriendRequestByIdMutation,
+  useRespondToFriendRequestMutation,
+  useCancelFriendRequestMutation,
+  useGetUserGroupsQuery,
 } = userApi;

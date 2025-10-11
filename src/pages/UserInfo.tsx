@@ -1,113 +1,265 @@
-import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { ArrowLeft, User, MapPin, Phone, Mail, Calendar, Shield } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import Header from "@/components/Header";
-import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/hooks/use-toast";
+import React, { useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { 
+  FaUserPlus, 
+  FaUserMinus, 
+  FaComment, 
+  FaTimes, 
+  FaCheck,
+  FaMapMarkerAlt,
+  FaCalendarAlt,
+  FaSchool,
+  FaUsers
+} from 'react-icons/fa';
+import { 
+  useGetUserProfileQuery,
+  useGetFriendshipStatusQuery,
+  useSendFriendRequestByIdMutation,
+  useRespondToFriendRequestMutation,
+  useCancelFriendRequestMutation,
+  useGetUserGroupsQuery
+} from '../store/api/userApi';
+import { useGetUserPostsByIdQuery } from '../store/api/postsApi';
+import { getAvatarByGender } from '../utils/avatarUtils';
+import PostCard from '../components/PostCard';
+import CreatePost from '../components/CreatePost';
+import Sidebar from '../components/Sidebar';
+import Header from '../components/Header';
+import { useToast } from '../hooks/use-toast';
 
-interface UserProfile {
-  id: string;
-  name: string;
-  age: number;
-  location: string;
-  mobile: string;
-  gender: string;
-  is_verified: boolean;
-  created_at: string;
-}
-
-const UserInfo = () => {
+const UserInfo: React.FC = () => {
   const { userId } = useParams<{ userId: string }>();
   const navigate = useNavigate();
-  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [showSharePost, setShowSharePost] = useState(false);
   const { toast } = useToast();
 
-  useEffect(() => {
-    if (userId) {
-      fetchUserProfile();
-    }
-  }, [userId]);
+  // Get current user from localStorage or auth state
+  const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+  const isOwnProfile = currentUser?.id === parseInt(userId || '0');
 
-  const fetchUserProfile = async () => {
+  // API calls using RTK Query
+  const { 
+    data: userProfile, 
+    isLoading: profileLoading, 
+    error: profileError 
+  } = useGetUserProfileQuery(userId || '', {
+    skip: !userId
+  });
+
+  const { 
+    data: friendshipStatus, 
+    isLoading: friendshipLoading 
+  } = useGetFriendshipStatusQuery({ userId: userId || '' }, {
+    skip: !userId || isOwnProfile
+  });
+
+  const { 
+    data: userPosts, 
+    isLoading: postsLoading,
+    error: postsError,
+    refetch: refetchPosts 
+  } = useGetUserPostsByIdQuery({
+    userId: userId || '',
+    page: currentPage,
+    size: 10
+  }, {
+    skip: !userId
+  });
+
+  const { 
+    data: userGroups, 
+    isLoading: groupsLoading 
+  } = useGetUserGroupsQuery(userId || '', {
+    skip: !userId || !isOwnProfile // Only show groups for own profile for now
+  });
+
+  // Mutations
+  const [sendFriendRequest] = useSendFriendRequestByIdMutation();
+  const [respondToRequest] = useRespondToFriendRequestMutation();
+  const [cancelRequest] = useCancelFriendRequestMutation();
+
+  const handleFriendAction = async (action: string) => {
     if (!userId) return;
 
     try {
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("id", userId)
-        .single();
-
-      if (error) {
-        console.error("Error fetching user profile:", error);
-        toast({
-          title: "Error",
-          description: "Failed to load user profile",
-          variant: "destructive",
-        });
-        return;
+      switch (action) {
+        case 'add':
+          await sendFriendRequest({ targetUserId: userId }).unwrap();
+          toast({
+            title: "Success",
+            description: "Friend request sent successfully!",
+          });
+          break;
+        case 'accept':
+          if (friendshipStatus?.friendship?.id) {
+            await respondToRequest({ 
+              friendshipId: friendshipStatus.friendship.id, 
+              response: 'ACCEPTED' 
+            }).unwrap();
+            toast({
+              title: "Success",
+              description: "Friend request accepted!",
+            });
+          }
+          break;
+        case 'decline':
+          if (friendshipStatus?.friendship?.id) {
+            await respondToRequest({ 
+              friendshipId: friendshipStatus.friendship.id, 
+              response: 'DECLINED' 
+            }).unwrap();
+            toast({
+              title: "Success",
+              description: "Friend request declined.",
+            });
+          }
+          break;
+        case 'cancel':
+          await cancelRequest({ friendId: userId }).unwrap();
+          toast({
+            title: "Success",
+            description: "Friend request cancelled.",
+          });
+          break;
       }
-
-      setUserProfile(data);
-    } catch (error) {
-      console.error("Error:", error);
+    } catch (error: any) {
+      console.error('Friend action failed:', error);
       toast({
         title: "Error",
-        description: "Something went wrong",
+        description: error?.data?.message || error?.message || "Failed to perform friend action. Please try again.",
         variant: "destructive",
       });
-    } finally {
-      setLoading(false);
     }
   };
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-  };
+  const renderFriendButton = () => {
+    if (isOwnProfile) return null;
+    
+    if (friendshipLoading) {
+      return (
+        <div className="px-3 py-2 bg-secondary/20 text-muted-foreground rounded-lg text-sm">
+          Loading...
+        </div>
+      );
+    }
 
-  const getGenderEmoji = (gender: string) => {
-    switch (gender.toLowerCase()) {
-      case 'male': return '👨';
-      case 'female': return '👩';
-      default: return '👤';
+    const friendship = friendshipStatus?.friendship;
+    
+    if (!friendship) {
+      // No friendship exists - show Add Friend button
+      return (
+        <button
+          onClick={() => handleFriendAction('add')}
+          className="flex items-center px-3 py-2 bg-gradient-to-r from-blue-400 to-blue-500 text-white rounded-lg hover:opacity-90 transition-opacity text-sm font-medium"
+        >
+          <FaUserPlus className="mr-2" />
+          Add Friend
+        </button>
+      );
+    }
+
+    switch (friendship.status) {
+      case 'PENDING':
+        if (friendship.isSentByCurrentUser) {
+          // Current user sent the request - show Cancel button
+          return (
+            <button
+              onClick={() => handleFriendAction('cancel')}
+              className="flex items-center px-3 py-2 bg-secondary text-muted-foreground rounded-lg hover:bg-secondary/80 transition-colors text-sm font-medium"
+            >
+              <FaTimes className="mr-2" />
+              Cancel Request
+            </button>
+          );
+        } else {
+          // Current user received the request - show Accept/Decline buttons
+          return (
+            <div className="flex space-x-2">
+              <button
+                onClick={() => handleFriendAction('accept')}
+                className="flex items-center px-3 py-2 bg-gradient-to-r from-green-400 to-green-500 text-white rounded-lg hover:opacity-90 transition-opacity text-sm font-medium"
+              >
+                <FaCheck className="mr-1" />
+                Accept
+              </button>
+              <button
+                onClick={() => handleFriendAction('decline')}
+                className="flex items-center px-3 py-2 bg-gradient-to-r from-red-400 to-red-500 text-white rounded-lg hover:opacity-90 transition-opacity text-sm font-medium"
+              >
+                <FaTimes className="mr-1" />
+                Decline
+              </button>
+            </div>
+          );
+        }
+      case 'ACCEPTED':
+        // Friends - show Message and Remove buttons
+        return (
+          <div className="flex space-x-2">
+            <button
+              onClick={() => navigate(`/messages/${userId}`)}
+              className="flex items-center px-3 py-2 bg-gradient-to-r from-purple-400 to-purple-500 text-white rounded-lg hover:opacity-90 transition-opacity text-sm font-medium"
+            >
+              <FaComment className="mr-2" />
+              Message
+            </button>
+            <button
+              onClick={() => handleFriendAction('cancel')}
+              className="flex items-center px-3 py-2 bg-gradient-to-r from-red-400 to-red-500 text-white rounded-lg hover:opacity-90 transition-opacity text-sm font-medium"
+            >
+              <FaUserMinus className="mr-1" />
+              Remove
+            </button>
+          </div>
+        );
+      default:
+        return null;
     }
   };
 
-  const getAgeGroup = (age: number) => {
-    if (age <= 12) return 'Child';
-    if (age <= 17) return 'Teenager';
-    if (age <= 25) return 'Young Adult';
-    return 'Adult';
-  };
-
-  if (loading) {
+  if (profileLoading) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-background overflow-x-hidden">
         <Header />
-        <main className="container mx-auto px-4 py-6">
-          <div className="text-center py-8">Loading user profile...</div>
+        <main className="container mx-auto px-3 md:px-4 py-4 md:py-6 max-w-full">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 md:gap-6">
+            <div className="lg:col-span-3 hidden lg:block">
+              <Sidebar />
+            </div>
+            <div className="lg:col-span-6 space-y-3 md:space-y-6 min-w-0 w-full">
+              <div className="bg-card rounded-2xl shadow-playful border-2 border-secondary/20 p-6">
+                <div className="text-center text-muted-foreground">Loading user profile...</div>
+              </div>
+            </div>
+          </div>
         </main>
       </div>
     );
   }
 
-  if (!userProfile) {
+  if (profileError || !userProfile) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-background overflow-x-hidden">
         <Header />
-        <main className="container mx-auto px-4 py-6">
-          <div className="text-center py-8">
-            <h2 className="text-2xl font-bold mb-4">User Not Found</h2>
-            <p className="text-muted-foreground mb-4">The user profile you're looking for doesn't exist.</p>
-            <Button onClick={() => navigate(-1)}>Go Back</Button>
+        <main className="container mx-auto px-3 md:px-4 py-4 md:py-6 max-w-full">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 md:gap-6">
+            <div className="lg:col-span-3 hidden lg:block">
+              <Sidebar />
+            </div>
+            <div className="lg:col-span-6 space-y-3 md:space-y-6 min-w-0 w-full">
+              <div className="bg-card rounded-2xl shadow-playful border-2 border-secondary/20 p-6 text-center">
+                <div className="text-red-500 mb-4">
+                  User not found or error loading profile.
+                </div>
+                <button 
+                  onClick={() => navigate(-1)}
+                  className="px-4 py-2 bg-gradient-to-r from-purple-400 to-blue-500 text-white rounded-lg hover:opacity-90 transition-opacity"
+                >
+                  Go Back
+                </button>
+              </div>
+            </div>
           </div>
         </main>
       </div>
@@ -115,127 +267,223 @@ const UserInfo = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background overflow-x-hidden">
       <Header />
       
-      <main className="container mx-auto px-4 py-6 max-w-4xl">
-        <Button
-          onClick={() => navigate(-1)}
-          variant="ghost"
-          className="mb-4 gap-2"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          Back
-        </Button>
+      <main className="container mx-auto px-3 md:px-4 py-4 md:py-6 max-w-full">
+        
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 md:gap-6">
+          <div className="lg:col-span-3 hidden lg:block">
+            <Sidebar />
+          </div>
 
-        <Card className="p-6 shadow-playful hover:shadow-hover transition-all duration-300">
-          <div className="text-center mb-6">
-            <div className="w-24 h-24 rounded-full bg-gradient-to-r from-purple-400 to-pink-400 flex items-center justify-center text-4xl mx-auto mb-4">
-              {getGenderEmoji(userProfile.gender)}
+          <div className="lg:col-span-6 space-y-3 md:space-y-6 min-w-0 w-full">
+            
+            {/* User Profile Header */}
+            <div className="bg-card rounded-2xl shadow-playful border-2 border-secondary/20 p-6">
+              <div className="flex flex-col md:flex-row items-start space-y-4 md:space-y-0 md:space-x-6">
+                
+                {/* Profile Picture */}
+                <div className="flex-shrink-0">
+                  <div className="w-20 h-20 bg-gradient-to-br from-purple-400 to-blue-500 rounded-full flex items-center justify-center text-white text-2xl font-bold">
+                    {userProfile.fullName.charAt(0).toUpperCase()}
+                  </div>
+                </div>
+                
+                {/* User Info */}
+                <div className="flex-1">
+                  <h1 className="text-2xl font-bold text-foreground mb-2">
+                    {userProfile.fullName}
+                  </h1>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
+                    <div className="flex items-center text-muted-foreground text-sm">
+                      <FaMapMarkerAlt className="mr-2 text-purple-500" />
+                      <span>{userProfile.country}</span>
+                    </div>
+                    <div className="flex items-center text-muted-foreground text-sm">
+                      <FaCalendarAlt className="mr-2 text-purple-500" />
+                      <span>{userProfile.age} years old</span>
+                    </div>
+                    {userProfile.schoolName && (
+                      <div className="flex items-center text-muted-foreground text-sm">
+                        <FaSchool className="mr-2 text-purple-500" />
+                        <span>{userProfile.schoolName}</span>
+                      </div>
+                    )}
+                    <div className="flex items-center text-muted-foreground text-sm">
+                      <span className="mr-2">👤</span>
+                      <span className="capitalize">{userProfile.gender}</span>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center space-x-4">
+                    {userProfile.isVerified && (
+                      <span className="flex items-center text-green-600 text-sm">
+                        <FaCheck className="mr-1" />
+                        Verified
+                      </span>
+                    )}
+                    <span className="text-muted-foreground text-sm">
+                      Member since {new Date(userProfile.createdAt).toLocaleDateString()}
+                    </span>
+                  </div>
+                </div>
+                
+                {/* Action Buttons */}
+                <div className="flex-shrink-0">
+                  {renderFriendButton()}
+                </div>
+              </div>
             </div>
-            <h1 className="text-3xl font-bold text-foreground mb-2">{userProfile.name}</h1>
-            {userProfile.is_verified && (
-              <Badge variant="secondary" className="gap-1">
-                <Shield className="h-3 w-3" />
-                Verified User
-              </Badge>
+
+            {/* Share Post Section (only for own profile) */}
+            {isOwnProfile && (
+              <div className="bg-card rounded-2xl shadow-playful border-2 border-secondary/20 p-4">
+                <h3 className="font-bold text-base mb-3 flex items-center gap-2">
+                  ✨ Share a Post
+                </h3>
+                <button
+                  onClick={() => setShowSharePost(!showSharePost)}
+                  className="w-full p-3 bg-secondary/10 rounded-lg text-left text-muted-foreground hover:bg-secondary/20 transition-colors text-sm"
+                >
+                  What's on your mind? Share something nice! 🌟
+                </button>
+                
+                {showSharePost && (
+                  <div className="mt-4">
+                    <CreatePost onPostCreated={() => setShowSharePost(false)} />
+                  </div>
+                )}
+              </div>
             )}
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Personal Information */}
-            <div className="space-y-4">
-              <h2 className="text-xl font-semibold text-foreground mb-4 flex items-center gap-2">
-                <User className="h-5 w-5" />
-                Personal Information
-              </h2>
+            
+            {/* Posts Feed */}
+            <div className="bg-card rounded-2xl shadow-playful border-2 border-secondary/20 p-4">
+              <h3 className="font-bold text-base mb-4 flex items-center gap-2">
+                📝 {isOwnProfile ? 'My Posts' : `${userProfile.fullName}'s Posts`}
+              </h3>
               
-              <div className="space-y-3">
-                <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg">
-                  <Calendar className="h-4 w-4 text-muted-foreground" />
-                  <div>
-                    <p className="text-sm text-muted-foreground">Age</p>
-                    <p className="font-medium">{userProfile.age} years old ({getAgeGroup(userProfile.age)})</p>
-                  </div>
+              {postsLoading ? (
+                <div className="text-center py-8 text-muted-foreground">Loading posts...</div>
+              ) : postsError ? (
+                <div className="text-center py-8 text-red-500">
+                  Failed to load posts
                 </div>
-
-                <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg">
-                  <User className="h-4 w-4 text-muted-foreground" />
-                  <div>
-                    <p className="text-sm text-muted-foreground">Gender</p>
-                    <p className="font-medium capitalize">{userProfile.gender}</p>
-                  </div>
+              ) : userPosts?.content && userPosts.content.length > 0 ? (
+                <div className="space-y-4">
+                  {userPosts.content.map((post) => {
+                    console.log('Post data:', post); // Debug log
+                    return (
+                      <PostCard 
+                        key={post.id} 
+                        postId={post.id}
+                        author={post.author.fullName || post.author.name}
+                        avatar={getAvatarByGender(post.author.gender)}
+                        time={new Date(post.createdAt).toLocaleDateString()}
+                        content={post.content}
+                        likes={post.likesCount}
+                        comments={post.commentsCount}
+                        userId={post.author.id.toString()}
+                        userGender={post.author.gender}
+                        isLikedByCurrentUser={post.isLikedByCurrentUser}
+                        onUpdate={refetchPosts}
+                      />
+                    );
+                  })}
+                  
+                  {/* Load More Button */}
+                  {!userPosts.last && (
+                    <div className="text-center pt-4">
+                      <button
+                        onClick={() => setCurrentPage(prev => prev + 1)}
+                        className="px-4 py-2 bg-gradient-to-r from-purple-400 to-blue-500 text-white rounded-lg hover:opacity-90 transition-opacity text-sm font-medium"
+                      >
+                        Load More Posts
+                      </button>
+                    </div>
+                  )}
                 </div>
-
-                <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg">
-                  <MapPin className="h-4 w-4 text-muted-foreground" />
-                  <div>
-                    <p className="text-sm text-muted-foreground">Location</p>
-                    <p className="font-medium">{userProfile.location}</p>
-                  </div>
+              ) : (
+                <div className="text-center py-8 text-muted-foreground">
+                  {isOwnProfile ? 
+                    "You haven't shared any posts yet." : 
+                    `${userProfile.fullName} hasn't shared any posts yet.`
+                  }
                 </div>
-              </div>
+              )}
             </div>
-
-            {/* Contact Information */}
-            <div className="space-y-4">
-              <h2 className="text-xl font-semibold text-foreground mb-4 flex items-center gap-2">
-                <Phone className="h-5 w-5" />
-                Contact Information
-              </h2>
+          </div>
+          
+          {/* Right Column - Groups and Info */}
+          <div className="lg:col-span-3 hidden lg:block">
+            <div className="sticky top-20 space-y-4">
               
-              <div className="space-y-3">
-                <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg">
-                  <Phone className="h-4 w-4 text-muted-foreground" />
-                  <div>
-                    <p className="text-sm text-muted-foreground">Mobile Number</p>
-                    <p className="font-medium">{userProfile.mobile}</p>
+              {/* Profile Stats */}
+              <div className="bg-card rounded-2xl shadow-playful border-2 border-secondary/20 p-4">
+                <h3 className="font-bold text-base mb-3 flex items-center gap-2">
+                  📊 Profile Stats
+                </h3>
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center">
+                    <span className="text-muted-foreground text-sm">Posts</span>
+                    <span className="font-semibold text-foreground">{userPosts?.totalElements || 0}</span>
                   </div>
-                </div>
-
-                <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg">
-                  <Mail className="h-4 w-4 text-muted-foreground" />
-                  <div>
-                    <p className="text-sm text-muted-foreground">Email ID</p>
-                    <p className="font-medium text-muted-foreground">
-                      {userProfile.mobile.replace(/^\+91/, '').replace(/^\+1/, '').slice(0, 3)}***@email.com
-                    </p>
-                    <p className="text-xs text-muted-foreground">For privacy, email is partially hidden</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg">
-                  <Calendar className="h-4 w-4 text-muted-foreground" />
-                  <div>
-                    <p className="text-sm text-muted-foreground">Member Since</p>
-                    <p className="font-medium">{formatDate(userProfile.created_at)}</p>
+                  {isOwnProfile && userGroups && (
+                    <div className="flex justify-between items-center">
+                      <span className="text-muted-foreground text-sm">Groups</span>
+                      <span className="font-semibold text-foreground">{userGroups.length}</span>
+                    </div>
+                  )}
+                  <div className="flex justify-between items-center">
+                    <span className="text-muted-foreground text-sm">Member Since</span>
+                    <span className="font-semibold text-foreground text-sm">
+                      {new Date(userProfile.createdAt).toLocaleDateString('en-US', { 
+                        month: 'short', 
+                        year: 'numeric' 
+                      })}
+                    </span>
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
 
-          {/* School Information - Placeholder since it's not in current database */}
-          <div className="mt-6 p-4 bg-muted/30 rounded-lg border-2 border-dashed border-muted-foreground/30">
-            <h3 className="text-lg font-semibold mb-2 text-center">🏫 School Information</h3>
-            <p className="text-center text-muted-foreground">
-              School details will be available once user completes their profile.
-            </p>
-          </div>
-
-          {/* Safety Notice */}
-          <div className="mt-6 p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-800">
-            <div className="flex items-start gap-3">
-              <Shield className="h-5 w-5 text-yellow-600 mt-0.5" />
-              <div>
-                <h3 className="font-semibold text-yellow-800 dark:text-yellow-200">Safety Notice</h3>
-                <p className="text-sm text-yellow-700 dark:text-yellow-300 mt-1">
-                  This is a safe learning environment for children. Personal information is protected and only basic details are shown for safety reasons.
-                </p>
+              {/* User Groups */}
+              <div className="bg-card rounded-2xl shadow-playful border-2 border-secondary/20 p-4">
+                <h3 className="font-bold text-base mb-3 flex items-center gap-2">
+                  <FaUsers className="text-purple-500" />
+                  {isOwnProfile ? 'My Groups' : 'Groups'}
+                </h3>
+                
+                {groupsLoading ? (
+                  <div className="text-center py-4 text-muted-foreground text-sm">Loading groups...</div>
+                ) : userGroups && userGroups.length > 0 ? (
+                  <div className="space-y-2">
+                    {userGroups.map((group) => (
+                      <div 
+                        key={group.id}
+                        className="p-3 bg-secondary/10 rounded-lg hover:bg-secondary/20 transition-colors cursor-pointer"
+                        onClick={() => navigate(`/groups/${group.id}`)}
+                      >
+                        <h4 className="font-semibold text-foreground text-sm">{group.name}</h4>
+                        <p className="text-xs text-muted-foreground">{group.memberCount} members</p>
+                        {group.description && (
+                          <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
+                            {group.description}
+                          </p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-4 text-muted-foreground text-sm">
+                    {isOwnProfile ? "You haven't joined any groups yet." : "No groups to show."}
+                  </div>
+                )}
               </div>
+              
             </div>
           </div>
-        </Card>
+        </div>
       </main>
     </div>
   );

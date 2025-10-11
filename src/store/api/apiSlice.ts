@@ -11,7 +11,7 @@ const baseQueryWithErrorHandling: BaseQueryFn = async (args, api, extraOptions) 
       // Add common headers
       headers.set('Content-Type', 'application/json');
       
-      // Add auth token if available
+      // Add auth token if available (but don't require it for now)
       const token = (getState() as RootState).auth?.token;
       if (token) {
         headers.set('authorization', `Bearer ${token}`);
@@ -29,8 +29,8 @@ const baseQueryWithErrorHandling: BaseQueryFn = async (args, api, extraOptions) 
     
     // You can add global error handling here
     if (result.error.status === 401) {
-      // Handle unauthorized
-      console.log('Unauthorized - redirecting to login');
+      // Handle unauthorized - but don't redirect for now during development
+      console.log('Unauthorized - may need to login');
     }
   }
 
@@ -41,7 +41,7 @@ const baseQueryWithErrorHandling: BaseQueryFn = async (args, api, extraOptions) 
 export const apiSlice = createApi({
   reducerPath: 'api',
   baseQuery: baseQueryWithErrorHandling,
-  tagTypes: ['User', 'Post', 'Group', 'Zoom', 'Comment'],
+  tagTypes: ['User', 'Post', 'Group', 'Zoom', 'Comment', 'Friendship'],
   endpoints: () => ({}),
 });
 
