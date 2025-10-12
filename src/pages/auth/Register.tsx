@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { useSignupMutation } from "@/store/api/authApi";
+import { useSignupMutation, useSendOtpMutation } from "@/store/api/authApi";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -55,6 +55,7 @@ type RegisterFormValues = z.infer<typeof registerSchema>;
 export default function Register() {
   const navigate = useNavigate();
   const [signup, { isLoading }] = useSignupMutation();
+  const [sendOtp] = useSendOtpMutation();
 
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
@@ -72,7 +73,8 @@ export default function Register() {
 
   const onSubmit = async (values: RegisterFormValues) => {
     try {
-      const result = await signup({
+      // Step 1: Register the user
+      await signup({
         fullName: values.name,
         mobile: values.mobile,
         email: values.email,
@@ -85,12 +87,31 @@ export default function Register() {
 
       toast({
         title: "Registration Successful",
-        description: "Please verify your mobile number with the OTP sent to you",
+        description: "Account created successfully. Sending OTP to your email...",
       });
 
-      navigate("/auth/verify-otp", {
-        state: { mobile: values.mobile },
-      });
+      // Step 2: Send OTP to email
+      try {
+        await sendOtp({ email: values.email }).unwrap();
+
+        toast({
+          title: "OTP Sent",
+          description: "Please check your email for the verification code",
+        });
+
+        // Step 3: Navigate to OTP verification
+        navigate("/auth/verify-otp", {
+          state: { email: values.email },
+        });
+      } catch (otpError: any) {
+        console.error("Send OTP error:", otpError);
+        toast({
+          title: "OTP Send Failed",
+          description: "Account created but failed to send OTP. Please contact support.",
+          variant: "destructive",
+        });
+      }
+
     } catch (error: any) {
       console.error("Registration error:", error);
       

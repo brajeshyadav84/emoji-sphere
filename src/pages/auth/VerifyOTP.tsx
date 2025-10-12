@@ -9,12 +9,13 @@ import { Loader2, ShieldCheck } from "lucide-react";
 export default function VerifyOTP() {
   const navigate = useNavigate();
   const location = useLocation();
-  const mobile = location.state?.mobile;
+  const email = location.state?.email;
+  console.log("Email from state:", location.state);
   const [otp, setOtp] = useState("");
   const [verifyOtp, { isLoading }] = useVerifyOtpMutation();
   const [sendOtp, { isLoading: isResending }] = useSendOtpMutation();
 
-  if (!mobile) {
+  if (!email) {
     navigate("/auth/register");
     return null;
   }
@@ -31,7 +32,7 @@ export default function VerifyOTP() {
 
     try {
       await verifyOtp({
-        mobile,
+        email,
         otp,
       }).unwrap();
 
@@ -53,11 +54,11 @@ export default function VerifyOTP() {
 
   const resendOTP = async () => {
     try {
-      await sendOtp({ mobile }).unwrap();
+      await sendOtp({ email }).unwrap();
 
       toast({
         title: "OTP Resent",
-        description: "A new OTP has been sent to your mobile number",
+        description: "A new OTP has been sent to your email address",
       });
     } catch (error: any) {
       console.error("Resend OTP error:", error);
@@ -80,9 +81,9 @@ export default function VerifyOTP() {
           </div>
           <h1 className="text-4xl font-bold tracking-tight">Verify OTP</h1>
           <p className="text-muted-foreground mt-2">
-            Enter the 6-digit code sent to your mobile number
+            Enter the 6-digit code sent to your email address
           </p>
-          <p className="text-sm font-medium mt-1">{mobile}</p>
+          <p className="text-sm font-medium mt-1">{email}</p>
         </div>
 
         <div className="bg-card border rounded-lg shadow-lg p-8">

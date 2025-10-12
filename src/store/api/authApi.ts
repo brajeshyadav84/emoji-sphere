@@ -27,16 +27,16 @@ export const authApi = apiSlice.injectEndpoints({
       }),
     }),
     // Add other auth endpoints as needed
-    sendOtp: builder.mutation<{ message: string }, { mobile: string }>({
+    sendOtp: builder.mutation<{ message: string }, { email: string }>({
       query: (body) => ({
-        url: '/auth/send-otp',
+        url: '/auth/send-email-otp',
         method: 'POST',
         body,
       }),
     }),
-    verifyOtp: builder.mutation<{ message: string }, { mobile: string; otp: string }>({
+    verifyOtp: builder.mutation<{ message: string }, { email: string; otp: string }>({
       query: (body) => ({
-        url: '/auth/verify-otp',
+        url: '/auth/verify-email-otp',
         method: 'POST',
         body,
       }),
@@ -59,7 +59,7 @@ export const authApi = apiSlice.injectEndpoints({
         body,
       }),
     }),
-    forgotPassword: builder.mutation<{ message: string }, { mobile: string }>({
+    forgotPassword: builder.mutation<{ message: string }, { email: string }>({
       query: (body) => ({
         url: '/auth/forgot-password',
         method: 'POST',
@@ -67,7 +67,7 @@ export const authApi = apiSlice.injectEndpoints({
       }),
     }),
     resetPassword: builder.mutation<{ message: string }, {
-      mobile: string;
+      email: string;
       otp: string;
       newPassword: string;
       confirmPassword: string;
