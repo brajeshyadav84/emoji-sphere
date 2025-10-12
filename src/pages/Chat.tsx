@@ -40,6 +40,7 @@ const Chat = () => {
   const [showHighlightAnimation, setShowHighlightAnimation] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Get selected friend from navigation state
   const routeSelectedFriend = location.state?.selectedFriend;
@@ -128,6 +129,13 @@ const Chat = () => {
     }
   }, [selectedConversationId, markAsRead]);
 
+  // Auto-scroll to bottom when messages change
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [messagesResponse?.messages]);
+
   const handleSelectFriend = (friend: Friend) => {
     setSelectedFriend(friend);
     setShowHighlightAnimation(false);
@@ -192,10 +200,10 @@ const Chat = () => {
   ];
 
   return (
-    <div className="min-h-screen h-screen flex flex-col bg-background">
+    <div className="h-screen flex flex-col bg-background overflow-hidden">
       <Header />
 
-      <main className="flex-1 flex flex-col w-full max-w-full px-0 sm:px-4 py-0 sm:py-6 mx-auto">
+      <main className="flex-1 flex flex-col w-full max-w-full px-0 sm:px-4 py-0 sm:py-6 mx-auto min-h-0">
         <h1 className="text-4xl font-bold mb-6 hidden sm:block">
           <span className="gradient-text-primary">Messages</span> 💬
         </h1>
@@ -231,10 +239,10 @@ const Chat = () => {
         )}
 
         {!friendsLoading && !friendsError && friends.length > 0 && (
-          <div className="flex flex-1 min-h-0 gap-2">
+          <div className="flex flex-1 min-h-0 gap-2 h-full">
             {/* Mobile Sidebar */}
             <div className="relative h-full flex flex-col z-20 md:hidden">
-              <div className="flex flex-col items-center py-8 gap-2 flex-1 overflow-y-auto w-14 bg-background shadow-playful rounded-xl">
+              <div className="flex flex-col items-center py-8 gap-2 flex-1 overflow-y-auto w-14 bg-background shadow-playful rounded-xl max-h-full">
                 {filteredFriends.map((friend) => (
                   <button
                     key={friend.id}
@@ -261,7 +269,7 @@ const Chat = () => {
               
               {!sidebarCollapsed && (
                 <div className="fixed inset-0 z-40 flex" style={{ pointerEvents: 'none' }}>
-                  <div className="h-full w-60 bg-background shadow-xl rounded-r-xl flex flex-col pt-16 p-4 relative" style={{ pointerEvents: 'auto' }}>
+                  <div className="h-full w-60 bg-background shadow-xl rounded-r-xl flex flex-col pt-16 p-4 relative max-h-screen overflow-hidden" style={{ pointerEvents: 'auto' }}>
                     <button
                       className="absolute top-4 left-2 z-50 p-1 rounded-full bg-muted hover:bg-muted/70 border shadow"
                       onClick={() => setSidebarCollapsed(true)}
@@ -316,7 +324,7 @@ const Chat = () => {
             </div>
             
             {/* Desktop Sidebar */}
-            <div className="hidden md:flex md:flex-col md:w-72 h-full bg-background shadow-playful rounded-xl p-4 z-10">
+            <div className="hidden md:flex md:flex-col md:w-72 h-full bg-background shadow-playful rounded-xl p-4 z-10 max-h-full overflow-hidden">
               <div className="mb-4">
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -360,8 +368,8 @@ const Chat = () => {
             </div>
             
             {/* Chat Area */}
-            <div className="flex-1 flex">
-              <Card className="flex-1 shadow-playful flex flex-col">
+            <div className="flex-1 flex min-h-0 max-h-full">
+              <Card className="flex-1 shadow-playful flex flex-col h-full max-h-full overflow-hidden">
                 {selectedFriend ? (
                   <>
                     {/* Chat Header */}
@@ -376,54 +384,57 @@ const Chat = () => {
                     </div>
 
                     {/* Messages */}
-                    <ScrollArea className="flex-1 p-4">
-                      {messagesLoading ? (
-                        <div className="flex items-center justify-center h-full">
-                          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
-                        </div>
-                      ) : (
-                        <div className="space-y-4">
-                          {messagesResponse?.messages?.map((message: ChatMessage) => (
-                            <div
-                              key={message.id}
-                              className={`flex ${
-                                message.senderId === selectedFriend.id ? "justify-start" : "justify-end"
-                              }`}
-                            >
+                    <div className="flex-1 overflow-hidden flex flex-col min-h-0">
+                      <ScrollArea className="flex-1 p-4 h-full">
+                        {messagesLoading ? (
+                          <div className="flex items-center justify-center h-full">
+                            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
+                          </div>
+                        ) : (
+                          <div className="space-y-4">
+                            {messagesResponse?.messages?.map((message: ChatMessage) => (
                               <div
-                                className={`max-w-[70%] p-3 rounded-2xl ${
-                                  message.senderId === selectedFriend.id
-                                    ? "bg-muted"
-                                    : "gradient-primary text-primary-foreground"
+                                key={message.id}
+                                className={`flex ${
+                                  message.senderId === selectedFriend.id ? "justify-start" : "justify-end"
                                 }`}
                               >
-                                <p className="text-sm">{message.messageText}</p>
-                                <span
-                                  className={`text-xs mt-1 block ${
+                                <div
+                                  className={`max-w-[70%] p-3 rounded-2xl ${
                                     message.senderId === selectedFriend.id
-                                      ? "text-muted-foreground"
-                                      : "text-primary-foreground/80"
+                                      ? "bg-muted"
+                                      : "gradient-primary text-primary-foreground"
                                   }`}
                                 >
-                                  {new Date(message.createdAt).toLocaleTimeString([], { 
-                                    hour: '2-digit', 
-                                    minute: '2-digit' 
-                                  })}
-                                </span>
+                                  <p className="text-sm">{message.messageText}</p>
+                                  <span
+                                    className={`text-xs mt-1 block ${
+                                      message.senderId === selectedFriend.id
+                                        ? "text-muted-foreground"
+                                        : "text-primary-foreground/80"
+                                    }`}
+                                  >
+                                    {new Date(message.createdAt).toLocaleTimeString([], { 
+                                      hour: '2-digit', 
+                                      minute: '2-digit' 
+                                    })}
+                                  </span>
+                                </div>
                               </div>
-                            </div>
-                          )) || (
-                            <div className="text-center text-muted-foreground py-8">
-                              <div className="text-4xl mb-2">💬</div>
-                              <p>Start your conversation by sending a message!</p>
-                            </div>
-                          )}
-                        </div>
-                      )}
-                    </ScrollArea>
+                            )) || (
+                              <div className="text-center text-muted-foreground py-8">
+                                <div className="text-4xl mb-2">💬</div>
+                                <p>Start your conversation by sending a message!</p>
+                              </div>
+                            )}
+                            <div ref={messagesEndRef} />
+                          </div>
+                        )}
+                      </ScrollArea>
+                    </div>
 
                     {/* Message Input */}
-                    <div className="p-4 border-t border-border">
+                    <div className="p-4 border-t border-border flex-shrink-0">
                       <div className="flex gap-2">
                         <div className="relative">
                           <Button
@@ -435,7 +446,7 @@ const Chat = () => {
                             <Smile className="h-5 w-5" />
                           </Button>
                           {showEmojiPicker && (
-                            <div className="absolute left-0 bottom-12 z-50 bg-background border rounded-xl shadow-lg p-2 w-72 max-w-xs grid grid-cols-8 gap-2">
+                            <div className="absolute left-0 bottom-12 z-50 bg-background border rounded-xl shadow-lg p-2 w-72 max-w-xs grid grid-cols-8 gap-2 max-h-40 overflow-y-auto">
                               {emojiList.map((emoji) => (
                                 <button
                                   key={emoji}
