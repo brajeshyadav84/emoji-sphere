@@ -116,19 +116,19 @@ export const userApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     // Profile endpoints
     getUserProfile: builder.query<UserProfile, string>({
-      query: (userId) => `/api/user/profile/${userId}`,
+      query: (userId) => `/user/profile/${userId}`,
       providesTags: ['User'],
     }),
 
     // Get current user profile (authenticated user)
     getCurrentUserProfile: builder.query<UserProfile, void>({
-      query: () => `/api/user/profile`,
+      query: () => `/user/profile`,
       providesTags: ['User'],
     }),
     
-    updateUserProfile: builder.mutation<UserProfile, Partial<UserProfile> & { id: string }>({
-      query: ({ id, ...patch }) => ({
-        url: `/users/${id}/profile`,
+    updateUserProfile: builder.mutation<UserProfile, Partial<UserProfile>>({
+      query: (patch) => ({
+        url: `/user/profile`,
         method: 'PUT',
         body: patch,
       }),
@@ -163,12 +163,12 @@ export const userApi = apiSlice.injectEndpoints({
       invalidatesTags: ['User'],
     }),
 
-    removeFriend: builder.mutation<void, { userId: string; friendshipId: string }>({
-      query: ({ userId, friendshipId }) => ({
-        url: `/users/${userId}/friends/${friendshipId}`,
+    removeFriend: builder.mutation<void, { friendId: string }>({
+      query: ({ friendId }) => ({
+        url: `/friendships/remove/${friendId}`,
         method: 'DELETE',
       }),
-      invalidatesTags: ['User'],
+      invalidatesTags: ['Friendship'],
     }),
 
     // Friendship status for user profile

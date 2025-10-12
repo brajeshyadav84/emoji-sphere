@@ -323,6 +323,15 @@ const UserInfo: React.FC = () => {
                       <span className="mr-2">👤</span>
                       <span className="capitalize">{userProfile.gender}</span>
                     </div>
+                    {userProfile.email && (
+                      <div className="flex items-center text-muted-foreground text-sm">
+                        <span className="mr-2">✉️</span>
+                        <span>{userProfile.email}</span>
+                        {userProfile.isVerified && (
+                          <span className="ml-2 text-green-600 text-xs">✓</span>
+                        )}
+                      </div>
+                    )}
                   </div>
                   
                   <div className="flex items-center space-x-4">

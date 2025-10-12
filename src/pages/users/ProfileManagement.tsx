@@ -5,35 +5,39 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { useToast } from '@/hooks/use-toast';
-import { User, Phone, MapPin, Calendar } from 'lucide-react';
-import { useGetUserProfileQuery, useUpdateUserProfileMutation } from '@/store/api/userApi';
+import { User, Phone, MapPin, Calendar, GraduationCap } from 'lucide-react';
+import { useGetCurrentUserProfileQuery, useUpdateUserProfileMutation } from '@/store/api/userApi';
 
 interface ProfileManagementProps {
-  userId: string;
+  // No props needed since we're getting current user profile
 }
 
-const ProfileManagement: React.FC<ProfileManagementProps> = ({ userId }) => {
+const ProfileManagement: React.FC<ProfileManagementProps> = () => {
   const { toast } = useToast();
-  const { data: profile, isLoading } = useGetUserProfileQuery(userId);
+  const { data: profile, isLoading } = useGetCurrentUserProfileQuery();
   const [updateProfile, { isLoading: isUpdating }] = useUpdateUserProfileMutation();
   
   const [formData, setFormData] = useState({
-    name: '',
+    fullName: '',
     age: '',
     gender: '',
-    location: '',
-    mobile: ''
+    country: '',
+    mobileNumber: '',
+    schoolName: '',
+    email: ''
   });
   const [isEditing, setIsEditing] = useState(false);
 
   React.useEffect(() => {
     if (profile) {
       setFormData({
-        name: profile.name || '',
+        fullName: profile.fullName || '',
         age: profile.age?.toString() || '',
         gender: profile.gender || '',
-        location: profile.location || '',
-        mobile: profile.mobile || ''
+        country: profile.country || '',
+        mobileNumber: profile.mobileNumber || '',
+        schoolName: profile.schoolName || '',
+        email: profile.email || ''
       });
     }
   }, [profile]);
@@ -48,12 +52,13 @@ const ProfileManagement: React.FC<ProfileManagementProps> = ({ userId }) => {
   const handleSave = async () => {
     try {
       await updateProfile({
-        id: userId,
-        name: formData.name,
+        fullName: formData.fullName,
         age: parseInt(formData.age),
         gender: formData.gender,
-        location: formData.location,
-        mobile: formData.mobile
+        country: formData.country,
+        schoolName: formData.schoolName
+        // Note: Email is not included as it cannot be changed
+        // Mobile number updates might need special handling in backend
       }).unwrap();
       
       setIsEditing(false);
@@ -61,10 +66,10 @@ const ProfileManagement: React.FC<ProfileManagementProps> = ({ userId }) => {
         title: "Profile Updated",
         description: "Your profile has been updated successfully.",
       });
-    } catch (error) {
+    } catch (error: any) {
       toast({
         title: "Error",
-        description: "Failed to update profile. Please try again.",
+        description: error?.data?.message || "Failed to update profile. Please try again.",
         variant: "destructive",
       });
     }
@@ -103,11 +108,11 @@ const ProfileManagement: React.FC<ProfileManagementProps> = ({ userId }) => {
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="name">Full Name</Label>
+                <Label htmlFor="fullName">Full Name</Label>
                 <Input
-                  id="name"
-                  name="name"
-                  value={formData.name}
+                  id="fullName"
+                  name="fullName"
+                  value={formData.fullName}
                   onChange={handleInputChange}
                   placeholder="Enter your full name"
                 />
@@ -133,30 +138,57 @@ const ProfileManagement: React.FC<ProfileManagementProps> = ({ userId }) => {
                   className="w-full p-2 border border-gray-300 rounded-md"
                 >
                   <option value="">Select Gender</option>
-                  <option value="male">Male</option>
-                  <option value="female">Female</option>
-                  <option value="other">Other</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Other">Other</option>
                 </select>
               </div>
               <div>
-                <Label htmlFor="location">Location</Label>
+                <Label htmlFor="country">Country</Label>
                 <Input
-                  id="location"
-                  name="location"
-                  value={formData.location}
+                  id="country"
+                  name="country"
+                  value={formData.country}
                   onChange={handleInputChange}
-                  placeholder="Enter your location"
+                  placeholder="Enter your country"
                 />
               </div>
-              <div className="md:col-span-2">
-                <Label htmlFor="mobile">Mobile Number</Label>
+              <div>
+                <Label htmlFor="schoolName">School Name</Label>
                 <Input
-                  id="mobile"
-                  name="mobile"
-                  value={formData.mobile}
+                  id="schoolName"
+                  name="schoolName"
+                  value={formData.schoolName}
+                  onChange={handleInputChange}
+                  placeholder="Enter your school/university name"
+                />
+              </div>
+              <div>
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  placeholder="Enter your email address"
+                  disabled
+                  className="bg-gray-100"
+                />
+                <p className="text-sm text-gray-500 mt-1">Email cannot be changed</p>
+              </div>
+              <div>
+                <Label htmlFor="mobileNumber">Mobile Number</Label>
+                <Input
+                  id="mobileNumber"
+                  name="mobileNumber"
+                  value={formData.mobileNumber}
                   onChange={handleInputChange}
                   placeholder="Enter your mobile number"
+                  disabled
+                  className="bg-gray-100"
                 />
+                <p className="text-sm text-gray-500 mt-1">Mobile cannot be changed</p>
               </div>
             </div>
             <div className="flex gap-2">
@@ -174,7 +206,7 @@ const ProfileManagement: React.FC<ProfileManagementProps> = ({ userId }) => {
               <div className="flex items-center gap-2">
                 <User className="h-4 w-4 text-gray-500" />
                 <span className="font-medium">Name:</span>
-                <span>{profile?.name || 'Not provided'}</span>
+                <span>{profile?.fullName || 'Not provided'}</span>
               </div>
               <div className="flex items-center gap-2">
                 <Calendar className="h-4 w-4 text-gray-500" />
@@ -188,16 +220,35 @@ const ProfileManagement: React.FC<ProfileManagementProps> = ({ userId }) => {
               </div>
               <div className="flex items-center gap-2">
                 <MapPin className="h-4 w-4 text-gray-500" />
-                <span className="font-medium">Location:</span>
-                <span>{profile?.location || 'Not provided'}</span>
+                <span className="font-medium">Country:</span>
+                <span>{profile?.country || 'Not provided'}</span>
               </div>
+              {profile?.schoolName && (
+                <div className="flex items-center gap-2">
+                  <GraduationCap className="h-4 w-4 text-gray-500" />
+                  <span className="font-medium">School:</span>
+                  <span>{profile.schoolName}</span>
+                </div>
+              )}
               <div className="flex items-center gap-2">
                 <Phone className="h-4 w-4 text-gray-500" />
                 <span className="font-medium">Mobile:</span>
-                <span>{profile?.mobile || 'Not provided'}</span>
-                {profile?.isVerified && (
-                  <span className="text-green-600 text-sm">✓ Verified</span>
-                )}
+                <span>{profile?.mobileNumber || 'Not provided'}</span>
+              </div>
+              {profile?.email && (
+                <div className="flex items-center gap-2">
+                  <span className="h-4 w-4 text-gray-500">✉</span>
+                  <span className="font-medium">Email:</span>
+                  <span>{profile.email}</span>
+                  {profile?.isVerified && (
+                    <span className="text-green-600 text-sm">✓ Verified</span>
+                  )}
+                </div>
+              )}
+              <div className="flex items-center gap-2">
+                <span className="h-4 w-4 text-gray-500">📅</span>
+                <span className="font-medium">Member since:</span>
+                <span>{profile?.createdAt ? new Date(profile.createdAt).toLocaleDateString() : 'N/A'}</span>
               </div>
             </div>
             <Button onClick={() => setIsEditing(true)}>

@@ -30,11 +30,18 @@ import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import ForgotPassword from "./pages/auth/ForgotPassword";
 import VerifyOTP from "./pages/auth/VerifyOTP";
+import AdminLogin from "./pages/auth/AdminLogin";
+import AdminRegister from "./pages/auth/AdminRegister";
+import TeacherLogin from "./pages/auth/TeacherLogin";
+import TeacherRegister from "./pages/auth/TeacherRegister";
 
 // User imports
 import Dashboard from "./pages/users/Dashboard";
 import UserInfo from "./pages/UserInfo";
 import ApiTest from "./pages/ApiTest";
+
+// Teacher imports
+import TeacherDashboard from "./pages/teachers/TeacherDashboard";
 
 // Knowledge imports
 import Planets from "./pages/knowledge/Planets";
@@ -100,6 +107,10 @@ const App = () => {
           
           {/* Auth routes */}
           <Route path="/auth/login" element={<Login />} />
+          <Route path="/auth/admin-login" element={<AdminLogin />} />
+          <Route path="/auth/admin-register" element={<AdminRegister />} />
+          <Route path="/auth/teacher-login" element={<TeacherLogin />} />
+          <Route path="/auth/teacher-register" element={<TeacherRegister />} />
           <Route path="/auth/register" element={<Register />} />
           <Route path="/auth/forgot-password" element={<ForgotPassword />} />
           <Route path="/auth/verify-otp" element={<VerifyOTP />} />
@@ -108,6 +119,11 @@ const App = () => {
           <Route path="/dashboard" element={
             <ProtectedRoute>
               <Dashboard />
+            </ProtectedRoute>
+          } />
+          <Route path="/teacher-dashboard" element={
+            <ProtectedRoute>
+              <TeacherDashboard />
             </ProtectedRoute>
           } />
           <Route path="/user/:userId" element={<UserInfo />} />

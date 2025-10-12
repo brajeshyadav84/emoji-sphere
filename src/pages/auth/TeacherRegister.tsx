@@ -9,10 +9,10 @@ import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "@/components/ui/use-toast";
-import { Loader2, UserPlus } from "lucide-react";
+import { Loader2, GraduationCap, BookOpen } from "lucide-react";
 import { countries } from "@/data/countries";
 
-const registerSchema = z.object({
+const teacherRegisterSchema = z.object({
   name: z
     .string()
     .trim()
@@ -23,7 +23,7 @@ const registerSchema = z.object({
     .string()
     .min(1, "Age is required")
     .refine((val) => !isNaN(Number(val)), "Age must be a number")
-    .refine((val) => Number(val) >= 1 && Number(val) <= 150, "Age must be between 1 and 150"),
+    .refine((val) => Number(val) >= 18 && Number(val) <= 150, "Teacher must be at least 18 years old"),
   gender: z.enum(["Male", "Female", "Other"], {
     required_error: "Please select a gender",
   }),
@@ -48,23 +48,27 @@ const registerSchema = z.object({
   schoolName: z
     .string()
     .trim()
-    .optional()
-    .refine((val) => !val || val.length >= 2, "School/Institution name must be at least 2 characters if provided")
-    .refine((val) => !val || val.length <= 200, "School/Institution name must be less than 200 characters"),
+    .min(2, "School/Institution name must be at least 2 characters")
+    .max(200, "School/Institution name must be less than 200 characters"),
+  subject: z
+    .string()
+    .trim()
+    .min(2, "Subject/Area must be at least 2 characters")
+    .max(100, "Subject/Area must be less than 100 characters"),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Passwords don't match",
   path: ["confirmPassword"],
 });
 
-type RegisterFormValues = z.infer<typeof registerSchema>;
+type TeacherRegisterFormValues = z.infer<typeof teacherRegisterSchema>;
 
-export default function Register() {
+export default function TeacherRegister() {
   const navigate = useNavigate();
   const [signup, { isLoading }] = useSignupMutation();
   const [sendOtp] = useSendOtpMutation();
 
-  const form = useForm<RegisterFormValues>({
-    resolver: zodResolver(registerSchema),
+  const form = useForm<TeacherRegisterFormValues>({
+    resolver: zodResolver(teacherRegisterSchema),
     defaultValues: {
       name: "",
       age: "",
@@ -75,12 +79,13 @@ export default function Register() {
       password: "",
       confirmPassword: "",
       schoolName: "",
+      subject: "",
     },
   });
 
-  const onSubmit = async (values: RegisterFormValues) => {
+  const onSubmit = async (values: TeacherRegisterFormValues) => {
     try {
-      // Step 1: Register the user
+      // Step 1: Register the teacher user
       await signup({
         fullName: values.name,
         mobile: values.mobile,
@@ -90,12 +95,13 @@ export default function Register() {
         age: Number(values.age),
         country: values.location,
         gender: values.gender,
-        schoolName: values.schoolName,
+        schoolName: `${values.schoolName} - ${values.subject}`, // Combine school and subject
+        role: ["TEACHER"], // Set teacher role
       }).unwrap();
 
       toast({
-        title: "Registration Successful",
-        description: "Account created successfully. Sending OTP to your email...",
+        title: "Teacher Registration Successful",
+        description: "Teacher account created successfully. Sending OTP to your email...",
       });
 
       // Step 2: Send OTP to email
@@ -115,19 +121,19 @@ export default function Register() {
         console.error("Send OTP error:", otpError);
         toast({
           title: "OTP Send Failed",
-          description: "Account created but failed to send OTP. Please contact support.",
+          description: "Teacher account created but failed to send OTP. Please contact support.",
           variant: "destructive",
         });
       }
 
     } catch (error: any) {
-      console.error("Registration error:", error);
+      console.error("Teacher registration error:", error);
       
       // Extract error message from the response
       const errorMessage = error?.data?.message || error?.message || "An unexpected error occurred. Please try again.";
       
       // Handle specific error cases with user-friendly messages
-      let title = "Registration Failed";
+      let title = "Teacher Registration Failed";
       let description = errorMessage;
       
       if (errorMessage.toLowerCase().includes("mobile number is already registered")) {
@@ -150,14 +156,23 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-background to-muted p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-blue-950 dark:via-indigo-950 dark:to-purple-950 p-4">
       <div className="w-full max-w-2xl space-y-8 my-8">
         <div className="text-center">
-          <h1 className="text-4xl font-bold tracking-tight">Create Account</h1>
-          <p className="text-muted-foreground mt-2">Join us today</p>
+          <div className="flex justify-center mb-4">
+            <div className="bg-blue-100 dark:bg-blue-900/30 p-3 rounded-full">
+              <GraduationCap className="h-8 w-8 text-blue-600 dark:text-blue-400" />
+            </div>
+          </div>
+          <h1 className="text-4xl font-bold tracking-tight text-blue-900 dark:text-blue-100">
+            Teacher Registration
+          </h1>
+          <p className="text-blue-700 dark:text-blue-300 mt-2">
+            Create your teacher account
+          </p>
         </div>
 
-        <div className="bg-card border rounded-lg shadow-lg p-8">
+        <div className="bg-white dark:bg-gray-900 border border-blue-200 dark:border-blue-800 rounded-lg shadow-lg p-8">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -185,14 +200,14 @@ export default function Register() {
                   name="age"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Age</FormLabel>
+                      <FormLabel>Age (Minimum 18)</FormLabel>
                       <FormControl>
                         <Input
                           {...field}
                           type="number"
                           placeholder="25"
                           disabled={isLoading}
-                          min="1"
+                          min="18"
                           max="150"
                         />
                       </FormControl>
@@ -287,7 +302,7 @@ export default function Register() {
                         <Input
                           {...field}
                           type="email"
-                          placeholder="john@example.com"
+                          placeholder="teacher@example.com"
                           disabled={isLoading}
                           autoComplete="email"
                         />
@@ -307,7 +322,7 @@ export default function Register() {
                         <Input
                           {...field}
                           type="password"
-                          placeholder="Create a strong password"
+                          placeholder="Create strong password"
                           disabled={isLoading}
                           autoComplete="new-password"
                         />
@@ -338,34 +353,58 @@ export default function Register() {
                 />
               </div>
 
-              <FormField
-                control={form.control}
-                name="schoolName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>School/Institution (Optional)</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        placeholder="Name of your school or institution"
-                        disabled={isLoading}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <FormField
+                  control={form.control}
+                  name="schoolName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>School/Institution</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          placeholder="Name of your school or institution"
+                          disabled={isLoading}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-              <Button type="submit" className="w-full" disabled={isLoading}>
+                <FormField
+                  control={form.control}
+                  name="subject"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Subject/Teaching Area</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          placeholder="e.g., Mathematics, English, Science"
+                          disabled={isLoading}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <Button 
+                type="submit" 
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white" 
+                disabled={isLoading}
+              >
                 {isLoading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Creating account...
+                    Creating Teacher Account...
                   </>
                 ) : (
                   <>
-                    <UserPlus className="mr-2 h-4 w-4" />
-                    Create Account
+                    <GraduationCap className="mr-2 h-4 w-4" />
+                    Create Teacher Account
                   </>
                 )}
               </Button>
@@ -374,17 +413,17 @@ export default function Register() {
 
           <div className="mt-6 text-center text-sm space-y-2">
             <div>
-              <span className="text-muted-foreground">Already have an account? </span>
-              <Link to="/auth/login" className="text-primary hover:underline font-medium">
-                Sign in
+              <span className="text-muted-foreground">Already have a teacher account? </span>
+              <Link to="/auth/teacher-login" className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 hover:underline font-medium">
+                Teacher Sign In
               </Link>
             </div>
             
-            <div className="border-t border-gray-200 pt-4 space-y-1">
+            <div className="border-t border-blue-200 dark:border-blue-800 pt-4 space-y-1">
               <div>
-                <span className="text-muted-foreground">Teacher? </span>
-                <Link to="/auth/teacher-register" className="text-blue-600 hover:text-blue-700 hover:underline font-medium">
-                  Teacher Registration
+                <span className="text-muted-foreground">Regular user? </span>
+                <Link to="/auth/register" className="text-primary hover:underline font-medium">
+                  User Registration
                 </Link>
               </div>
               <div>

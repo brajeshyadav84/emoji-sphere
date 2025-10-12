@@ -5,25 +5,31 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { useToast } from '@/hooks/use-toast';
-import { Users, UserPlus, UserMinus, Search } from 'lucide-react';
-import { useGetFriendsQuery, useSendFriendRequestMutation, useRemoveFriendMutation } from '@/store/api/userApi';
+import { Users, UserPlus, UserMinus, Search, Check, X } from 'lucide-react';
+import { useGetFriendsQuery, useSendFriendRequestByIdMutation, useRemoveFriendMutation, useRespondToFriendRequestMutation } from '@/store/api/userApi';
 
 interface FriendsManagementProps {
-  userId: string;
+  // No props needed since we're using current user's friends
 }
 
-const FriendsManagement: React.FC<FriendsManagementProps> = ({ userId }) => {
+const FriendsManagement: React.FC<FriendsManagementProps> = () => {
   const { toast } = useToast();
-  const { data: friends, isLoading } = useGetFriendsQuery(userId);
-  const [sendFriendRequest, { isLoading: isSending }] = useSendFriendRequestMutation();
+  
+  // Get friends from API
+  const { data: friendsResponse, isLoading: friendsLoading, error: friendsError } = useGetFriendsQuery({ page: 0, size: 50 });
+  
+  const [sendFriendRequest, { isLoading: isSending }] = useSendFriendRequestByIdMutation();
   const [removeFriend, { isLoading: isRemoving }] = useRemoveFriendMutation();
+  const [respondToFriendRequest, { isLoading: isResponding }] = useRespondToFriendRequestMutation();
   
   const [searchQuery, setSearchQuery] = useState('');
   const [newFriendId, setNewFriendId] = useState('');
 
-  const filteredFriends = friends?.filter(friend =>
-    friend.friendProfile.name.toLowerCase().includes(searchQuery.toLowerCase())
-  ) || [];
+  // Extract friends from API response
+  const friends = friendsResponse?.friends || [];
+  const filteredFriends = friends.filter(friend =>
+    friend.otherUser.fullName.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   const handleSendFriendRequest = async () => {
     if (!newFriendId.trim()) {
@@ -37,8 +43,7 @@ const FriendsManagement: React.FC<FriendsManagementProps> = ({ userId }) => {
 
     try {
       await sendFriendRequest({
-        userId,
-        friendId: newFriendId.trim()
+        targetUserId: newFriendId.trim()
       }).unwrap();
       
       setNewFriendId('');
@@ -46,30 +51,69 @@ const FriendsManagement: React.FC<FriendsManagementProps> = ({ userId }) => {
         title: "Friend Request Sent",
         description: "Your friend request has been sent successfully.",
       });
-    } catch (error) {
+    } catch (error: any) {
       toast({
         title: "Error",
-        description: "Failed to send friend request. Please try again.",
+        description: error?.data?.message || "Failed to send friend request. Please try again.",
         variant: "destructive",
       });
     }
   };
 
-  const handleRemoveFriend = async (friendshipId: string, friendName: string) => {
+  const handleRemoveFriend = async (friendId: number, friendName: string) => {
     try {
       await removeFriend({
-        userId,
-        friendshipId
+        friendId: friendId.toString()
       }).unwrap();
       
       toast({
         title: "Friend Removed",
         description: `${friendName} has been removed from your friends list.`,
       });
-    } catch (error) {
+    } catch (error: any) {
       toast({
         title: "Error",
-        description: "Failed to remove friend. Please try again.",
+        description: error?.data?.message || "Failed to remove friend. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleAcceptFriendRequest = async (friendshipId: number, friendName: string) => {
+    try {
+      await respondToFriendRequest({
+        friendshipId,
+        response: 'ACCEPTED'
+      }).unwrap();
+      
+      toast({
+        title: "Friend Request Accepted",
+        description: `You are now friends with ${friendName}!`,
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error?.data?.message || "Failed to accept friend request. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleDeclineFriendRequest = async (friendshipId: number, friendName: string) => {
+    try {
+      await respondToFriendRequest({
+        friendshipId,
+        response: 'DECLINED'
+      }).unwrap();
+      
+      toast({
+        title: "Friend Request Declined",
+        description: `Friend request from ${friendName} has been declined.`,
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error?.data?.message || "Failed to decline friend request. Please try again.",
         variant: "destructive",
       });
     }
@@ -77,16 +121,17 @@ const FriendsManagement: React.FC<FriendsManagementProps> = ({ userId }) => {
 
   const getStatusBadge = (status: string) => {
     const statusConfig = {
-      accepted: { variant: 'default' as const, text: 'Friends' },
-      pending: { variant: 'secondary' as const, text: 'Pending' },
-      blocked: { variant: 'destructive' as const, text: 'Blocked' }
+      ACCEPTED: { variant: 'default' as const, text: 'Friends' },
+      PENDING: { variant: 'secondary' as const, text: 'Pending' },
+      BLOCKED: { variant: 'destructive' as const, text: 'Blocked' },
+      DECLINED: { variant: 'outline' as const, text: 'Declined' }
     };
     
-    const config = statusConfig[status as keyof typeof statusConfig] || statusConfig.pending;
+    const config = statusConfig[status as keyof typeof statusConfig] || statusConfig.PENDING;
     return <Badge variant={config.variant}>{config.text}</Badge>;
   };
 
-  if (isLoading) {
+  if (friendsLoading) {
     return (
       <Card>
         <CardHeader>
@@ -113,7 +158,7 @@ const FriendsManagement: React.FC<FriendsManagementProps> = ({ userId }) => {
           <Users className="h-5 w-5" />
           Friends Management
           <Badge variant="outline" className="ml-auto">
-            {friends?.filter(f => f.status === 'accepted').length || 0} Friends
+            {friends?.filter(f => f.status === 'ACCEPTED').length || 0} Friends
           </Badge>
         </CardTitle>
       </CardHeader>
@@ -147,6 +192,14 @@ const FriendsManagement: React.FC<FriendsManagementProps> = ({ userId }) => {
           />
         </div>
 
+        {/* Error handling */}
+        {friendsError && (
+          <div className="text-center py-4 text-red-500">
+            <p>Failed to load friends list</p>
+            <p className="text-sm">Please try refreshing the page</p>
+          </div>
+        )}
+
         {/* Friends List */}
         <div className="space-y-3">
           {filteredFriends.length === 0 ? (
@@ -166,45 +219,82 @@ const FriendsManagement: React.FC<FriendsManagementProps> = ({ userId }) => {
               <div key={friend.id} className="flex items-center justify-between p-3 border rounded-lg">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white font-medium">
-                    {friend.friendProfile.name.charAt(0).toUpperCase()}
+                    {friend.otherUser.fullName.charAt(0).toUpperCase()}
                   </div>
                   <div>
-                    <p className="font-medium">{friend.friendProfile.name}</p>
+                    <p className="font-medium">{friend.otherUser.fullName}</p>
                     <p className="text-sm text-gray-500">
-                      Age: {friend.friendProfile.age} • {getStatusBadge(friend.status)}
+                      {friend.otherUser.age} years old • {friend.otherUser.country}
+                      {friend.otherUser.schoolName && ` • ${friend.otherUser.schoolName}`}
                     </p>
+                    <div className="flex items-center gap-2 mt-1">
+                      {getStatusBadge(friend.status)}
+                      {friend.status === 'PENDING' && friend.isSentByCurrentUser && (
+                        <span className="text-xs text-gray-500">Request sent</span>
+                      )}
+                      {friend.status === 'PENDING' && friend.canRespond && (
+                        <span className="text-xs text-blue-600">Can respond</span>
+                      )}
+                    </div>
                   </div>
                 </div>
                 
-                {friend.status === 'accepted' && (
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <Button variant="outline" size="sm" className="text-red-600 hover:text-red-700">
-                        <UserMinus className="h-4 w-4 mr-1" />
-                        Remove
+                {/* Action buttons based on friendship status */}
+                <div className="flex items-center gap-2">
+                  {friend.status === 'PENDING' && friend.canRespond && (
+                    <>
+                      <Button 
+                        onClick={() => handleAcceptFriendRequest(friend.id, friend.otherUser.fullName)}
+                        disabled={isResponding}
+                        size="sm"
+                        className="bg-green-600 hover:bg-green-700 text-white"
+                      >
+                        <Check className="h-4 w-4 mr-1" />
+                        Accept
                       </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>Remove Friend</AlertDialogTitle>
-                        <AlertDialogDescription>
-                          Are you sure you want to remove {friend.friendProfile.name} from your friends list? 
-                          This action cannot be undone.
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction
-                          onClick={() => handleRemoveFriend(friend.id, friend.friendProfile.name)}
-                          disabled={isRemoving}
-                          className="bg-red-600 hover:bg-red-700"
-                        >
-                          {isRemoving ? 'Removing...' : 'Remove Friend'}
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
-                )}
+                      <Button 
+                        onClick={() => handleDeclineFriendRequest(friend.id, friend.otherUser.fullName)}
+                        disabled={isResponding}
+                        variant="outline" 
+                        size="sm"
+                        className="text-red-600 hover:text-red-700"
+                      >
+                        <X className="h-4 w-4 mr-1" />
+                        Decline
+                      </Button>
+                    </>
+                  )}
+                  
+                  {friend.status === 'ACCEPTED' && (
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button variant="outline" size="sm" className="text-red-600 hover:text-red-700">
+                          <UserMinus className="h-4 w-4 mr-1" />
+                          Remove
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Remove Friend</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            Are you sure you want to remove {friend.otherUser.fullName} from your friends list? 
+                            This action cannot be undone.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction
+                            onClick={() => handleRemoveFriend(friend.otherUserId, friend.otherUser.fullName)}
+                            disabled={isRemoving}
+                            className="bg-red-600 hover:bg-red-700"
+                          >
+                            {isRemoving ? 'Removing...' : 'Remove Friend'}
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  )}
+                </div>
               </div>
             ))
           )}
@@ -215,19 +305,19 @@ const FriendsManagement: React.FC<FriendsManagementProps> = ({ userId }) => {
           <div className="grid grid-cols-3 gap-4 mt-6 pt-4 border-t">
             <div className="text-center">
               <p className="text-2xl font-bold text-green-600">
-                {friends.filter(f => f.status === 'accepted').length}
+                {friends.filter(f => f.status === 'ACCEPTED').length}
               </p>
               <p className="text-sm text-gray-500">Friends</p>
             </div>
             <div className="text-center">
               <p className="text-2xl font-bold text-orange-600">
-                {friends.filter(f => f.status === 'pending').length}
+                {friends.filter(f => f.status === 'PENDING').length}
               </p>
               <p className="text-sm text-gray-500">Pending</p>
             </div>
             <div className="text-center">
               <p className="text-2xl font-bold text-red-600">
-                {friends.filter(f => f.status === 'blocked').length}
+                {friends.filter(f => f.status === 'BLOCKED').length}
               </p>
               <p className="text-sm text-gray-500">Blocked</p>
             </div>

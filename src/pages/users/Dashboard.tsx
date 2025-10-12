@@ -50,17 +50,17 @@ const Dashboard: React.FC = () => {
   const renderActiveTab = () => {
     switch (activeTab) {
       case 'profile':
-        return <ProfileManagement userId={userId} />;
+        return <ProfileManagement />;
       case 'security':
         return <SecuritySettings userId={userId} />;
       case 'friends':
-        return <FriendsManagement userId={userId} />;
+        return <FriendsManagement />;
       case 'exams':
         return <ExamHistory userId={userId} />;
       case 'feedback':
         return <FeedbackSystem userId={userId} />;
       default:
-        return <ProfileManagement userId={userId} />;
+        return <ProfileManagement />;
     }
   };
 
@@ -70,15 +70,37 @@ const Dashboard: React.FC = () => {
       <Header />
       
       <div className="max-w-6xl mx-auto p-4 space-y-6">
+        {/* Welcome Section with User Info */}
+        <Card className="border-2 border-purple-200 bg-gradient-to-r from-purple-50 via-blue-50 to-indigo-50">
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="w-16 h-16 bg-gradient-to-br from-purple-400 to-blue-500 rounded-full flex items-center justify-center text-white text-xl font-bold">
+                  {user?.fullName?.charAt(0).toUpperCase() || user?.name?.charAt(0).toUpperCase() || 'U'}
+                </div>
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-800">
+                    Welcome back, {user?.fullName || user?.name || 'User'}! 👋
+                  </h2>
+                  <p className="text-gray-600">
+                    {user?.role === 'TEACHER' ? '🎓 Teacher' : user?.role === 'ADMIN' ? '👑 Administrator' : '📚 Student'}
+                    {user?.mobile && ` • ${user.mobile}`}
+                  </p>
+                </div>
+              </div>
+              <Badge variant="outline" className="text-sm bg-gradient-to-r from-purple-100 to-blue-100 text-purple-700 border-purple-300">
+                {getGreeting()}
+              </Badge>
+            </div>
+          </CardHeader>
+        </Card>
+
         {/* Dashboard Header */}
         <div className="flex flex-col gap-4">
           <div className="flex items-center justify-between">
             <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-600 via-blue-600 to-indigo-600 bg-clip-text text-transparent">
               User Dashboard!
             </h1>
-            <Badge variant="outline" className="text-sm bg-gradient-to-r from-purple-100 to-blue-100 text-purple-700 border-purple-300">
-              {getGreeting()}
-            </Badge>
           </div>
           <p className="text-lg text-gray-600">
             Manage your profile and track your learning progress!
