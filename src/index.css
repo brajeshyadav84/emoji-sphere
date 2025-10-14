@@ -124,6 +124,28 @@ All colors MUST be HSL.
     overflow-x: hidden;
   }
 
+  /* Prevent body margin when scroll is locked - multiple approaches */
+  body[data-scroll-locked],
+  body[data-scroll-locked="1"],
+  body[data-scroll-locked="true"],
+  body.scroll-locked,
+  html[data-scroll-locked] body,
+  html body[data-scroll-locked] {
+    margin-right: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  /* Force no margin on body regardless of attributes - highest specificity */
+  html body {
+    margin-right: 0 !important;
+    padding-right: 0 !important;
+  }
+  
+  /* Override any Radix UI scroll lock margin */
+  body[style*="margin-right"] {
+    margin-right: 0 !important;
+  }
+
   html {
     overflow-x: hidden;
   }

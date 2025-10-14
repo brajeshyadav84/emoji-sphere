@@ -17,8 +17,16 @@ import {
   ChatMessage,
   Conversation 
 } from "@/store/api/chatApi";
+import { 
+  useGetFriendsStatusQuery,
+  useSetUserOnlineMutation,
+  useSetUserOfflineMutation,
+  useSendHeartbeatMutation 
+} from "@/store/api/presenceApi";
+import { useUserPresence } from "@/hooks/useUserPresence";
 import { getAvatarByGender } from "@/utils/avatarUtils";
 import { FriendshipResponse } from "@/store/api/userApi";
+import OnlineStatusIndicator from "@/components/OnlineStatusIndicator";
 
 interface Friend {
   id: number;
@@ -28,6 +36,8 @@ interface Friend {
   time: string;
   online: boolean;
   gender?: string;
+  hasNewMessages?: boolean;
+  unreadCount?: number;
 }
 
 const Chat = () => {
@@ -39,19 +49,48 @@ const Chat = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(true);
   const [showHighlightAnimation, setShowHighlightAnimation] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
+  const [friendTyping, setFriendTyping] = useState<number | null>(null);
+  const [newMessageNotification, setNewMessageNotification] = useState<{ friendId: number; count: number } | null>(null);
+  const [friendsWithNewMessages, setFriendsWithNewMessages] = useState<Set<number>>(new Set());
+  const [lastReadMessages, setLastReadMessages] = useState<Map<number, number>>(new Map());
+  const [unreadCounts, setUnreadCounts] = useState<Map<number, number>>(new Map());
   const inputRef = useRef<HTMLInputElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const lastMessageCountRef = useRef<number>(0);
 
   // Get selected friend from navigation state
   const routeSelectedFriend = location.state?.selectedFriend;
 
   // API hooks
   const { data: friendsResponse, isLoading: friendsLoading, error: friendsError } = useGetFriendsQuery({ page: 0, size: 50 });
-  const { data: conversationsResponse } = useGetConversationsQuery({ page: 0, size: 20 });
+  const { data: conversationsResponse, refetch: refetchConversations } = useGetConversationsQuery(
+    { page: 0, size: 20 },
+    {
+      pollingInterval: 3000, // Poll every 3 seconds to check for new conversations/messages
+      refetchOnFocus: true,
+      refetchOnReconnect: true
+    }
+  );
   const { data: messagesResponse, isLoading: messagesLoading } = useGetMessagesQuery(
     selectedConversationId ? { conversationId: selectedConversationId, page: 0, size: 50 } : { conversationId: 0 },
-    { skip: !selectedConversationId }
+    { 
+      skip: !selectedConversationId,
+      pollingInterval: 2000, // Poll every 2 seconds for new messages
+      refetchOnFocus: true,
+      refetchOnReconnect: true
+    }
   );
+  
+  // Presence API hooks
+  const { data: friendsStatusResponse } = useGetFriendsStatusQuery(undefined, {
+    pollingInterval: 30000, // Poll every 30 seconds for online status
+    refetchOnFocus: true,
+    refetchOnReconnect: true
+  });
+  
+  // Use custom presence hook for automatic online/offline management
+  useUserPresence();
 
   // Mutations
   const [sendMessage] = useSendMessageMutation();
@@ -61,30 +100,45 @@ const Chat = () => {
   // Transform API response to Friend interface - filter only accepted friendships
   const friends: Friend[] = friendsResponse?.friends
     ?.filter((friendship: FriendshipResponse) => friendship.status === 'ACCEPTED')
-    ?.map((friendship: FriendshipResponse) => ({
-      id: friendship.otherUserId,
-      name: friendship.otherUser?.fullName || 'Unknown User',
-      avatar: getAvatarByGender(friendship.otherUser?.gender),
-      lastMessage: "Start a conversation",
-      time: new Date(friendship.createdAt).toLocaleDateString(),
-      online: Math.random() > 0.5, // Random online status for demo
-      gender: friendship.otherUser?.gender
-    })) || [];
+    ?.map((friendship: FriendshipResponse) => {
+      // Get online status from friends status response
+      const friendStatus = friendsStatusResponse?.friendsStatus?.find(
+        status => status.userId === friendship.otherUserId
+      );
+      
+      return {
+        id: friendship.otherUserId,
+        name: friendship.otherUser?.fullName || 'Unknown User',
+        avatar: getAvatarByGender(friendship.otherUser?.gender),
+        lastMessage: "Start a conversation",
+        time: new Date(friendship.createdAt).toLocaleDateString(),
+        online: friendStatus?.isOnline || false, // Use real online status from API
+        gender: friendship.otherUser?.gender
+      };
+    }) || [];
 
   // Find existing conversation for selected friend
   const findConversationForFriend = (friendId: number): Conversation | undefined => {
     return conversationsResponse?.conversations?.find(conv => conv.otherUserId === friendId);
   };
 
-  // Update friends with last message info from conversations
+  // Update friends with last message info from conversations and unread count
   const friendsWithConversations = friends.map(friend => {
     const conversation = findConversationForFriend(friend.id);
+    const hasNewMessages = friendsWithNewMessages.has(friend.id) && selectedFriend?.id !== friend.id;
+    const isSelected = selectedFriend?.id === friend.id;
+    
+    // Get unread count from state
+    const unreadCount = isSelected ? 0 : (unreadCounts.get(friend.id) || 0);
+    
     return {
       ...friend,
       lastMessage: conversation?.lastMessage || "Start a conversation",
       time: conversation?.lastMessageTime ? 
         new Date(conversation.lastMessageTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 
-        friend.time
+        friend.time,
+      hasNewMessages,
+      unreadCount
     };
   });
 
@@ -136,10 +190,170 @@ const Chat = () => {
     }
   }, [messagesResponse?.messages]);
 
+  // Handle new message notifications and sound
+  useEffect(() => {
+    if (messagesResponse?.messages && selectedConversationId) {
+      const currentMessageCount = messagesResponse.messages.length;
+      
+      if (lastMessageCountRef.current > 0 && currentMessageCount > lastMessageCountRef.current) {
+        // New message received
+        const lastMessage = messagesResponse.messages[messagesResponse.messages.length - 1];
+        
+        // If the message is from the friend (not from current user)
+        if (lastMessage.senderId === selectedFriend?.id) {
+          // Play notification sound
+          try {
+            const audio = new Audio('/notification.mp3'); // You'll need to add this sound file
+            audio.volume = 0.3;
+            audio.play().catch(() => {}); // Ignore if audio fails
+          } catch (error) {
+            // Fallback: create a simple beep using Web Audio API
+            try {
+              const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+              const oscillator = audioContext.createOscillator();
+              const gainNode = audioContext.createGain();
+              
+              oscillator.connect(gainNode);
+              gainNode.connect(audioContext.destination);
+              
+              oscillator.frequency.value = 800;
+              oscillator.type = 'sine';
+              gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+              gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+              
+              oscillator.start(audioContext.currentTime);
+              oscillator.stop(audioContext.currentTime + 0.1);
+            } catch (audioError) {
+              console.log('Audio notification not available');
+            }
+          }
+          
+          // Show visual notification
+          setNewMessageNotification({ friendId: selectedFriend.id, count: 1 });
+          setTimeout(() => setNewMessageNotification(null), 3000);
+        }
+      }
+      
+      lastMessageCountRef.current = currentMessageCount;
+    }
+  }, [messagesResponse?.messages, selectedConversationId, selectedFriend]);
+
+  // Detect new messages in conversations for friends not currently selected
+  useEffect(() => {
+    if (conversationsResponse?.conversations && friends.length > 0) {
+      const newFriendsWithMessages = new Set<number>();
+      
+      conversationsResponse.conversations.forEach(conversation => {
+        // Only mark as having new messages if this friend is not currently selected
+        if (selectedFriend?.id !== conversation.otherUserId) {
+          const lastReadMessageId = lastReadMessages.get(conversation.otherUserId);
+          
+          // If we haven't read this conversation yet, or if there's a newer message
+          if (!lastReadMessageId || (conversation.lastMessageId && conversation.lastMessageId > lastReadMessageId)) {
+            newFriendsWithMessages.add(conversation.otherUserId);
+          }
+        }
+      });
+      
+      // Update the state if there are changes
+      if (newFriendsWithMessages.size !== friendsWithNewMessages.size || 
+          ![...newFriendsWithMessages].every(id => friendsWithNewMessages.has(id))) {
+        setFriendsWithNewMessages(newFriendsWithMessages);
+      }
+    }
+  }, [conversationsResponse, selectedFriend, lastReadMessages, friends]);
+
+  // Simulate new messages from other friends for demo purposes
+  useEffect(() => {
+    if (friends.length > 1) {
+      const interval = setInterval(() => {
+        // Randomly add new message notifications for friends not currently selected
+        const nonSelectedFriends = friends.filter(f => f.id !== selectedFriend?.id);
+        if (nonSelectedFriends.length > 0 && Math.random() > 0.7) { // 30% chance every interval
+          const randomFriend = nonSelectedFriends[Math.floor(Math.random() * nonSelectedFriends.length)];
+          setFriendsWithNewMessages(prev => {
+            const newSet = new Set(prev);
+            newSet.add(randomFriend.id);
+            return newSet;
+          });
+          
+          // Play notification sound if not currently chatting with anyone
+          if (!selectedFriend) {
+            try {
+              const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+              const oscillator = audioContext.createOscillator();
+              const gainNode = audioContext.createGain();
+              
+              oscillator.connect(gainNode);
+              gainNode.connect(audioContext.destination);
+              
+              oscillator.frequency.value = 800;
+              oscillator.type = 'sine';
+              gainNode.gain.setValueAtTime(0.05, audioContext.currentTime);
+              gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+              
+              oscillator.start(audioContext.currentTime);
+              oscillator.stop(audioContext.currentTime + 0.1);
+            } catch (audioError) {
+              console.log('Audio notification not available');
+            }
+          }
+        }
+      }, 8000); // Check every 8 seconds
+
+      return () => clearInterval(interval);
+    }
+  }, [friends, selectedFriend]);
+
+  // Simulate typing indicator (in a real app, this would come from WebSocket)
+  useEffect(() => {
+    let typingTimeout: NodeJS.Timeout;
+    
+    if (messageText.length > 0) {
+      setIsTyping(true);
+      typingTimeout = setTimeout(() => setIsTyping(false), 1000);
+    } else {
+      setIsTyping(false);
+    }
+    
+    return () => {
+      if (typingTimeout) clearTimeout(typingTimeout);
+    };
+  }, [messageText]);
+
   const handleSelectFriend = (friend: Friend) => {
     setSelectedFriend(friend);
     setShowHighlightAnimation(false);
     setSearchQuery("");
+    
+    // Clear new message notification for this friend
+    if (newMessageNotification?.friendId === friend.id) {
+      setNewMessageNotification(null);
+    }
+
+    // Clear new message indicator for this friend
+    setFriendsWithNewMessages(prev => {
+      const newSet = new Set(prev);
+      newSet.delete(friend.id);
+      return newSet;
+    });
+
+    // Clear unread count for this friend
+    setUnreadCounts(prev => {
+      const newMap = new Map(prev);
+      newMap.delete(friend.id);
+      return newMap;
+    });
+
+    // Mark conversation as read
+    const conversation = findConversationForFriend(friend.id);
+    if (conversation?.lastMessageId) {
+      setLastReadMessages(prev => {
+        const newMap = new Map(prev);
+        newMap.set(friend.id, conversation.lastMessageId);
+        return newMap;
+      });
+    }
 
     // Find or create conversation
     const existingConversation = findConversationForFriend(friend.id);
@@ -160,19 +374,47 @@ const Chat = () => {
 
   const handleSendMessage = async () => {
     if (messageText.trim() && selectedFriend) {
+      const messageToSend = messageText.trim();
+      const tempId = Date.now(); // Temporary ID for optimistic update
+      
+      // Clear input immediately for better UX
+      setMessageText("");
+      
       try {
         // Determine message type
-        const isEmojiOnly = /^[\p{Emoji}\p{Emoji_Modifier}\p{Emoji_Component}\p{Emoji_Modifier_Base}\p{Emoji_Presentation}]+$/u.test(messageText.trim());
+        const isEmojiOnly = /^[\p{Emoji}\p{Emoji_Modifier}\p{Emoji_Component}\p{Emoji_Modifier_Base}\p{Emoji_Presentation}]+$/u.test(messageToSend);
         
+        // Send message with optimistic update
         await sendMessage({
           receiverId: selectedFriend.id,
-          messageText: messageText.trim(),
+          messageText: messageToSend,
           messageType: isEmojiOnly ? 'EMOJI' : 'TEXT'
         }).unwrap();
         
-        setMessageText("");
+        // Show success animation
+        const successIndicator = document.createElement('div');
+        successIndicator.innerHTML = '✓';
+        successIndicator.className = 'fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-green-500 text-2xl font-bold z-50 animate-ping';
+        document.body.appendChild(successIndicator);
+        setTimeout(() => document.body.removeChild(successIndicator), 1000);
+        
       } catch (error) {
         console.error('Failed to send message:', error);
+        
+        // Show error feedback and restore message
+        setMessageText(messageToSend);
+        
+        // Show error animation
+        const errorIndicator = document.createElement('div');
+        errorIndicator.innerHTML = '❌ Failed to send';
+        errorIndicator.className = 'fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-red-500 text-sm font-bold z-50 bg-background border rounded-lg px-4 py-2 shadow-lg';
+        document.body.appendChild(errorIndicator);
+        setTimeout(() => document.body.removeChild(errorIndicator), 3000);
+        
+        // Focus back on input
+        if (inputRef.current) {
+          inputRef.current.focus();
+        }
       }
     }
   };
@@ -191,6 +433,27 @@ const Chat = () => {
       input.setSelectionRange(start + emoji.length, start + emoji.length);
     }, 0);
   };
+
+  // Close emoji picker when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (showEmojiPicker) {
+        const target = event.target as HTMLElement;
+        const emojiPicker = document.querySelector('[data-emoji-picker]');
+        const emojiButton = document.querySelector('[data-emoji-button]');
+        
+        if (emojiPicker && !emojiPicker.contains(target) && 
+            emojiButton && !emojiButton.contains(target)) {
+          setShowEmojiPicker(false);
+        }
+      }
+    };
+
+    if (showEmojiPicker) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [showEmojiPicker]);
 
   // Emoji list
   const emojiList = [
@@ -247,13 +510,21 @@ const Chat = () => {
                   <button
                     key={friend.id}
                     onClick={() => handleSelectFriend(friend)}
-                    className={`flex items-center justify-center w-10 h-10 rounded-full mb-1
+                    className={`flex items-center justify-center w-10 h-10 rounded-full mb-1 relative
                       ${selectedFriend?.id === friend.id ? 'ring-2 ring-primary' : ''}
                       ${friend.online ? '' : 'opacity-60'}
                       bg-muted hover:bg-muted/70 transition-all duration-200`}
                     title={friend.name}
                   >
                     <span className="text-2xl">{friend.avatar}</span>
+                    <OnlineStatusIndicator 
+                      isOnline={friend.online}
+                      size="sm"
+                      className="absolute bottom-0 right-0"
+                    />
+                    {friend.hasNewMessages && selectedFriend?.id !== friend.id && (
+                      <div className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+                    )}
                   </button>
                 ))}
               </div>
@@ -302,13 +573,38 @@ const Chat = () => {
                                 : 'bg-muted/50 hover:bg-muted'
                             }`}
                           >
-                            <span className="text-2xl">{friend.avatar}</span>
+                            <div className="relative">
+                              <span className="text-2xl">{friend.avatar}</span>
+                              <OnlineStatusIndicator 
+                                isOnline={friend.online}
+                                size="sm"
+                                className="absolute -bottom-1 -right-1"
+                              />
+                              {friend.hasNewMessages && selectedFriend?.id !== friend.id && (
+                                <div className="absolute -top-1 -right-1 min-w-[16px] h-4 bg-red-500 rounded-full flex items-center justify-center animate-pulse">
+                                  {friend.unreadCount && friend.unreadCount > 0 && (
+                                    <span className="text-[8px] text-white font-bold">
+                                      {friend.unreadCount > 9 ? '9+' : friend.unreadCount}
+                                    </span>
+                                  )}
+                                </div>
+                              )}
+                            </div>
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center justify-between mb-1">
-                                <h3 className="font-semibold text-sm truncate">{friend.name}</h3>
-                                <span className="text-xs text-muted-foreground">{friend.time}</span>
+                                <h3 className={`font-semibold text-sm truncate ${friend.hasNewMessages && selectedFriend?.id !== friend.id ? 'text-primary' : ''}`}>
+                                  {friend.name}
+                                </h3>
+                                <div className="flex items-center gap-1">
+                                  <span className="text-xs text-muted-foreground">{friend.time}</span>
+                                  {friend.hasNewMessages && selectedFriend?.id !== friend.id && (
+                                    <div className="w-2 h-2 bg-primary rounded-full animate-pulse" />
+                                  )}
+                                </div>
                               </div>
-                              <p className="text-xs text-muted-foreground truncate">{friend.lastMessage}</p>
+                              <p className={`text-xs truncate ${friend.hasNewMessages && selectedFriend?.id !== friend.id ? 'text-primary font-medium' : 'text-muted-foreground'}`}>
+                                {friend.lastMessage}
+                              </p>
                             </div>
                             {friend.online && (
                               <div className="w-2 h-2 bg-success rounded-full ml-2" />
@@ -350,16 +646,36 @@ const Chat = () => {
                     >
                       <div className="relative">
                         <span className="text-3xl">{friend.avatar}</span>
-                        {friend.online && (
-                          <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-success rounded-full border-2 border-background" />
+                        <OnlineStatusIndicator 
+                          isOnline={friend.online}
+                          size="md"
+                          className="absolute -bottom-1 -right-1"
+                        />
+                        {friend.hasNewMessages && selectedFriend?.id !== friend.id && (
+                          <div className="absolute -top-1 -right-1 min-w-[20px] h-5 bg-red-500 rounded-full border-2 border-background animate-pulse flex items-center justify-center">
+                            {friend.unreadCount && friend.unreadCount > 0 && (
+                              <span className="text-[10px] text-white font-bold">
+                                {friend.unreadCount > 9 ? '9+' : friend.unreadCount}
+                              </span>
+                            )}
+                          </div>
                         )}
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between mb-1">
-                          <h3 className="font-semibold text-sm truncate">{friend.name}</h3>
-                          <span className="text-xs text-muted-foreground">{friend.time}</span>
+                          <h3 className={`font-semibold text-sm truncate ${friend.hasNewMessages && selectedFriend?.id !== friend.id ? 'text-primary' : ''}`}>
+                            {friend.name}
+                          </h3>
+                          <div className="flex items-center gap-1">
+                            <span className="text-xs text-muted-foreground">{friend.time}</span>
+                            {friend.hasNewMessages && selectedFriend?.id !== friend.id && (
+                              <div className="w-2 h-2 bg-primary rounded-full animate-pulse" />
+                            )}
+                          </div>
                         </div>
-                        <p className="text-xs text-muted-foreground truncate">{friend.lastMessage}</p>
+                        <p className={`text-xs truncate ${friend.hasNewMessages && selectedFriend?.id !== friend.id ? 'text-primary font-medium' : 'text-muted-foreground'}`}>
+                          {friend.lastMessage}
+                        </p>
                       </div>
                     </button>
                   ))}
@@ -373,13 +689,44 @@ const Chat = () => {
                 {selectedFriend ? (
                   <>
                     {/* Chat Header */}
-                    <div className="p-4 border-b border-border flex items-center gap-3">
-                      <div className="text-3xl">{selectedFriend.avatar}</div>
-                      <div>
-                        <h2 className="font-bold text-lg">{selectedFriend.name}</h2>
-                        <p className="text-sm text-muted-foreground">
-                          {selectedFriend.online ? "Online" : "Offline"}
-                        </p>
+                    <div className="p-4 border-b border-border flex items-center gap-3 bg-gradient-to-r from-primary/5 to-transparent">
+                      <div className="relative">
+                        <div className="text-3xl">{selectedFriend.avatar}</div>
+                        <OnlineStatusIndicator 
+                          isOnline={selectedFriend.online}
+                          size="md"
+                          className="absolute -bottom-1 -right-1"
+                        />
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2">
+                          <h2 className="font-bold text-lg">{selectedFriend.name}</h2>
+                          {newMessageNotification?.friendId === selectedFriend.id && (
+                            <div className="animate-bounce">
+                              <span className="inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full">
+                                New!
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <OnlineStatusIndicator 
+                            isOnline={selectedFriend.online}
+                            size="sm"
+                            showText={true}
+                            lastSeen={friendsStatusResponse?.friendsStatus?.find(s => s.userId === selectedFriend.id)?.lastSeen}
+                          />
+                          {friendTyping === selectedFriend.id && (
+                            <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                              <div className="flex space-x-1">
+                                <div className="w-1 h-1 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                                <div className="w-1 h-1 bg-primary rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                                <div className="w-1 h-1 bg-primary rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                              </div>
+                              <span>typing...</span>
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
 
@@ -392,39 +739,64 @@ const Chat = () => {
                           </div>
                         ) : (
                           <div className="space-y-4">
-                            {messagesResponse?.messages?.map((message: ChatMessage) => (
-                              <div
-                                key={message.id}
-                                className={`flex ${
-                                  message.senderId === selectedFriend.id ? "justify-start" : "justify-end"
-                                }`}
-                              >
+                            {messagesResponse?.messages?.map((message: ChatMessage, index: number) => {
+                              const isCurrentUser = message.senderId !== selectedFriend.id;
+                              const isLastMessage = index === messagesResponse.messages.length - 1;
+                              
+                              return (
                                 <div
-                                  className={`max-w-[70%] p-3 rounded-2xl ${
-                                    message.senderId === selectedFriend.id
-                                      ? "bg-muted"
-                                      : "gradient-primary text-primary-foreground"
+                                  key={message.id}
+                                  className={`flex ${isCurrentUser ? "justify-end" : "justify-start"} ${
+                                    isLastMessage ? 'animate-in slide-in-from-bottom-2 duration-300' : ''
                                   }`}
                                 >
-                                  <p className="text-sm">{message.messageText}</p>
-                                  <span
-                                    className={`text-xs mt-1 block ${
-                                      message.senderId === selectedFriend.id
-                                        ? "text-muted-foreground"
-                                        : "text-primary-foreground/80"
+                                  {!isCurrentUser && (
+                                    <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center mr-2 mt-auto">
+                                      <span className="text-sm">{selectedFriend.avatar}</span>
+                                    </div>
+                                  )}
+                                  <div
+                                    className={`max-w-[70%] p-3 rounded-2xl transition-all duration-200 hover:scale-105 ${
+                                      isCurrentUser
+                                        ? "gradient-primary text-primary-foreground rounded-br-md"
+                                        : "bg-muted rounded-bl-md"
                                     }`}
                                   >
-                                    {new Date(message.createdAt).toLocaleTimeString([], { 
-                                      hour: '2-digit', 
-                                      minute: '2-digit' 
-                                    })}
-                                  </span>
+                                    <p className={`text-sm ${message.messageType === 'EMOJI' ? 'text-2xl' : ''}`}>
+                                      {message.messageText}
+                                    </p>
+                                    <div className="flex items-center justify-between mt-1">
+                                      <span
+                                        className={`text-xs ${
+                                          isCurrentUser
+                                            ? "text-primary-foreground/80"
+                                            : "text-muted-foreground"
+                                        }`}
+                                      >
+                                        {new Date(message.createdAt).toLocaleTimeString([], { 
+                                          hour: '2-digit', 
+                                          minute: '2-digit' 
+                                        })}
+                                      </span>
+                                      {isCurrentUser && (
+                                        <span className="text-xs text-primary-foreground/80 ml-2">
+                                          {message.isRead ? '✓✓' : '✓'}
+                                        </span>
+                                      )}
+                                    </div>
+                                  </div>
+                                  {isCurrentUser && (
+                                    <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center ml-2 mt-auto">
+                                      <span className="text-sm">👤</span>
+                                    </div>
+                                  )}
                                 </div>
-                              </div>
-                            )) || (
+                              );
+                            }) || (
                               <div className="text-center text-muted-foreground py-8">
-                                <div className="text-4xl mb-2">💬</div>
+                                <div className="text-4xl mb-2 animate-bounce">💬</div>
                                 <p>Start your conversation by sending a message!</p>
+                                <p className="text-xs mt-2 opacity-60">Messages will appear here in real-time</p>
                               </div>
                             )}
                             <div ref={messagesEndRef} />
@@ -434,7 +806,17 @@ const Chat = () => {
                     </div>
 
                     {/* Message Input */}
-                    <div className="p-4 border-t border-border flex-shrink-0">
+                    <div className="p-4 border-t border-border flex-shrink-0 bg-gradient-to-r from-transparent to-primary/5">
+                      {isTyping && (
+                        <div className="mb-2 text-xs text-muted-foreground flex items-center gap-2">
+                          <div className="flex space-x-1">
+                            <div className="w-1 h-1 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                            <div className="w-1 h-1 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                            <div className="w-1 h-1 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                          </div>
+                          <span>You are typing...</span>
+                        </div>
+                      )}
                       <div className="flex gap-2">
                         <div className="relative">
                           <Button
@@ -442,15 +824,20 @@ const Chat = () => {
                             size="icon"
                             type="button"
                             onClick={() => setShowEmojiPicker((v) => !v)}
+                            className="hover:scale-110 transition-transform duration-200"
+                            data-emoji-button
                           >
                             <Smile className="h-5 w-5" />
                           </Button>
                           {showEmojiPicker && (
-                            <div className="absolute left-0 bottom-12 z-50 bg-background border rounded-xl shadow-lg p-2 w-72 max-w-xs grid grid-cols-8 gap-2 max-h-40 overflow-y-auto">
+                            <div 
+                              className="absolute left-0 bottom-12 z-50 bg-background border rounded-xl shadow-lg p-2 w-72 max-w-xs grid grid-cols-8 gap-2 max-h-40 overflow-y-auto animate-in slide-in-from-bottom-2 duration-200"
+                              data-emoji-picker
+                            >
                               {emojiList.map((emoji) => (
                                 <button
                                   key={emoji}
-                                  className="text-2xl hover:bg-muted rounded-lg p-1 focus:outline-none"
+                                  className="text-2xl hover:bg-muted rounded-lg p-1 focus:outline-none hover:scale-125 transition-all duration-150"
                                   type="button"
                                   onClick={() => handleEmojiClick(emoji)}
                                 >
@@ -466,13 +853,17 @@ const Chat = () => {
                           value={messageText}
                           onChange={(e) => setMessageText(e.target.value)}
                           onKeyPress={(e) => {
-                            if (e.key === "Enter") handleSendMessage();
+                            if (e.key === "Enter" && !e.shiftKey) {
+                              e.preventDefault();
+                              handleSendMessage();
+                            }
                           }}
-                          className="flex-1"
+                          className="flex-1 transition-all duration-200 focus:ring-2 focus:ring-primary/20"
+                          autoComplete="off"
                         />
                         <Button
                           onClick={handleSendMessage}
-                          className="gradient-primary"
+                          className="gradient-primary hover:scale-110 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                           disabled={!messageText.trim()}
                         >
                           <Send className="h-5 w-5" />

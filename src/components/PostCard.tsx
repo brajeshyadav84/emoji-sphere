@@ -7,12 +7,19 @@ import { Input } from "./ui/input";
 import { Heart, MessageCircle, Share2, Send } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { getAvatarByGender } from "@/utils/avatarUtils";
+
 import { 
   useGetCommentsByPostQuery, 
   useCreateCommentMutation,
   useTogglePostLikeMutation,
   useToggleCommentLikeMutation 
 } from "@/store/api/commentsApi";
+import {
+  useGetGroupCommentsByPostQuery,
+  useCreateGroupCommentMutation,
+  useToggleGroupPostLikeMutation,
+  useToggleGroupCommentLikeMutation
+} from "@/store/api/groupCommentApi";
 
 interface PostCardProps {
   postId: number; // Changed from string to number
@@ -25,6 +32,7 @@ interface PostCardProps {
   userId?: string;
   userGender?: string; // Add gender prop
   isLikedByCurrentUser?: boolean; // Add this prop
+  fromGroup?: boolean;
   onUpdate?: () => void;
 }
 
@@ -90,6 +98,7 @@ const PostCard = ({
   userId, 
   userGender, // Add gender prop
   isLikedByCurrentUser = false,
+  fromGroup = false,
   onUpdate 
 }: PostCardProps) => {
   const navigate = useNavigate();
@@ -104,19 +113,17 @@ const PostCard = ({
   const [showShareMenu, setShowShareMenu] = useState(false);
   const postUrl = typeof window !== "undefined" ? `${window.location.origin}/post/${postId}` : "";
 
+
   // API hooks
-  const { 
-    data: commentsData, 
-    isLoading: commentsLoading,
-    refetch: refetchComments 
-  } = useGetCommentsByPostQuery(
-    { postId, page: 0, size: 10 }, 
-    { skip: !showComments }
-  );
-  
-  const [createComment] = useCreateCommentMutation();
-  const [togglePostLike] = useTogglePostLikeMutation();
-  const [toggleCommentLike] = useToggleCommentLikeMutation();
+  const commentsApi = fromGroup
+    ? useGetGroupCommentsByPostQuery({ postId, page: 0, size: 10 }, { skip: !showComments })
+    : useGetCommentsByPostQuery({ postId, page: 0, size: 10 }, { skip: !showComments });
+
+  const { data: commentsData, isLoading: commentsLoading, refetch: refetchComments } = commentsApi;
+
+  const [createComment] = fromGroup ? useCreateGroupCommentMutation() : useCreateCommentMutation();
+  const [togglePostLike] = fromGroup ? useToggleGroupPostLikeMutation() : useTogglePostLikeMutation();
+  const [toggleCommentLike] = fromGroup ? useToggleGroupCommentLikeMutation() : useToggleCommentLikeMutation();
 
   const handleShare = async () => {
     const shareData = {
@@ -252,10 +259,10 @@ const PostCard = ({
   };
   
   return (
-    <Card className="p-3 md:p-6 shadow-playful hover:shadow-hover transition-all duration-300 mx-0 w-full max-w-full">
+    <Card className="p-3 md:p-6 shadow-playful hover:shadow-hover transition-all duration-300 mx-0 w-full max-w-full transform hover:scale-[1.02] hover:-translate-y-1">
       <div className="flex items-start gap-2 md:gap-4">
         <div 
-          className="w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center text-xl md:text-2xl flex-shrink-0 bg-gradient-to-br from-orange-50 to-pink-50 border border-gray-200 shadow-sm cursor-pointer hover:scale-105 transition-transform"
+          className="w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center text-xl md:text-2xl flex-shrink-0 bg-gradient-to-br from-orange-50 to-pink-50 border border-gray-200 shadow-sm cursor-pointer hover:scale-110 transition-all duration-200 hover:shadow-md"
           onClick={handleAvatarClick}
           title={`View ${author}'s profile`}
         >
@@ -264,7 +271,7 @@ const PostCard = ({
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-2">
             <h3 
-              className="font-bold text-foreground text-sm md:text-base truncate cursor-pointer hover:text-primary transition-colors"
+              className="font-bold text-foreground text-sm md:text-base truncate cursor-pointer hover:text-primary transition-all duration-200 hover:scale-105"
               onClick={handleAvatarClick}
               title={`View ${author}'s profile`}
             >
@@ -278,16 +285,16 @@ const PostCard = ({
             <Button 
               variant="ghost" 
               size="sm" 
-              className={`gap-2 transition-colors ${liked ? "text-destructive" : "hover:text-destructive"}`}
+              className={`gap-2 transition-all duration-200 hover:scale-110 ${liked ? "text-destructive" : "hover:text-destructive"}`}
               onClick={handleLike}
             >
-              <Heart className={`h-4 w-4 ${liked ? "fill-current" : ""}`} />
+              <Heart className={`h-4 w-4 transition-all duration-200 ${liked ? "fill-current animate-pulse" : ""}`} />
               <span className="font-semibold">{likeCount}</span>
             </Button>
             <Button 
               variant="ghost" 
               size="sm" 
-              className="gap-2 hover:text-primary transition-colors"
+              className="gap-2 hover:text-primary transition-all duration-200 hover:scale-110"
               onClick={() => setShowComments(!showComments)}
             >
               <MessageCircle className="h-4 w-4" />
@@ -297,7 +304,7 @@ const PostCard = ({
               <Button
                 variant="ghost"
                 size="sm"
-                className="gap-1 md:gap-2 hover:text-success transition-colors px-1 md:px-2 text-xs md:text-sm"
+                className="gap-1 md:gap-2 hover:text-success transition-all duration-200 hover:scale-110 px-1 md:px-2 text-xs md:text-sm"
                 onClick={handleShare}
               >
                 <Share2 className="h-3 w-3 md:h-4 md:w-4" />

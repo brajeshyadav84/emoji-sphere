@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
@@ -7,106 +7,27 @@ import CreatePost from "@/components/CreatePost";
 import PostCard from "@/components/PostCard";
 import GroupSidebar from "@/components/GroupSidebar";
 import AdvertisementSpace from "@/components/AdvertisementSpace";
-import { supabase } from "@/integrations/supabase/client";
+import { useGetAllGroupPostsQuery } from "@/store/api/groupPostApi";
 import { useToast } from "@/hooks/use-toast";
 import { getAvatarByGender } from "@/utils/avatarUtils";
 
-interface Post {
-  id: string;
-  content: string;
-  created_at: string;
-  user_id: string; // Add user_id field
-  profiles: {
-    name: string;
-    gender?: string; // Add gender field
-  };
-  post_likes: { id: string }[];
-  post_comments: { id: string }[];
-}
+
 
 const GroupPage = () => {
   const { groupId } = useParams<{ groupId: string }>();
     const navigate = useNavigate();
-  const [posts, setPosts] = useState<Post[]>([]);
+
   const [groupName, setGroupName] = useState("");
-  const [loading, setLoading] = useState(true);
   const { toast } = useToast();
+  const {
+    data: postsData,
+    isLoading,
+    refetch
+  } = useGetAllGroupPostsQuery({ page: 0, size: 20 });
 
-  useEffect(() => {
-    if (groupId) {
-      fetchGroupDetails();
-      fetchPosts();
-    }
-  }, [groupId]);
 
-  const fetchGroupDetails = async () => {
-    const { data, error } = await supabase
-      .from("groups")
-      .select("name")
-      .eq("id", groupId)
-      .single();
-
-    if (error) {
-      toast({
-        title: "Error",
-        description: "Failed to load group details",
-        variant: "destructive",
-      });
-    } else if (data) {
-      setGroupName(data.name);
-    }
-  };
-
-  const fetchPosts = async () => {
-    setLoading(true);
-    const { data, error } = await supabase
-      .from("posts")
-      .select(`
-        id,
-        content,
-        created_at,
-        user_id,
-        post_likes (id),
-        post_comments (id)
-      `)
-      .eq("group_id", groupId)
-      .order("created_at", { ascending: false });
-
-    if (error) {
-      toast({
-        title: "Error",
-        description: "Failed to load posts",
-        variant: "destructive",
-      });
-      setLoading(false);
-      return;
-    }
-
-    // Fetch profile names separately
-    if (data && data.length > 0) {
-      const userIds = data.map(post => post.user_id);
-      const { data: profilesData } = await supabase
-        .from("profiles")
-        .select("id, name, gender")
-        .in("id", userIds);
-
-      const profilesMap = new Map(profilesData?.map(p => [p.id, p]) || []);
-      
-      const postsWithProfiles = data.map(post => ({
-        ...post,
-        profiles: profilesMap.get(post.user_id) || { name: "Unknown", gender: undefined }
-      }));
-
-      setPosts(postsWithProfiles as any);
-    } else {
-      setPosts([]);
-    }
-    setLoading(false);
-  };
-
-  const handlePostCreated = () => {
-    fetchPosts();
-  };
+  // Optionally fetch group name (if not available in postsData)
+  // You can add a useGetGroupByIdQuery if needed for groupName
 
   return (
     <div className="min-h-screen bg-background">
@@ -131,28 +52,28 @@ const GroupPage = () => {
           </div>
 
           <div className="lg:col-span-6 space-y-6">
-            <CreatePost groupId={groupId} onPostCreated={handlePostCreated} />
-            
-            {loading ? (
+            <CreatePost fromGroup={true} />
+            {isLoading ? (
               <div className="text-center py-8">Loading posts...</div>
-            ) : posts.length === 0 ? (
+            ) : !postsData?.content?.length ? (
               <div className="text-center py-8 text-muted-foreground">
                 No posts yet. Be the first to share something!
               </div>
             ) : (
-              posts.map((post) => (
+              postsData.content.map((post) => (
                 <PostCard
                   key={post.id}
                   postId={post.id}
-                  author={post.profiles?.name || "Unknown"}
-                  avatar={getAvatarByGender(post.profiles?.gender)}
-                  time={new Date(post.created_at).toLocaleDateString()}
+                  author={post.author?.name || "Unknown"}
+                  avatar={getAvatarByGender(post.author?.gender)}
+                  time={new Date(post.createdAt).toLocaleDateString()}
                   content={post.content}
-                  likes={post.post_likes?.length || 0}
-                  comments={post.post_comments?.length || 0}
-                  userId={post.user_id}
-                  userGender={post.profiles?.gender}
-                  onUpdate={fetchPosts}
+                  likes={post.likesCount || 0}
+                  comments={post.commentsCount || 0}
+                  userId={post.author?.id}
+                  userGender={post.author?.gender}
+                  onUpdate={refetch}
+                  fromGroup={true}
                 />
               ))
             )}

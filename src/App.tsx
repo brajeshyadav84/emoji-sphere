@@ -4,7 +4,9 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useEffect } from "react";
 import useSecurity from "@/hooks/useSecurity";
+import { initBodyMarginFix, cleanupBodyMarginFix } from "@/utils/bodyMarginFix";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import AdminRoute from "@/components/AdminRoute";
 import Index from "./pages/Index";
@@ -77,6 +79,15 @@ const queryClient = new QueryClient();
 const App = () => {
   // Apply security features globally
   useSecurity();
+  
+  // Initialize body margin fix to prevent dropdown/modal scroll issues
+  useEffect(() => {
+    initBodyMarginFix();
+    
+    return () => {
+      cleanupBodyMarginFix();
+    };
+  }, []);
   
   return (
     <QueryClientProvider client={queryClient}>

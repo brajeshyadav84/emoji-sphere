@@ -124,25 +124,6 @@ const Groups = () => {
                   Join groups and connect with friends who share your interests!
                 </p>
               </div>
-              <div className="flex gap-2">
-                <Button 
-                  onClick={() => navigate('/groups/manage')}
-                  variant="outline"
-                  className="text-xs md:text-sm"
-                >
-                  <Settings className="mr-2 h-4 w-4" />
-                  Manage
-                </Button>
-                {isAdmin && (
-                  <Button 
-                    onClick={() => navigate('/groups/manage')}
-                    className="gradient-primary font-semibold text-xs md:text-sm"
-                  >
-                    <Plus className="mr-2 h-4 w-4" />
-                    Create Group
-                  </Button>
-                )}
-              </div>
             </div>
             
             <section className="mb-6 md:mb-8 lg:mb-12">

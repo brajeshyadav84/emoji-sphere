@@ -8,19 +8,20 @@ import useSecurity from "@/hooks/useSecurity";
 import SecurityNotice from "./SecurityNotice";
 import { useToast } from "@/hooks/use-toast";
 import { useCreatePostMutation } from "@/store/api/postsApi";
+import { useShareGroupPostMutation } from "@/store/api/groupPostApi";
 
 interface CreatePostProps {
-  groupId?: string;
-  onPostCreated?: () => void;
+  fromGroup?: boolean;
 }
 
-const CreatePost = ({ groupId, onPostCreated }: CreatePostProps = {}) => {
+const CreatePost = ({ fromGroup }: CreatePostProps = {}) => {
   const [postText, setPostText] = useState("");
   const [showMoreEmojis, setShowMoreEmojis] = useState(false);
   const [validationMessage, setValidationMessage] = useState<ContentValidationResult | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
   const [createPost] = useCreatePostMutation();
+  const [shareGroupPost, { isLoading: isPosting }] = useShareGroupPostMutation();
 
   // Apply security features
   useSecurity();
@@ -65,15 +66,27 @@ const CreatePost = ({ groupId, onPostCreated }: CreatePostProps = {}) => {
     }
 
     try {
-      // Use RTK Query to create post via backend API
-      await createPost({
-        content: postText,
-        isPublic: true,
-        // Add categoryId if needed
-        // categoryId: 1,
-        // Add tags if any emojis are detected
-        tags: extractEmojisAsTags(postText),
-      }).unwrap();
+      if (fromGroup) {
+        // Use RTK Query to create post via backend API
+        await shareGroupPost({
+          content: postText,
+          isPublic: true,
+          // Add categoryId if needed
+          // categoryId: 1,
+          // Add tags if any emojis are detected
+          tags: extractEmojisAsTags(postText),
+        }).unwrap();
+      } else {
+        // Use RTK Query to create post via backend API
+        await createPost({
+          content: postText,
+          isPublic: true,
+          // Add categoryId if needed
+          // categoryId: 1,
+          // Add tags if any emojis are detected
+          tags: extractEmojisAsTags(postText),
+        }).unwrap();
+      }
 
       // Success - clear form
       setPostText("");
@@ -86,8 +99,6 @@ const CreatePost = ({ groupId, onPostCreated }: CreatePostProps = {}) => {
       setTimeout(() => {
         setValidationMessage(null);
       }, 3000);
-
-      onPostCreated?.();
       
       toast({
         title: "Success",

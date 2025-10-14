@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useGetPostsQuery } from "@/store/api/postsApi";
 import PostCard from "./PostCard";
 import { Button } from "./ui/button";
@@ -10,9 +10,65 @@ interface PostsFeedProps {
   useStoredProcedure?: boolean;
 }
 
+// Animation component for posts
+const AnimatedPostCard = ({ 
+  children, 
+  index, 
+  isVisible 
+}: { 
+  children: React.ReactNode; 
+  index: number; 
+  isVisible: boolean; 
+}) => {
+  return (
+    <div
+      className={`transform transition-all duration-700 ease-out ${
+        isVisible 
+          ? 'translate-y-0 opacity-100' 
+          : 'translate-y-8 opacity-0'
+      }`}
+      style={{
+        transitionDelay: `${index * 100}ms`
+      }}
+    >
+      {children}
+    </div>
+  );
+};
+
+// Custom hook for intersection observer
+const useInView = (options = {}) => {
+  const [isInView, setIsInView] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        setIsInView(true);
+        // Once in view, stop observing to keep the animation
+        observer.unobserve(entry.target);
+      }
+    }, {
+      threshold: 0.1,
+      rootMargin: '20px',
+      ...options
+    });
+
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  return [ref, isInView] as const;
+};
+
 const PostsFeed = ({ className = "", useStoredProcedure = false }: PostsFeedProps) => {
   const [page, setPage] = useState(0);
-  const [size] = useState(10);
+  const [size] = useState(3);
+  const [visiblePosts, setVisiblePosts] = useState<Set<number>>(new Set());
+  const [allPosts, setAllPosts] = useState<any[]>([]);
   
   const {
     data: postsData,
@@ -28,8 +84,38 @@ const PostsFeed = ({ className = "", useStoredProcedure = false }: PostsFeedProp
     useStoredProcedure,
   });
 
+  // Accumulate posts as pages are loaded
+  useEffect(() => {
+    if (!postsData?.content) return;
+    if (page === 0) {
+      setAllPosts(postsData.content);
+    } else {
+      setAllPosts(prev => {
+        // Avoid duplicates if API returns overlapping posts
+        const existingIds = new Set(prev.map(p => p.id));
+        const newPosts = postsData.content.filter(p => !existingIds.has(p.id));
+        return [...prev, ...newPosts];
+      });
+    }
+  }, [postsData?.content, page]);
+
+  // Function to mark post as visible
+  const markPostAsVisible = (postId: number) => {
+    setVisiblePosts(prev => new Set(prev).add(postId));
+  };
+
+  // Reset visible posts when data changes significantly
+  useEffect(() => {
+    if (page === 0) {
+      setVisiblePosts(new Set());
+    }
+  }, [page, postsData?.content?.length]);
+
   const handleRefresh = () => {
-    refetch();
+  setPage(0); // Reset to first page
+  setVisiblePosts(new Set()); // Reset animations
+  setAllPosts([]); // Reset accumulated posts
+  refetch();
   };
 
   const handleLoadMore = () => {
@@ -75,7 +161,7 @@ const PostsFeed = ({ className = "", useStoredProcedure = false }: PostsFeedProp
     );
   }
 
-  if (!postsData?.content || postsData.content.length === 0) {
+  if (!allPosts || allPosts.length === 0) {
     return (
       <div className={`text-center py-8 ${className}`}>
         <h3 className="text-lg font-semibold mb-2">No posts yet</h3>
@@ -107,10 +193,68 @@ const PostsFeed = ({ className = "", useStoredProcedure = false }: PostsFeedProp
         </Button>
       </div>
 
-      {/* Posts */}
-      {postsData.content.map((post) => (
+      {/* Posts with animations */}
+      <div className="space-y-6">
+        {allPosts.map((post, index) => {
+          return (
+            <PostWithAnimation
+              key={post.id}
+              post={post}
+              index={index}
+              onRefetch={refetch}
+            />
+          );
+        })}
+      </div>
+
+      {/* Load More Button */}
+      {postsData && !postsData.last && (
+        <div className="text-center py-4">
+          <Button
+            onClick={handleLoadMore}
+            variant="outline"
+            disabled={isFetching}
+            className="transform transition-all duration-200 hover:scale-105"
+          >
+            {isFetching ? 'Loading...' : 'Load More Posts'}
+          </Button>
+        </div>
+      )}
+
+      {/* Posts Stats */}
+      <div className="text-center text-sm text-muted-foreground">
+        Showing {allPosts.length} of {postsData?.totalElements ?? allPosts.length} posts
+      </div>
+    </div>
+  );
+};
+
+// Component for individual post with animation
+const PostWithAnimation = ({ 
+  post, 
+  index, 
+  onRefetch 
+}: { 
+  post: any; 
+  index: number; 
+  onRefetch: () => void; 
+}) => {
+  const [ref, isInView] = useInView();
+
+  return (
+    <div
+      ref={ref}
+      className={`transform transition-all duration-700 ease-out ${
+        isInView 
+          ? 'translate-y-0 opacity-100 scale-100' 
+          : 'translate-y-12 opacity-0 scale-95'
+      }`}
+      style={{
+        transitionDelay: `${Math.min(index * 150, 800)}ms`
+      }}
+    >
+      <div className="hover:scale-[1.02] transition-transform duration-300 ease-out">
         <PostCard
-          key={post.id}
           postId={post.id}
           author={post.author.name}
           avatar={getAvatarByGender(post.author.gender)}
@@ -121,26 +265,8 @@ const PostsFeed = ({ className = "", useStoredProcedure = false }: PostsFeedProp
           userId={post.author.id.toString()}
           userGender={post.author.gender}
           isLikedByCurrentUser={post.isLikedByCurrentUser}
-          onUpdate={refetch}
+          onUpdate={onRefetch}
         />
-      ))}
-
-      {/* Load More Button */}
-      {postsData && !postsData.last && (
-        <div className="text-center py-4">
-          <Button
-            onClick={handleLoadMore}
-            variant="outline"
-            disabled={isFetching}
-          >
-            {isFetching ? 'Loading...' : 'Load More Posts'}
-          </Button>
-        </div>
-      )}
-
-      {/* Posts Stats */}
-      <div className="text-center text-sm text-muted-foreground">
-        Showing {postsData.content.length} of {postsData.totalElements} posts
       </div>
     </div>
   );

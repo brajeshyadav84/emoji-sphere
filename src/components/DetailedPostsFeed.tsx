@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useGetPostsWithDetailsQuery } from "@/store/api/postsApi";
 import { useTogglePostLikeMutation, useToggleCommentLikeMutation } from "@/store/api/commentsApi";
 import { Button } from "./ui/button";
@@ -11,6 +11,34 @@ import { useToast } from "@/hooks/use-toast";
 interface DetailedPostsFeedProps {
   className?: string;
 }
+
+// Custom hook for intersection observer
+const useInView = (options = {}) => {
+  const [isInView, setIsInView] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        setIsInView(true);
+        // Once in view, stop observing to keep the animation
+        observer.unobserve(entry.target);
+      }
+    }, {
+      threshold: 0.1,
+      rootMargin: '20px',
+      ...options
+    });
+
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  return [ref, isInView] as const;
+};
 
 const DetailedPostsFeed = ({ className = "" }: DetailedPostsFeedProps) => {
   const [page, setPage] = useState(0);
@@ -34,6 +62,7 @@ const DetailedPostsFeed = ({ className = "" }: DetailedPostsFeedProps) => {
   const [toggleCommentLike] = useToggleCommentLikeMutation();
 
   const handleRefresh = () => {
+    setPage(0); // Reset to first page
     refetch();
   };
 
@@ -129,9 +158,69 @@ const DetailedPostsFeed = ({ className = "" }: DetailedPostsFeedProps) => {
         </Button>
       </div>
 
-      {/* Posts */}
-      {postsData.content.map((post) => (
-        <Card key={post.postId} className="w-full">
+      {/* Posts with animations */}
+      <div className="space-y-6">
+        {postsData.content.map((post, index) => (
+          <DetailedPostCard
+            key={post.postId}
+            post={post}
+            index={index}
+            onPostLike={handlePostLike}
+            onCommentLike={handleCommentLike}
+          />
+        ))}
+      </div>
+
+      {/* Load More Button */}
+      {postsData && !postsData.last && (
+        <div className="text-center py-4">
+          <Button
+            onClick={handleLoadMore}
+            variant="outline"
+            disabled={isFetching}
+            className="transform transition-all duration-200 hover:scale-105"
+          >
+            {isFetching ? 'Loading...' : 'Load More Posts'}
+          </Button>
+        </div>
+      )}
+
+      {/* Posts Stats */}
+      <div className="text-center text-sm text-muted-foreground">
+        Showing {postsData.content.length} of {postsData.totalElements} posts
+      </div>
+    </div>
+  );
+};
+
+// Component for individual detailed post with animation
+const DetailedPostCard = ({ 
+  post, 
+  index, 
+  onPostLike, 
+  onCommentLike 
+}: { 
+  post: any; 
+  index: number; 
+  onPostLike: (postId: number) => void;
+  onCommentLike: (commentId: number) => void;
+}) => {
+  const [ref, isInView] = useInView();
+
+  return (
+    <div
+      ref={ref}
+      className={`transform transition-all duration-700 ease-out ${
+        isInView 
+          ? 'translate-y-0 opacity-100 scale-100' 
+          : 'translate-y-12 opacity-0 scale-95'
+      }`}
+      style={{
+        transitionDelay: `${Math.min(index * 150, 800)}ms`
+      }}
+    >
+      <div className="hover:scale-[1.01] transition-transform duration-300 ease-out">
+        <Card className="w-full">
           <CardHeader>
             <div className="flex items-start space-x-4">
               <Avatar>
@@ -163,7 +252,7 @@ const DetailedPostsFeed = ({ className = "" }: DetailedPostsFeedProps) => {
                 <img 
                   src={post.mediaUrl} 
                   alt="Post media" 
-                  className="mt-3 rounded-lg max-w-full h-auto"
+                  className="mt-3 rounded-lg max-w-full h-auto transform transition-transform duration-300 hover:scale-105"
                 />
               )}
             </div>
@@ -173,8 +262,8 @@ const DetailedPostsFeed = ({ className = "" }: DetailedPostsFeedProps) => {
               <Button
                 variant="ghost"
                 size="sm"
-                className="gap-1 hover:text-destructive transition-colors p-1"
-                onClick={() => handlePostLike(post.postId)}
+                className="gap-1 hover:text-destructive transition-all duration-200 p-1 hover:scale-110"
+                onClick={() => onPostLike(post.postId)}
               >
                 <Heart className="h-4 w-4" />
                 <span>{post.likeCount} likes</span>
@@ -190,8 +279,16 @@ const DetailedPostsFeed = ({ className = "" }: DetailedPostsFeedProps) => {
               <div className="border-t pt-4">
                 <h4 className="font-medium mb-3">Comments ({post.commentCount})</h4>
                 <div className="space-y-3">
-                  {post.comments.map((comment) => (
-                    <div key={comment.commentId} className="bg-gray-50 rounded-lg p-3">
+                  {post.comments.map((comment, commentIndex) => (
+                    <div 
+                      key={comment.commentId} 
+                      className={`bg-gray-50 rounded-lg p-3 transform transition-all duration-500 ${
+                        isInView ? 'translate-x-0 opacity-100' : 'translate-x-4 opacity-0'
+                      }`}
+                      style={{
+                        transitionDelay: `${(index * 150) + (commentIndex * 100)}ms`
+                      }}
+                    >
                       <div className="flex items-start space-x-3">
                         <Avatar className="h-8 w-8">
                           <AvatarFallback>
@@ -212,8 +309,8 @@ const DetailedPostsFeed = ({ className = "" }: DetailedPostsFeedProps) => {
                             <Button
                               variant="ghost"
                               size="sm"
-                              className="gap-1 hover:text-destructive transition-colors p-1 h-auto"
-                              onClick={() => handleCommentLike(comment.commentId)}
+                              className="gap-1 hover:text-destructive transition-all duration-200 p-1 h-auto hover:scale-110"
+                              onClick={() => onCommentLike(comment.commentId)}
                             >
                               <Heart className="h-3 w-3" />
                               <span>{comment.likeCount}</span>
@@ -226,8 +323,16 @@ const DetailedPostsFeed = ({ className = "" }: DetailedPostsFeedProps) => {
                           {/* Replies */}
                           {comment.replies && comment.replies.length > 0 && (
                             <div className="mt-3 space-y-2">
-                              {comment.replies.map((reply) => (
-                                <div key={reply.replyId} className="bg-white rounded p-2 ml-4">
+                              {comment.replies.map((reply, replyIndex) => (
+                                <div 
+                                  key={reply.replyId} 
+                                  className={`bg-white rounded p-2 ml-4 transform transition-all duration-300 ${
+                                    isInView ? 'translate-x-0 opacity-100' : 'translate-x-6 opacity-0'
+                                  }`}
+                                  style={{
+                                    transitionDelay: `${(index * 150) + (commentIndex * 100) + (replyIndex * 50)}ms`
+                                  }}
+                                >
                                   <div className="flex items-center gap-2 mb-1">
                                     <span className="font-medium text-base">{reply.repliedBy}</span>
                                     <span className="text-sm text-muted-foreground">
@@ -248,27 +353,11 @@ const DetailedPostsFeed = ({ className = "" }: DetailedPostsFeedProps) => {
             )}
           </CardContent>
         </Card>
-      ))}
-
-      {/* Load More Button */}
-      {postsData && !postsData.last && (
-        <div className="text-center py-4">
-          <Button
-            onClick={handleLoadMore}
-            variant="outline"
-            disabled={isFetching}
-          >
-            {isFetching ? 'Loading...' : 'Load More Posts'}
-          </Button>
-        </div>
-      )}
-
-      {/* Posts Stats */}
-      <div className="text-center text-sm text-muted-foreground">
-        Showing {postsData.content.length} of {postsData.totalElements} posts
       </div>
     </div>
   );
 };
+
+export default DetailedPostsFeed;
 
 export default DetailedPostsFeed;
