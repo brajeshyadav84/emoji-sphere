@@ -61,6 +61,10 @@ export interface UserBasicInfo {
   age?: number;
   gender?: string;
   isActive: boolean;
+  // Online status fields
+  isOnline?: boolean;
+  lastSeen?: string;
+  onlineStatus?: string;
 }
 
 export interface FriendsListResponse {

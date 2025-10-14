@@ -218,11 +218,28 @@ const FriendsManagement: React.FC<FriendsManagementProps> = () => {
             filteredFriends.map((friend) => (
               <div key={friend.id} className="flex items-center justify-between p-3 border rounded-lg">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white font-medium">
-                    {friend.otherUser.fullName.charAt(0).toUpperCase()}
+                  <div className="relative w-10 h-10">
+                    <div className="w-10 h-10 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white font-medium">
+                      {friend.otherUser.fullName.charAt(0).toUpperCase()}
+                    </div>
+                    {/* Online/offline dot */}
+                    {typeof friend.otherUser.isOnline !== 'undefined' && (
+                      <span
+                        className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-white ${friend.otherUser.isOnline ? 'bg-green-400' : 'bg-gray-400'}`}
+                        title={friend.otherUser.isOnline ? 'Online' : friend.otherUser.lastSeen ? `Last seen: ${new Date(friend.otherUser.lastSeen).toLocaleString()}` : 'Offline'}
+                      />
+                    )}
                   </div>
                   <div>
-                    <p className="font-medium">{friend.otherUser.fullName}</p>
+                    <p className="font-medium flex items-center gap-2">
+                      {friend.otherUser.fullName}
+                      {/* Show online status text */}
+                      {typeof friend.otherUser.isOnline !== 'undefined' && (
+                        <span className={`text-xs ml-2 ${friend.otherUser.isOnline ? 'text-green-600' : 'text-gray-500'}`}>
+                          {friend.otherUser.isOnline ? 'Online' : friend.otherUser.onlineStatus === 'away' ? 'Away' : 'Offline'}
+                        </span>
+                      )}
+                    </p>
                     <p className="text-sm text-gray-500">
                       {friend.otherUser.age} years old • {friend.otherUser.country}
                       {friend.otherUser.schoolName && ` • ${friend.otherUser.schoolName}`}

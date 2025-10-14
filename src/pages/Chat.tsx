@@ -112,7 +112,7 @@ const Chat = () => {
         avatar: getAvatarByGender(friendship.otherUser?.gender),
         lastMessage: "Start a conversation",
         time: new Date(friendship.createdAt).toLocaleDateString(),
-        online: friendStatus?.isOnline || false, // Use real online status from API
+        online: friendship.otherUser?.isOnline || false, // Use real online status from API
         gender: friendship.otherUser?.gender
       };
     }) || [];
@@ -249,7 +249,7 @@ const Chat = () => {
           const lastReadMessageId = lastReadMessages.get(conversation.otherUserId);
           
           // If we haven't read this conversation yet, or if there's a newer message
-          if (!lastReadMessageId || (conversation.lastMessageId && conversation.lastMessageId > lastReadMessageId)) {
+          if (!lastReadMessageId || (conversation?.lastMessageId && conversation?.lastMessageId > lastReadMessageId)) {
             newFriendsWithMessages.add(conversation.otherUserId);
           }
         }
@@ -321,6 +321,22 @@ const Chat = () => {
     };
   }, [messageText]);
 
+  // Sync unreadCounts from conversations API response
+  useEffect(() => {
+    if (conversationsResponse?.conversations) {
+      setUnreadCounts(prev => {
+        const newMap = new Map<number, number>();
+        conversationsResponse.conversations.forEach((conv: any) => {
+          if (typeof conv.unreadCount === 'number' && conv.otherUserId) {
+            newMap.set(conv.otherUserId, conv.unreadCount);
+          }
+        });
+        return newMap;
+      });
+    }
+  }, [conversationsResponse]);
+  
+
   const handleSelectFriend = (friend: Friend) => {
     setSelectedFriend(friend);
     setShowHighlightAnimation(false);
@@ -350,7 +366,7 @@ const Chat = () => {
     if (conversation?.lastMessageId) {
       setLastReadMessages(prev => {
         const newMap = new Map(prev);
-        newMap.set(friend.id, conversation.lastMessageId);
+        newMap.set(friend.id, conversation?.lastMessageId);
         return newMap;
       });
     }
@@ -651,13 +667,11 @@ const Chat = () => {
                           size="md"
                           className="absolute -bottom-1 -right-1"
                         />
-                        {friend.hasNewMessages && selectedFriend?.id !== friend.id && (
+                        {friend.unreadCount !== undefined && friend.unreadCount > 0 && selectedFriend?.id !== friend.id && (
                           <div className="absolute -top-1 -right-1 min-w-[20px] h-5 bg-red-500 rounded-full border-2 border-background animate-pulse flex items-center justify-center">
-                            {friend.unreadCount && friend.unreadCount > 0 && (
-                              <span className="text-[10px] text-white font-bold">
-                                {friend.unreadCount > 9 ? '9+' : friend.unreadCount}
-                              </span>
-                            )}
+                            <span className="text-[10px] text-white font-bold">
+                              {friend.unreadCount > 9 ? '9+' : friend.unreadCount}
+                            </span>
                           </div>
                         )}
                       </div>

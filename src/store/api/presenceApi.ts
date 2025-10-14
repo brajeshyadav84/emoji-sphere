@@ -44,7 +44,6 @@ export const presenceApi = apiSlice.injectEndpoints({
       query: () => '/friends/status',
       providesTags: ['Presence'],
       // Poll every 30 seconds to update online status
-      pollingInterval: 30000,
     }),
 
     // Update user status (online, away, busy, etc.)
