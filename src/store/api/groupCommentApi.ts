@@ -53,7 +53,7 @@ export const groupCommentsApi = apiSlice.injectEndpoints({
       size?: number;
     }>({
       query: ({ postId, page = 0, size = 10 }) => ({
-        url: `/group/posts/${postId}/comments`,
+        url: `/group-posts/${postId}/comments`,
         params: { page, size },
       }),
       
@@ -65,7 +65,7 @@ export const groupCommentsApi = apiSlice.injectEndpoints({
       data: GroupCommentRequest;
     }>({
       query: ({ postId, data }) => ({
-        url: `/group/posts/${postId}/comments`,
+        url: `/group-posts/${postId}/comments`,
         method: 'POST',
         body: data,
       }),
@@ -77,7 +77,7 @@ export const groupCommentsApi = apiSlice.injectEndpoints({
       data: GroupCommentRequest;
     }>({
       query: ({ commentId, data }) => ({
-        url: `/group/comments/${commentId}`,
+        url: `/group-posts/comments/${commentId}`,
         method: 'PUT',
         body: data,
       }),
@@ -86,7 +86,7 @@ export const groupCommentsApi = apiSlice.injectEndpoints({
     // Delete a group comment
     deleteGroupComment: builder.mutation<void, number>({
       query: (commentId) => ({
-        url: `/group/comments/${commentId}`,
+        url: `/group-posts/comments/${commentId}`,
         method: 'DELETE',
       }),
     }),
@@ -100,15 +100,7 @@ export const groupCommentsApi = apiSlice.injectEndpoints({
     // Toggle like on a group comment
     toggleGroupCommentLike: builder.mutation<{liked: boolean; status: string; message: string}, number>({
       query: (commentId) => ({
-        url: `/group/comments/${commentId}/like`,
-        method: 'POST',
-      }),
-    }),
-
-    // Toggle like on a group post
-    toggleGroupPostLike: builder.mutation<{liked: boolean; status: string; message: string}, number>({
-      query: (postId) => ({
-        url: `/group/posts/${postId}/like`,
+        url: `/group-posts/comments/${commentId}/like`,
         method: 'POST',
       }),
     }),
@@ -122,6 +114,5 @@ export const {
   useUpdateGroupCommentMutation,
   useDeleteGroupCommentMutation,
   useGetGroupRepliesQuery,
-  useToggleGroupCommentLikeMutation,
-  useToggleGroupPostLikeMutation,
+  useToggleGroupCommentLikeMutation
 } = groupCommentsApi;

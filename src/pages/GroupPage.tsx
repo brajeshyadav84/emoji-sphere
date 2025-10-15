@@ -10,6 +10,7 @@ import AdvertisementSpace from "@/components/AdvertisementSpace";
 import { useGetAllGroupPostsQuery } from "@/store/api/groupPostApi";
 import { useToast } from "@/hooks/use-toast";
 import { getAvatarByGender } from "@/utils/avatarUtils";
+import { useAppSelector } from "@/store/hooks";
 
 
 
@@ -24,6 +25,8 @@ const GroupPage = () => {
     isLoading,
     refetch
   } = useGetAllGroupPostsQuery({ page: 0, size: 20 });
+  const currentUserId = useAppSelector((state) => state.auth.user?.id);
+  
 
 
   // Optionally fetch group name (if not available in postsData)
@@ -74,6 +77,7 @@ const GroupPage = () => {
                   userGender={post.author?.gender}
                   onUpdate={refetch}
                   fromGroup={true}
+                  currentUserId={currentUserId}
                 />
               ))
             )}

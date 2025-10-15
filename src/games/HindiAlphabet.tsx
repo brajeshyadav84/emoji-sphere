@@ -112,7 +112,7 @@ const HindiAlphabet = () => {
           Back to Games
         </Button>
 
-        <Card className="p-8 max-w-6xl mx-auto shadow-playful">
+        <Card className="p-8 mx-auto shadow-playful">
           <div className="text-center mb-8">
             <h1 className="text-4xl font-bold mb-4">
               <span className="gradient-text-primary">🕉️ हिंदी वर्णमाला</span>

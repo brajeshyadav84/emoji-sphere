@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useGetPostsQuery } from "@/store/api/postsApi";
 import PostCard from "./PostCard";
+import { useAppSelector } from "@/store/hooks";
 import { Button } from "./ui/button";
 import { RefreshCw, AlertCircle } from "lucide-react";
 import { getAvatarByGender } from "@/utils/avatarUtils";
@@ -20,6 +21,7 @@ const AnimatedPostCard = ({
   index: number; 
   isVisible: boolean; 
 }) => {
+  const currentUserId = useAppSelector((state) => state.auth.user?.id);
   return (
     <div
       className={`transform transition-all duration-700 ease-out ${
@@ -153,10 +155,10 @@ const PostsFeed = ({ className = "", useStoredProcedure = false }: PostsFeedProp
         <p className="text-muted-foreground mb-4">
           There was an error loading the posts. Please try again.
         </p>
-        <Button onClick={handleRefresh} variant="outline" className="gap-2">
+        {/* <Button onClick={handleRefresh} variant="outline" className="gap-2">
           <RefreshCw className="h-4 w-4" />
           Try Again
-        </Button>
+        </Button> */}
       </div>
     );
   }
@@ -168,10 +170,10 @@ const PostsFeed = ({ className = "", useStoredProcedure = false }: PostsFeedProp
         <p className="text-muted-foreground mb-4">
           Be the first to share something amazing!
         </p>
-        <Button onClick={handleRefresh} variant="outline" className="gap-2">
+        {/* <Button onClick={handleRefresh} variant="outline" className="gap-2">
           <RefreshCw className="h-4 w-4" />
           Refresh
-        </Button>
+        </Button> */}
       </div>
     );
   }
@@ -181,7 +183,7 @@ const PostsFeed = ({ className = "", useStoredProcedure = false }: PostsFeedProp
       {/* Refresh Button */}
       <div className="flex justify-between items-center">
         <h2 className="text-xl font-bold">Latest Posts</h2>
-        <Button
+        {/* <Button
           onClick={handleRefresh}
           variant="ghost"
           size="sm"
@@ -190,7 +192,7 @@ const PostsFeed = ({ className = "", useStoredProcedure = false }: PostsFeedProp
         >
           <RefreshCw className={`h-4 w-4 ${isFetching ? 'animate-spin' : ''}`} />
           Refresh
-        </Button>
+        </Button> */}
       </div>
 
       {/* Posts with animations */}
@@ -240,7 +242,7 @@ const PostWithAnimation = ({
   onRefetch: () => void; 
 }) => {
   const [ref, isInView] = useInView();
-
+  const currentUserId = useAppSelector((state) => state.auth.user?.id);
   return (
     <div
       ref={ref}
@@ -266,6 +268,7 @@ const PostWithAnimation = ({
           userGender={post.author.gender}
           isLikedByCurrentUser={post.isLikedByCurrentUser}
           onUpdate={onRefetch}
+          currentUserId={currentUserId}
         />
       </div>
     </div>

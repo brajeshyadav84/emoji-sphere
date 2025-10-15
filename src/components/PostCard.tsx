@@ -1,10 +1,23 @@
 import { useState, useEffect } from "react";
+import { useAppSelector } from "@/store/hooks";
+import { useDeletePostMutation } from "@/store/api/postsApi";
+import { useDeleteGroupPostMutation, useGroupToggleLikePostMutation } from "@/store/api/groupPostApi";
 import { useNavigate } from "react-router-dom";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Card } from "./ui/card";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { Heart, MessageCircle, Share2, Send } from "lucide-react";
+import { Heart, MessageCircle, Share2, Send, Trash2 } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { useToast } from "@/hooks/use-toast";
 import { getAvatarByGender } from "@/utils/avatarUtils";
 
@@ -17,7 +30,6 @@ import {
 import {
   useGetGroupCommentsByPostQuery,
   useCreateGroupCommentMutation,
-  useToggleGroupPostLikeMutation,
   useToggleGroupCommentLikeMutation
 } from "@/store/api/groupCommentApi";
 
@@ -34,6 +46,7 @@ interface PostCardProps {
   isLikedByCurrentUser?: boolean; // Add this prop
   fromGroup?: boolean;
   onUpdate?: () => void;
+  currentUserId?: string;
 }
 
 // Update the Comment interface to match backend response
@@ -99,8 +112,32 @@ const PostCard = ({
   userGender, // Add gender prop
   isLikedByCurrentUser = false,
   fromGroup = false,
-  onUpdate 
+  onUpdate,
+  currentUserId
 }: PostCardProps) => {
+  const [deletePost, { isLoading: isDeleting }] = fromGroup
+    ? useDeleteGroupPostMutation()
+    : useDeletePostMutation();
+  const canDelete = currentUserId && userId && currentUserId == userId;
+  
+  // AlertDialog state for delete
+  const [deleteTarget, setDeleteTarget] = useState<boolean>(false);
+
+  const handleDelete = () => {
+    setDeleteTarget(true);
+  };
+
+  const confirmDelete = async () => {
+    try {
+      await deletePost(postId).unwrap();
+      toast({ title: "Post deleted", description: "Your post was deleted successfully." });
+      onUpdate?.();
+    } catch (error) {
+      toast({ title: "Error", description: "Failed to delete post.", variant: "destructive" });
+    }
+    setDeleteTarget(false);
+  };
+  
   const navigate = useNavigate();
   const [liked, setLiked] = useState(isLikedByCurrentUser);
   const [likeCount, setLikeCount] = useState(likes);
@@ -122,7 +159,7 @@ const PostCard = ({
   const { data: commentsData, isLoading: commentsLoading, refetch: refetchComments } = commentsApi;
 
   const [createComment] = fromGroup ? useCreateGroupCommentMutation() : useCreateCommentMutation();
-  const [togglePostLike] = fromGroup ? useToggleGroupPostLikeMutation() : useTogglePostLikeMutation();
+  const [togglePostLike] = fromGroup ? useGroupToggleLikePostMutation() : useTogglePostLikeMutation();
   const [toggleCommentLike] = fromGroup ? useToggleGroupCommentLikeMutation() : useToggleCommentLikeMutation();
 
   const handleShare = async () => {
@@ -154,14 +191,14 @@ const PostCard = ({
       console.log('Like API result:', result);
       
       // The backend now returns {liked: boolean, status: string, message: string}
-      const isNowLiked = result.liked;
+      const isNowLiked = result?.liked;
       setLiked(isNowLiked);
       setLikeCount(prev => isNowLiked ? prev + 1 : prev - 1);
       onUpdate?.();
       
       toast({
         title: "Success",
-        description: result.message || `Post ${isNowLiked ? 'liked' : 'unliked'} successfully!`,
+        description: result?.message || `Post ${isNowLiked ? 'liked' : 'unliked'} successfully!`,
       });
     } catch (error) {
       console.error('Like API error:', error);
@@ -268,8 +305,36 @@ const PostCard = ({
         >
           {getAvatarByGender(userGender)}
         </div>
-        <div className="flex-1 min-w-0">
+  <div className="flex-1 min-w-0 relative">
           <div className="flex items-center gap-2 mb-2">
+            {canDelete && (
+              <button
+                className="absolute right-0 top-0 text-red-500 hover:text-red-700 p-1"
+                title="Delete post"
+                onClick={handleDelete}
+                disabled={isDeleting}
+                style={{ background: "none", border: "none", cursor: "pointer" }}
+              >
+                <Trash2 className="h-4 w-4" />
+              </button>
+            )}
+      {/* Delete confirmation dialog */}
+      <AlertDialog open={deleteTarget} onOpenChange={() => setDeleteTarget(false)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will remove the post. This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDelete} className="bg-destructive hover:bg-destructive/90">
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
             <h3 
               className="font-bold text-foreground text-sm md:text-base truncate cursor-pointer hover:text-primary transition-all duration-200 hover:scale-105"
               onClick={handleAvatarClick}

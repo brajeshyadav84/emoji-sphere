@@ -116,7 +116,7 @@ const Exams: React.FC = () => {
           </div>
 
           {/* Subjects Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 mx-auto">
             {subjects.map((subject) => (
               <Card 
                 key={subject.id} 

@@ -60,7 +60,23 @@ export const groupPostApi = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ['Post'],
     }),
+
+    deleteGroupPost: builder.mutation<void, number>({
+      query: (id) => ({
+        url: `/group-posts/${id}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['Post'],
+    }),
+    // Like/Unlike a post
+    groupToggleLikePost: builder.mutation<void, number>({
+      query: (postId) => ({
+        url: `/group-posts/${postId}/like`,
+        method: 'POST',
+      }),
+      invalidatesTags: (result, error, postId) => [{ type: 'Post', id: postId }],
+    }),
   }),
 });
 
-export const { useGetAllGroupPostsQuery, useShareGroupPostMutation } = groupPostApi;
+export const { useGetAllGroupPostsQuery, useShareGroupPostMutation, useDeleteGroupPostMutation, useGroupToggleLikePostMutation } = groupPostApi;

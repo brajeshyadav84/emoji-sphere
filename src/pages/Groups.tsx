@@ -113,7 +113,7 @@ const Groups = () => {
       <Header />
       
       <main className="container mx-auto px-3 md:px-4 py-4 md:py-6 max-w-full">
-        <div className="max-w-6xl mx-auto px-1 md:px-0">
+        <div className="mx-auto px-1 md:px-0">
           <div className="px-2 md:px-0">
             <div className="mb-6 md:mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
               <div>

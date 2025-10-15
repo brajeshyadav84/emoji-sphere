@@ -26,6 +26,7 @@ import CreatePost from '../components/CreatePost';
 import Sidebar from '../components/Sidebar';
 import Header from '../components/Header';
 import { useToast } from '../hooks/use-toast';
+import { useAppSelector } from '@/store/hooks';
 
 const UserInfo: React.FC = () => {
   const { userId } = useParams<{ userId: string }>();
@@ -33,6 +34,8 @@ const UserInfo: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [showSharePost, setShowSharePost] = useState(false);
   const { toast } = useToast();
+    const currentUserId = useAppSelector((state) => state.auth.user?.id);
+  
 
   // Get current user from localStorage or auth state
   const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
@@ -369,7 +372,7 @@ const UserInfo: React.FC = () => {
                 
                 {showSharePost && (
                   <div className="mt-4">
-                    <CreatePost onPostCreated={() => setShowSharePost(false)} />
+                    <CreatePost />
                   </div>
                 )}
               </div>
@@ -405,6 +408,7 @@ const UserInfo: React.FC = () => {
                         userGender={post.author.gender}
                         isLikedByCurrentUser={post.isLikedByCurrentUser}
                         onUpdate={refetchPosts}
+                        currentUserId={currentUserId}
                       />
                     );
                   })}

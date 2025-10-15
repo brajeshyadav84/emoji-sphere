@@ -202,7 +202,7 @@ export const groupsApi = apiSlice.injectEndpoints({
         url: `/groups/${groupId}/members`,
         params: { page, size },
       }),
-      providesTags: (result, error, { groupId }) => [{ type: 'GroupMember', id: groupId }],
+      // providesTags: (result, error, { groupId }) => [{ type: 'GroupMember', id: groupId }],
     }),
 
     // Search group members
@@ -211,7 +211,7 @@ export const groupsApi = apiSlice.injectEndpoints({
         url: `/groups/${groupId}/members/search`,
         params: { q, page, size },
       }),
-      providesTags: (result, error, { groupId }) => [{ type: 'GroupMember', id: groupId }],
+      // providesTags: (result, error, { groupId }) => [{ type: 'GroupMember', id: groupId }],
     }),
 
     // Remove member from group
@@ -220,7 +220,7 @@ export const groupsApi = apiSlice.injectEndpoints({
         url: `/groups/${groupId}/members/${memberId}`,
         method: 'DELETE',
       }),
-      invalidatesTags: (result, error, { groupId }) => [{ type: 'GroupMember', id: groupId }],
+      // invalidatesTags: (result, error, { groupId }) => [{ type: 'GroupMember', id: groupId }],
     }),
 
     // Promote member to admin
@@ -229,7 +229,7 @@ export const groupsApi = apiSlice.injectEndpoints({
         url: `/groups/${groupId}/members/${memberId}/promote`,
         method: 'POST',
       }),
-      invalidatesTags: (result, error, { groupId }) => [{ type: 'GroupMember', id: groupId }],
+      // invalidatesTags: (result, error, { groupId }) => [{ type: 'GroupMember', id: groupId }],
     }),
 
     // Demote admin to member
@@ -238,7 +238,7 @@ export const groupsApi = apiSlice.injectEndpoints({
         url: `/groups/${groupId}/members/${memberId}/demote`,
         method: 'POST',
       }),
-      invalidatesTags: (result, error, { groupId }) => [{ type: 'GroupMember', id: groupId }],
+      // invalidatesTags: (result, error, { groupId }) => [{ type: 'GroupMember', id: groupId }],
     }),
 
     // Get posts for a specific group

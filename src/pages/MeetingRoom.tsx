@@ -132,7 +132,7 @@ Password: ${password || 'Not required'}
       {!isFullscreen && <Header />}
       
       <div className={`${isFullscreen ? 'h-full' : 'container mx-auto py-4 md:py-6 px-4'}`}>
-        <div className={`${isFullscreen ? 'h-full' : 'max-w-6xl mx-auto'}`}>
+        <div className={`${isFullscreen ? 'h-full' : 'mx-auto'}`}>
           
           {/* Meeting Controls - Hidden in fullscreen */}
           {!isFullscreen && (

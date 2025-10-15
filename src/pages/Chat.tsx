@@ -407,12 +407,12 @@ const Chat = () => {
           messageType: isEmojiOnly ? 'EMOJI' : 'TEXT'
         }).unwrap();
         
-        // Show success animation
-        const successIndicator = document.createElement('div');
-        successIndicator.innerHTML = '✓';
-        successIndicator.className = 'fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-green-500 text-2xl font-bold z-50 animate-ping';
-        document.body.appendChild(successIndicator);
-        setTimeout(() => document.body.removeChild(successIndicator), 1000);
+        // // Show success animation
+        // const successIndicator = document.createElement('div');
+        // successIndicator.innerHTML = '✓';
+        // successIndicator.className = 'fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-green-500 text-2xl font-bold z-50 animate-ping';
+        // document.body.appendChild(successIndicator);
+        // setTimeout(() => document.body.removeChild(successIndicator), 1000);
         
       } catch (error) {
         console.error('Failed to send message:', error);
