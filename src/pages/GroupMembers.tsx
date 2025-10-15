@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Header from "@/components/Header";
 import { Card } from "@/components/ui/card";
@@ -18,11 +18,16 @@ import {
 } from "@/components/ui/alert-dialog";
 import { toast } from "@/components/ui/use-toast";
 
+import { useGetGroupMembersQuery, useRemoveMemberMutation } from "@/store/api/groupsApi";
+import { skipToken } from "@reduxjs/toolkit/query";
+
 interface Member {
   id: number;
   name: string;
   age: number;
   joinedDate: string;
+  email?: string;
+  mobileNumber?: string;
 }
 
 const GroupMembers = () => {
@@ -33,17 +38,36 @@ const GroupMembers = () => {
   const [selectedMembers, setSelectedMembers] = useState<number[]>([]);
   const [deleteTarget, setDeleteTarget] = useState<number | "bulk" | null>(null);
   
-  // Mock data - replace with actual data from Supabase
-  const [members, setMembers] = useState<Member[]>([
-    { id: 1, name: "Alice Johnson", age: 12, joinedDate: "2024-01-15" },
-    { id: 2, name: "Bob Smith", age: 11, joinedDate: "2024-01-20" },
-    { id: 3, name: "Charlie Brown", age: 13, joinedDate: "2024-02-01" },
-    { id: 4, name: "Diana Prince", age: 12, joinedDate: "2024-02-10" },
-    { id: 5, name: "Ethan Hunt", age: 14, joinedDate: "2024-02-15" },
-  ]);
 
-  const filteredMembers = members.filter((member) =>
-    member.name.toLowerCase().includes(searchQuery.toLowerCase())
+
+  // Fetch group members from API
+  const groupIdNum = groupId ? Number(groupId) : undefined;
+  const { data, isLoading, isError, refetch } = useGetGroupMembersQuery(
+    groupIdNum ? { groupId: groupIdNum, page: 0, size: 100 } : skipToken
+  );
+
+  // Remove member mutation
+  const [removeMember, { isLoading: isRemoving }] = useRemoveMemberMutation();
+
+  // Map API data to Member[] for UI
+  const members: Member[] = useMemo(() => {
+    if (!data?.success || !data.data?.content) return [];
+    return data.data.content.map((m: any) => ({
+      id: m.id,
+      name: [m.firstName, m.lastName].filter(Boolean).join(" ") || m.mobileNumber || m.email || "Unknown",
+      age: m.age ?? 0,
+      joinedDate: m.joinedAt,
+      email: m.email,
+      mobileNumber: m.mobileNumber,
+    }));
+  }, [data]);
+
+  const filteredMembers = useMemo(
+    () =>
+      members.filter((member) =>
+        member.name.toLowerCase().includes(searchQuery.toLowerCase())
+      ),
+    [members, searchQuery]
   );
 
   const handleSelectMember = (memberId: number) => {
@@ -62,6 +86,7 @@ const GroupMembers = () => {
     }
   };
 
+
   const handleDeleteSingle = (memberId: number) => {
     setDeleteTarget(memberId);
   };
@@ -78,23 +103,82 @@ const GroupMembers = () => {
     setDeleteTarget("bulk");
   };
 
-  const confirmDelete = () => {
-    if (deleteTarget === "bulk") {
-      setMembers((prev) => prev.filter((m) => !selectedMembers.includes(m.id)));
+
+  // Remove member(s) from group
+  const confirmDelete = async () => {
+    if (!groupIdNum) {
       toast({
-        title: "Members removed",
-        description: `${selectedMembers.length} member(s) have been removed from the group.`,
+        title: "Invalid group",
+        description: "Group ID is missing.",
+        variant: "destructive",
+      });
+      setDeleteTarget(null);
+      return;
+    }
+
+    // Single member delete
+    if (typeof deleteTarget === "number") {
+      try {
+        const result = await removeMember({ groupId: groupIdNum, memberId: String(deleteTarget) }).unwrap();
+        if (result.success) {
+          toast({
+            title: "Member removed",
+            description: "The member has been removed from the group.",
+            variant: "default",
+          });
+          refetch();
+        } else {
+          toast({
+            title: "Failed to remove member",
+            description: result.message || "Unknown error.",
+            variant: "destructive",
+          });
+        }
+      } catch (err: any) {
+        toast({
+          title: "Error removing member",
+          description: err?.data?.message || err?.message || "Unknown error.",
+          variant: "destructive",
+        });
+      }
+      setDeleteTarget(null);
+      return;
+    }
+
+    // Bulk delete
+    if (deleteTarget === "bulk") {
+      let successCount = 0;
+      let failCount = 0;
+      for (const memberId of selectedMembers) {
+        try {
+          const result = await removeMember({ groupId: groupIdNum, memberId: String(memberId) }).unwrap();
+          if (result.success) {
+            successCount++;
+          } else {
+            failCount++;
+          }
+        } catch {
+          failCount++;
+        }
+      }
+      toast({
+        title: `Bulk removal complete`,
+        description: `${successCount} removed, ${failCount} failed.`,
+        variant: failCount === 0 ? "default" : "destructive",
       });
       setSelectedMembers([]);
-    } else if (typeof deleteTarget === "number") {
-      setMembers((prev) => prev.filter((m) => m.id !== deleteTarget));
-      toast({
-        title: "Member removed",
-        description: "The member has been removed from the group.",
-      });
+      refetch();
+      setDeleteTarget(null);
+      return;
     }
     setDeleteTarget(null);
   };
+  if (isLoading) {
+    return <div className="min-h-screen flex items-center justify-center">Loading members...</div>;
+  }
+  if (isError) {
+    return <div className="min-h-screen flex items-center justify-center text-destructive">Failed to load members. <Button onClick={() => refetch()}>Retry</Button></div>;
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -167,9 +251,40 @@ const GroupMembers = () => {
                       onCheckedChange={() => handleSelectMember(member.id)}
                     />
                     <div>
-                      <h3 className="font-semibold">{member.name}</h3>
+                      <h3 className="font-semibold">
+                        {member.name}
+                        {member.email && (
+                          <>
+                            {" ("}
+                            <a
+                              href={`mailto:${member.email}`}
+                              className="text-primary underline hover:text-primary/80 ml-1"
+                              title={`Send email to ${member.email}`}
+                              onClick={e => e.stopPropagation()}
+                            >
+                              {member.email}
+                            </a>
+                            {" )"}
+                          </>
+                        )}
+                      </h3>
                       <p className="text-sm text-muted-foreground">
-                        Age: {member.age} • Joined: {new Date(member.joinedDate).toLocaleDateString()}
+                        Mobile:
+                        {member.mobileNumber ? (
+                          <a
+                            href={`https://wa.me/${member.mobileNumber.replace(/[^\d]/g, "")}`}
+                            className="text-primary underline hover:text-primary/80 ml-1"
+                            title={`Chat on WhatsApp: ${member.mobileNumber}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={e => e.stopPropagation()}
+                          >
+                            {member.mobileNumber}
+                          </a>
+                        ) : (
+                          <span className="ml-1">N/A</span>
+                        )}
+                        {" • Joined: "}{new Date(member.joinedDate).toLocaleDateString()}
                       </p>
                     </div>
                   </div>
