@@ -41,16 +41,16 @@ export interface CreateGroupPostRequest {
   isPublic?: boolean;
   categoryId?: number;
   tags?: string[];
+  groupId: number;
 }
 
 export const groupPostApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    getAllGroupPosts: builder.query<GroupPostsResponse, { page?: number; size?: number }>({
-      query: ({ page = 0, size = 20 } = {}) => ({
-        url: '/group-posts',
+    getAllGroupPosts: builder.query<GroupPostsResponse, {groupId: number, page?: number; size?: number }>({
+      query: ({ groupId, page = 0, size = 20 }) => ({
+        url: `/group-posts/group/${groupId}`,
         params: { page, size },
       }),
-      providesTags: ['Post'],
     }),
     shareGroupPost: builder.mutation<GroupPost, CreateGroupPostRequest>({
       query: (body) => ({

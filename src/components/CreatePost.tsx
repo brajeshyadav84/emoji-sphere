@@ -9,12 +9,14 @@ import SecurityNotice from "./SecurityNotice";
 import { useToast } from "@/hooks/use-toast";
 import { useCreatePostMutation } from "@/store/api/postsApi";
 import { useShareGroupPostMutation } from "@/store/api/groupPostApi";
+import { useParams } from "react-router-dom";
 
 interface CreatePostProps {
   fromGroup?: boolean;
 }
 
 const CreatePost = ({ fromGroup }: CreatePostProps = {}) => {
+  const { groupId } = useParams();
   const [postText, setPostText] = useState("");
   const [showMoreEmojis, setShowMoreEmojis] = useState(false);
   const [validationMessage, setValidationMessage] = useState<ContentValidationResult | null>(null);
@@ -71,6 +73,7 @@ const CreatePost = ({ fromGroup }: CreatePostProps = {}) => {
         await shareGroupPost({
           content: postText,
           isPublic: true,
+          groupId: Number(groupId), // Replace with actual groupId as needed
           // Add categoryId if needed
           // categoryId: 1,
           // Add tags if any emojis are detected

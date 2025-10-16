@@ -11,6 +11,7 @@ import { useGetAllGroupPostsQuery } from "@/store/api/groupPostApi";
 import { useToast } from "@/hooks/use-toast";
 import { getAvatarByGender } from "@/utils/avatarUtils";
 import { useAppSelector } from "@/store/hooks";
+import { useEffect } from "react";
 
 
 
@@ -24,8 +25,17 @@ const GroupPage = () => {
     data: postsData,
     isLoading,
     refetch
-  } = useGetAllGroupPostsQuery({ page: 0, size: 20 });
+  } = useGetAllGroupPostsQuery({ groupId: Number(groupId), page: 0, size: 20 });
   const currentUserId = useAppSelector((state) => state.auth.user?.id);
+
+  // Ensure we fetch posts whenever the page is landed on or groupId changes
+  useEffect(() => {
+    if (groupId) {
+      // refetch ensures a network request happens even if cached data exists
+      refetch();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [groupId]);
   
 
 
@@ -38,12 +48,12 @@ const GroupPage = () => {
       
         <main className="container mx-auto px-4 py-6">
           <Button
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/groups")}
             variant="ghost"
             className="mb-4 gap-2"
           >
             <ArrowLeft className="h-4 w-4" />
-            Back to Home
+            Back to groups
           </Button>
           <div className="mb-6">
             <h1 className="text-3xl font-bold text-foreground">{groupName}</h1>
