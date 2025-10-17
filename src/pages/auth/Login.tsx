@@ -56,8 +56,19 @@ export default function Login() {
         mobile: values.mobile,
         password: values.password,
       }).unwrap();
+      console.log("Login response:", response);
 
-      // Dispatch login success action
+      if(response?.code && response?.code !== "00") {
+        toast({
+          title: "Login Failed",
+          description: response?.message || "Invalid mobile number or password.",
+          variant: "destructive",
+        });
+        navigate("/auth/verify-otp", {
+          state: { email: response?.code },
+        });
+      } else {
+        // Dispatch login success action
       dispatch(loginSuccess({
         user: {
           id: response.id,
@@ -77,7 +88,11 @@ export default function Login() {
       });
 
       navigate("/dashboard");
+      }
+
+      
     } catch (error: any) {
+      console.log("Login error:", error);
       toast({
         title: "Login Failed",
         description: error?.data?.message || "Invalid mobile number or password.",
