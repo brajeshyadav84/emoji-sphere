@@ -12,6 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 import { getAvatarByGender } from "@/utils/avatarUtils";
 import { useAppSelector } from "@/store/hooks";
 import { useEffect } from "react";
+import PostsFeedSwitcher from "@/components/PostsFeedSwitcher";
 
 
 
@@ -66,31 +67,8 @@ const GroupPage = () => {
 
           <div className="lg:col-span-6 space-y-6">
             <CreatePost fromGroup={true} />
-            {isLoading ? (
-              <div className="text-center py-8">Loading posts...</div>
-            ) : !postsData?.content?.length ? (
-              <div className="text-center py-8 text-muted-foreground">
-                No posts yet. Be the first to share something!
-              </div>
-            ) : (
-              postsData.content.map((post) => (
-                <PostCard
-                  key={post.id}
-                  postId={post.id}
-                  author={post.author?.name || "Unknown"}
-                  avatar={getAvatarByGender(post.author?.gender)}
-                  time={new Date(post.createdAt).toLocaleDateString()}
-                  content={post.content}
-                  likes={post.likesCount || 0}
-                  comments={post.commentsCount || 0}
-                  userId={post.author?.id}
-                  userGender={post.author?.gender}
-                  onUpdate={refetch}
-                  fromGroup={true}
-                  currentUserId={currentUserId}
-                />
-              ))
-            )}
+            {/* Posts feed with switching capability between regular and stored procedure */}
+            <PostsFeedSwitcher fromGroup={true} />
           </div>
 
           <div className="lg:col-span-3 hidden lg:block">
