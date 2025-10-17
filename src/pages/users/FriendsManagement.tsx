@@ -7,6 +7,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { useToast } from '@/hooks/use-toast';
 import { Users, UserPlus, UserMinus, Search, Check, X } from 'lucide-react';
 import { useGetFriendsQuery, useSendFriendRequestByIdMutation, useRemoveFriendMutation, useRespondToFriendRequestMutation } from '@/store/api/userApi';
+import { calcAge } from '@/utils/dob';
 
 interface FriendsManagementProps {
   // No props needed since we're using current user's friends
@@ -241,7 +242,7 @@ const FriendsManagement: React.FC<FriendsManagementProps> = () => {
                       )}
                     </p>
                     <p className="text-sm text-gray-500">
-                      {friend.otherUser.age} years old • {friend.otherUser.country}
+                      DOB: {friend.otherUser.dob} <br /> Country: {friend.otherUser.country}
                       {friend.otherUser.schoolName && ` • ${friend.otherUser.schoolName}`}
                     </p>
                     <div className="flex items-center gap-2 mt-1">

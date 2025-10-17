@@ -314,7 +314,7 @@ const UserInfo: React.FC = () => {
                     </div>
                     <div className="flex items-center text-muted-foreground text-sm">
                       <FaCalendarAlt className="mr-2 text-purple-500" />
-                      <span>{userProfile.age} years old</span>
+                      <span>{userProfile.dob ? calcAge(userProfile.dob) : 0} years old</span>
                     </div>
                     {userProfile.schoolName && (
                       <div className="flex items-center text-muted-foreground text-sm">

@@ -20,6 +20,7 @@ import { toast } from "@/components/ui/use-toast";
 
 import { useGetGroupMembersQuery, useRemoveMemberMutation } from "@/store/api/groupsApi";
 import { skipToken } from "@reduxjs/toolkit/query";
+import { calcAge } from "@/utils/dob";
 
 interface Member {
   id: number;
@@ -55,7 +56,7 @@ const GroupMembers = () => {
     return data.data.content.map((m: any) => ({
       id: m.id,
       name: [m.firstName, m.lastName].filter(Boolean).join(" ") || m.mobileNumber || m.email || "Unknown",
-      age: m.age ?? 0,
+      age: m.dob ? calcAge(m.dob) : 0,
       joinedDate: m.joinedAt,
       email: m.email,
       mobileNumber: m.mobileNumber,

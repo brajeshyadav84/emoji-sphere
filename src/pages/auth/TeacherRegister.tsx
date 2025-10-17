@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useSignupMutation, useSendOtpMutation } from "@/store/api/authApi";
+import { parseDob, isFuture, formatDobToDDMMYYYY, calcAge, formatInputDob, toIsoDate } from "@/utils/dob";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -19,11 +20,18 @@ const teacherRegisterSchema = z.object({
     .min(2, "Name must be at least 2 characters")
     .max(100, "Name must be less than 100 characters")
     .regex(/^[a-zA-Z\s]+$/, "Name can only contain letters and spaces"),
-  age: z
+  dob: z
     .string()
-    .min(1, "Age is required")
-    .refine((val) => !isNaN(Number(val)), "Age must be a number")
-    .refine((val) => Number(val) >= 18 && Number(val) <= 150, "Teacher must be at least 18 years old"),
+    .min(1, "Date of birth is required")
+    .refine((val) => !!parseDob(val), "Please enter a valid date in DD/MM/YYYY or use the date picker")
+    .refine((val) => {
+      const d = parseDob(val);
+      return d ? !isFuture(d) : false;
+    }, "Date of birth cannot be in the future")
+    .refine((val) => {
+      const d = parseDob(val);
+      return d ? calcAge(d) >= 18 : false;
+    }, "Teacher must be at least 18 years old"),
   gender: z.enum(["Male", "Female", "Other"], {
     required_error: "Please select a gender",
   }),
@@ -71,7 +79,7 @@ export default function TeacherRegister() {
     resolver: zodResolver(teacherRegisterSchema),
     defaultValues: {
       name: "",
-      age: "",
+      dob: "",
       gender: undefined,
       location: "",
       mobile: "",
@@ -86,13 +94,15 @@ export default function TeacherRegister() {
   const onSubmit = async (values: TeacherRegisterFormValues) => {
     try {
       // Step 1: Register the teacher user
+      const dobFormatted = formatDobToDDMMYYYY(parseDob(values.dob) as Date);
+
       await signup({
         fullName: values.name,
         mobile: values.mobile,
         email: values.email,
         password: values.password,
         confirmPassword: values.confirmPassword,
-        age: Number(values.age),
+        dob: dobFormatted,
         country: values.location,
         gender: values.gender,
         schoolName: `${values.schoolName} - ${values.subject}`, // Combine school and subject
@@ -197,23 +207,55 @@ export default function TeacherRegister() {
 
                 <FormField
                   control={form.control}
-                  name="age"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Age (Minimum 18)</FormLabel>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          type="number"
-                          placeholder="25"
-                          disabled={isLoading}
-                          min="18"
-                          max="150"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+                  name="dob"
+                  render={({ field }) => {
+                    const dateInputRef = useRef<HTMLInputElement | null>(null);
+                    return (
+                      <FormItem>
+                        <FormLabel>Date of Birth (DD/MM/YYYY)</FormLabel>
+                        <FormControl>
+                          <div className="relative flex items-center">
+                            <Input
+                              {...field}
+                              type="text"
+                              placeholder="DD/MM/YYYY"
+                              disabled={isLoading}
+                              onChange={(e) => field.onChange(e.target.value)}
+                            />
+                            <input
+                              ref={dateInputRef}
+                              type="date"
+                              className="absolute right-2 opacity-0 pointer-events-none"
+                              onChange={(e) => {
+                                if (e.target.value) {
+                                  const iso = e.target.value;
+                                  const d = new Date(iso + 'T00:00:00');
+                                  const dd = String(d.getDate()).padStart(2, '0');
+                                  const mm = String(d.getMonth() + 1).padStart(2, '0');
+                                  const yyyy = d.getFullYear();
+                                  field.onChange(`${dd}/${mm}/${yyyy}`);
+                                }
+                              }}
+                            />
+                            <button
+                              type="button"
+                              className="ml-2 p-2"
+                              onClick={() => {
+                                if (dateInputRef.current) {
+                                  dateInputRef.current.focus();
+                                  dateInputRef.current.showPicker?.();
+                                }
+                              }}
+                              aria-label="Open date picker"
+                            >
+                              📅
+                            </button>
+                          </div>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    );
+                  }}
                 />
 
                 <FormField

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -7,6 +7,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { useToast } from '@/hooks/use-toast';
 import { User, Phone, MapPin, Calendar, GraduationCap } from 'lucide-react';
 import { useGetCurrentUserProfileQuery, useUpdateUserProfileMutation } from '@/store/api/userApi';
+import { calcAge, parseDob, formatDobToDDMMYYYY, formatInputDob, toIsoDate } from '@/utils/dob';
 
 interface ProfileManagementProps {
   // No props needed since we're getting current user profile
@@ -20,6 +21,7 @@ const ProfileManagement: React.FC<ProfileManagementProps> = () => {
   const [formData, setFormData] = useState({
     fullName: '',
     age: '',
+    dob: '',
     gender: '',
     country: '',
     mobileNumber: '',
@@ -27,12 +29,21 @@ const ProfileManagement: React.FC<ProfileManagementProps> = () => {
     email: ''
   });
   const [isEditing, setIsEditing] = useState(false);
+  const dateInputRef = useRef<HTMLInputElement | null>(null);
+  const profileDobDate = profile?.dob ? parseDob(profile.dob) : null;
+  const displayAge = profileDobDate ? calcAge(profileDobDate) : 0;
 
   React.useEffect(() => {
     if (profile) {
+      // Normalize DOB from profile (could be ISO or DD/MM/YYYY) and derive age
+      const parsedDob = profile.dob ? parseDob(profile.dob) : null;
+      const dobFormatted = parsedDob ? formatDobToDDMMYYYY(parsedDob) : (profile.dob || '');
+      const ageFromDob = parsedDob ? calcAge(parsedDob).toString() : '';
+
       setFormData({
         fullName: profile.fullName || '',
-        age: profile.age?.toString() || '',
+        age: ageFromDob,
+        dob: dobFormatted,
         gender: profile.gender || '',
         country: profile.country || '',
         mobileNumber: profile.mobileNumber || '',
@@ -43,9 +54,31 @@ const ProfileManagement: React.FC<ProfileManagementProps> = () => {
   }, [profile]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+
+    // If age changes, derive DOB (use today's month/day)
+    if (name === 'age') {
+      const ageNum = parseInt(value as string, 10);
+      if (!value || isNaN(ageNum)) {
+        setFormData({ ...formData, age: '', dob: '' });
+        return;
+      }
+
+      const d = new Date();
+      d.setFullYear(d.getFullYear() - ageNum);
+      const dobStr = formatDobToDDMMYYYY(d);
+
+      // keep date input iso in hidden date input if available
+      if (dateInputRef.current) dateInputRef.current.value = toIsoDate(dobStr) ?? '';
+
+      setFormData({ ...formData, age: String(ageNum), dob: dobStr });
+      return;
+    }
+
+    // Fallback generic handler
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [name]: value
     });
   };
 
@@ -53,7 +86,7 @@ const ProfileManagement: React.FC<ProfileManagementProps> = () => {
     try {
       await updateProfile({
         fullName: formData.fullName,
-        age: parseInt(formData.age),
+        dob: formData.dob || "",
         gender: formData.gender,
         country: formData.country,
         schoolName: formData.schoolName
@@ -127,6 +160,56 @@ const ProfileManagement: React.FC<ProfileManagementProps> = () => {
                   onChange={handleInputChange}
                   placeholder="Enter your age"
                 />
+              </div>
+              <div>
+                <Label htmlFor="dob">Date of Birth</Label>
+                <div className="relative flex items-center">
+                  <Input
+                    id="dob"
+                    name="dob"
+                    type="text"
+                    value={formData.dob}
+                    onChange={(e) => {
+                      const raw = e.target.value;
+                      const formatted = formatInputDob(raw);
+                      // derive age if possible
+                      const parsed = parseDob(formatted);
+                      const ageStr = parsed ? String(calcAge(parsed)) : '';
+
+                      // set hidden date input iso
+                      if (dateInputRef.current) dateInputRef.current.value = toIsoDate(formatted) ?? '';
+
+                      setFormData({ ...formData, dob: formatted, age: ageStr });
+                    }}
+                    placeholder="DD/MM/YYYY"
+                  />
+                  <input
+                    ref={dateInputRef}
+                    type="date"
+                    className="absolute right-2 opacity-0 pointer-events-none"
+                    onChange={(e) => {
+                      if (e.target.value) {
+                        const d = new Date(e.target.value + 'T00:00:00');
+                        const formatted = formatDobToDDMMYYYY(d);
+                        const ageStr = String(calcAge(d));
+                        setFormData({ ...formData, dob: formatted, age: ageStr });
+                      }
+                    }}
+                  />
+                  <button
+                    type="button"
+                    className="ml-2 p-2"
+                    onClick={() => {
+                      if (dateInputRef.current) {
+                        dateInputRef.current.focus();
+                        dateInputRef.current.showPicker?.();
+                      }
+                    }}
+                    aria-label="Open date picker"
+                  >
+                    📅
+                  </button>
+                </div>
               </div>
               <div>
                 <Label htmlFor="gender">Gender</Label>
@@ -211,7 +294,7 @@ const ProfileManagement: React.FC<ProfileManagementProps> = () => {
               <div className="flex items-center gap-2">
                 <Calendar className="h-4 w-4 text-gray-500" />
                 <span className="font-medium">Age:</span>
-                <span>{profile?.age || 'Not provided'}</span>
+                <span>{displayAge} years old</span>
               </div>
               <div className="flex items-center gap-2">
                 <User className="h-4 w-4 text-gray-500" />

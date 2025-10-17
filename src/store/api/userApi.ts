@@ -4,7 +4,7 @@ export interface UserProfile {
   id: string;
   mobileNumber?: string;
   fullName: string;
-  age: number;
+  dob: string;
   gender: string;
   country: string;
   schoolName?: string;
@@ -59,6 +59,7 @@ export interface UserBasicInfo {
   country?: string;
   schoolName?: string;
   age?: number;
+  dob?: string;
   gender?: string;
   isActive: boolean;
   // Online status fields

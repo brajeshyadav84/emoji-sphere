@@ -47,7 +47,7 @@ export const authApi = apiSlice.injectEndpoints({
       email: string;
       password: string;
       confirmPassword: string;
-      age: number;
+      dob: string;
       country: string;
       gender: string;
       schoolName?: string;
