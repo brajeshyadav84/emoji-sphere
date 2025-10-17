@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAppSelector } from "@/store/hooks";
+import { useParams } from "react-router-dom";
+import { useGetUserGroupsQuery } from "@/store/api/groupsApi";
 import { useDeletePostMutation } from "@/store/api/postsApi";
 import { useDeleteGroupPostMutation, useGroupToggleLikePostMutation } from "@/store/api/groupPostApi";
 import { useNavigate } from "react-router-dom";
@@ -150,6 +152,21 @@ const PostCard = ({
   const [showShareMenu, setShowShareMenu] = useState(false);
   const postUrl = typeof window !== "undefined" ? `${window.location.origin}/post/${postId}` : "";
 
+  // Auth and group membership
+  const isAuthorized = useAppSelector((state) => state.auth.isAuthenticated);
+  // Try to get groupId from route when PostCard is rendered on GroupPage
+  const params = useParams<{ groupId?: string }>();
+  const routeGroupId = params.groupId ? Number(params.groupId) : undefined;
+
+  const { data: userGroupsData } = useGetUserGroupsQuery();
+  const userGroups = userGroupsData?.data || [];
+
+  // Determine if current user is member of the group where this post belongs.
+  // If PostCard is used inside a group page, we infer groupId from route.
+  const isUserMember = fromGroup && routeGroupId
+    ? userGroups.some((g: any) => g.id === routeGroupId)
+    : false;
+
 
   // API hooks
   const commentsApi = fromGroup
@@ -163,6 +180,18 @@ const PostCard = ({
   const [toggleCommentLike] = fromGroup ? useToggleGroupCommentLikeMutation() : useToggleCommentLikeMutation();
 
   const handleShare = async () => {
+    // Guard: only allow sharing when authorized and membership rules satisfied
+    if (fromGroup) {
+      if (!isAuthorized || !isUserMember) {
+        toast({ title: 'Unauthorized', description: 'You must be a member of this group and logged in to share posts.', variant: 'destructive' });
+        return;
+      }
+    } else {
+      if (!isAuthorized) {
+        toast({ title: 'Unauthorized', description: 'You must be logged in to share posts.', variant: 'destructive' });
+        return;
+      }
+    }
     const shareData = {
       title: `${author} on KidSpace` ,
       text: content,
@@ -185,6 +214,18 @@ const PostCard = ({
   }, [isLikedByCurrentUser, likes]);
 
   const handleLike = async () => {
+    // Guard: only allow liking when authorized and membership rules satisfied
+    if (fromGroup) {
+      if (!isAuthorized || !isUserMember) {
+        toast({ title: 'Unauthorized', description: 'You must be a member of this group and logged in to like posts.', variant: 'destructive' });
+        return;
+      }
+    } else {
+      if (!isAuthorized) {
+        toast({ title: 'Unauthorized', description: 'You must be logged in to like posts.', variant: 'destructive' });
+        return;
+      }
+    }
     try {
       console.log('Attempting to like post:', postId);
       const result = await togglePostLike(postId).unwrap();
@@ -211,6 +252,18 @@ const PostCard = ({
   };
 
   const handleCommentLike = async (commentId: number) => {
+    // Guard: only allow comment like when authorized and membership rules satisfied
+    if (fromGroup) {
+      if (!isAuthorized || !isUserMember) {
+        toast({ title: 'Unauthorized', description: 'You must be a member of this group and logged in to like comments.', variant: 'destructive' });
+        return;
+      }
+    } else {
+      if (!isAuthorized) {
+        toast({ title: 'Unauthorized', description: 'You must be logged in to like comments.', variant: 'destructive' });
+        return;
+      }
+    }
     try {
       const result = await toggleCommentLike(commentId).unwrap();
       console.log('Comment like result:', result);
@@ -231,6 +284,18 @@ const PostCard = ({
   };
 
   const handleAddComment = async () => {
+    // Guard: only allow commenting when authorized and membership rules satisfied
+    if (fromGroup) {
+      if (!isAuthorized || !isUserMember) {
+        toast({ title: 'Unauthorized', description: 'You must be a member of this group and logged in to comment.', variant: 'destructive' });
+        return;
+      }
+    } else {
+      if (!isAuthorized) {
+        toast({ title: 'Unauthorized', description: 'You must be logged in to comment.', variant: 'destructive' });
+        return;
+      }
+    }
     if (!newComment.trim()) return;
 
     try {
@@ -261,6 +326,18 @@ const PostCard = ({
   };
 
   const handleAddReply = async (commentId: number) => {
+    // Guard: only allow reply when authorized and membership rules satisfied
+    if (fromGroup) {
+      if (!isAuthorized || !isUserMember) {
+        toast({ title: 'Unauthorized', description: 'You must be a member of this group and logged in to reply.', variant: 'destructive' });
+        return;
+      }
+    } else {
+      if (!isAuthorized) {
+        toast({ title: 'Unauthorized', description: 'You must be logged in to reply.', variant: 'destructive' });
+        return;
+      }
+    }
     if (!replyContent.trim()) return;
 
     try {

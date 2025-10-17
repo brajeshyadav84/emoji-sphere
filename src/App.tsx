@@ -47,6 +47,8 @@ import TeacherDashboard from "./pages/teachers/TeacherDashboard";
 
 // Knowledge imports
 import Planets from "./pages/knowledge/Planets";
+import Shape from "./pages/knowledge/Shape";
+import Measurement from "./pages/knowledge/Measurement.tsx";
 
 // Game imports
 import WordBuilder from "./games/WordBuilder";
@@ -115,6 +117,8 @@ const App = () => {
           
           {/* Knowledge routes */}
           <Route path="/knowledge/planets" element={<Planets />} />
+          <Route path="/knowledge/shapes" element={<Shape />} />
+          <Route path="/knowledge/measurement" element={<Measurement />} />
           
           {/* Auth routes */}
           <Route path="/auth/login" element={<Login />} />

@@ -25,7 +25,7 @@ const GroupPage = () => {
     data: postsData,
     isLoading,
     refetch
-  } = useGetAllGroupPostsQuery({ groupId: Number(groupId), page: 0, size: 20 });
+  } = useGetAllGroupPostsQuery({ groupId: Number(groupId), page: 0, size: 3 });
   const currentUserId = useAppSelector((state) => state.auth.user?.id);
 
   // Ensure we fetch posts whenever the page is landed on or groupId changes

@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useAppSelector } from "@/store/hooks";
+import { useGetUserGroupsQuery } from "@/store/api/groupsApi";
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
 import { Card } from "./ui/card";
@@ -24,6 +26,13 @@ const CreatePost = ({ fromGroup }: CreatePostProps = {}) => {
   const { toast } = useToast();
   const [createPost] = useCreatePostMutation();
   const [shareGroupPost, { isLoading: isPosting }] = useShareGroupPostMutation();
+
+  // Auth and membership
+  const isAuthorized = useAppSelector((state) => state.auth.isAuthenticated);
+  const { data: userGroupsData } = useGetUserGroupsQuery();
+  const userGroups = userGroupsData?.data || [];
+  const routeGroupId = groupId ? Number(groupId) : undefined;
+  const isUserMember = fromGroup && routeGroupId ? userGroups.some((g: any) => g.id === routeGroupId) : false;
 
   // Apply security features
   useSecurity();
@@ -54,6 +63,19 @@ const CreatePost = ({ fromGroup }: CreatePostProps = {}) => {
         message: "📝 Please write something before sharing!",
       });
       return;
+    }
+
+    // Guard: only allow sharing when authorized and membership rules satisfied
+    if (fromGroup) {
+      if (!isAuthorized || !isUserMember) {
+        toast({ title: 'Unauthorized', description: 'You must be a member of this group and logged in to share posts.', variant: 'destructive' });
+        return;
+      }
+    } else {
+      if (!isAuthorized) {
+        toast({ title: 'Unauthorized', description: 'You must be logged in to share posts.', variant: 'destructive' });
+        return;
+      }
     }
 
     setIsSubmitting(true);
