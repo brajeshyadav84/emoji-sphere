@@ -117,21 +117,28 @@ export interface Feedback {
   createdAt: string;
 }
 
+export interface ApiResponse<T> {
+  success: boolean;
+  message?: string;
+  data?: T;
+  status?: number;
+}
+
 export const userApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     // Profile endpoints
-    getUserProfile: builder.query<UserProfile, string>({
+    getUserProfile: builder.query<ApiResponse<UserProfile>, string>({
       query: (userId) => `/user/profile/${userId}`,
       providesTags: ['User'],
     }),
 
     // Get current user profile (authenticated user)
-    getCurrentUserProfile: builder.query<UserProfile, void>({
+    getCurrentUserProfile: builder.query<ApiResponse<UserProfile>, void>({
       query: () => `/user/profile`,
       providesTags: ['User'],
     }),
-    
-    updateUserProfile: builder.mutation<UserProfile, Partial<UserProfile>>({
+
+    updateUserProfile: builder.mutation<ApiResponse<UserProfile>, Partial<UserProfile>>({
       query: (patch) => ({
         url: `/user/profile`,
         method: 'PUT',
@@ -149,12 +156,12 @@ export const userApi = apiSlice.injectEndpoints({
     }),
 
     // Friends endpoints - using friendship API
-    getFriends: builder.query<FriendsListResponse, { page?: number; size?: number }>({
+    getFriends: builder.query<ApiResponse<FriendsListResponse>, { page?: number; size?: number }>({
       query: ({ page = 0, size = 50 }) => `/friendships/friends?page=${page}&size=${size}`,
       providesTags: ['Friendship'],
     }),
 
-    getFriendsList: builder.query<Friend[], string>({
+    getFriendsList: builder.query<ApiResponse<Friend[]>, string>({
       query: (userId) => `/users/${userId}/friends`,
       providesTags: ['User'],
     }),
@@ -246,9 +253,10 @@ export const userApi = apiSlice.injectEndpoints({
     getFeedbacks: builder.query<Feedback[], string>({
       query: (userId) => `/users/${userId}/feedback`,
       providesTags: ['User'],
+      transformResponse: (response: ApiResponse<Feedback[]>) => response?.data || [],
     }),
 
-    submitFeedback: builder.mutation<void, { userId: string; type: string; subject: string; message: string }>({
+    submitFeedback: builder.mutation<ApiResponse<Feedback>, { userId: string; type: string; subject: string; message: string }>( {
       query: ({ userId, ...body }) => ({
         url: `/users/${userId}/feedback`,
         method: 'POST',

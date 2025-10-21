@@ -108,7 +108,11 @@ const App = () => {
           } />
           <Route path="/groups/:groupId" element={<GroupPage />} />
           <Route path="/groups/:groupId/members" element={<GroupMembers />} />
-          <Route path="/chat" element={<Chat />} />
+          <Route path="/chat" element={
+            <ProtectedRoute>
+              <Chat />
+            </ProtectedRoute>
+          } />
           <Route path="/idioms" element={<Idioms />} />
           <Route path="/exams" element={<Exams />} />
           <Route path="/ask-me" element={<AskMe />} />

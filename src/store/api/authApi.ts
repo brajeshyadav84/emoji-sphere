@@ -17,9 +17,16 @@ export interface LoginResponse {
   name: string;
 }
 
+export interface ApiResponse<T> {
+  success: boolean;
+  message?: string;
+  data?: T;
+  status?: number;
+}
+
 export const authApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    login: builder.mutation<LoginResponse, LoginRequest>({
+    login: builder.mutation<ApiResponse<LoginResponse>, LoginRequest>({
       query: (credentials) => ({
         url: '/auth/signin',
         method: 'POST',

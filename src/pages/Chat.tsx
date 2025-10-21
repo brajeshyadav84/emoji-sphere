@@ -67,7 +67,7 @@ const Chat = () => {
   const { data: conversationsResponse, refetch: refetchConversations } = useGetConversationsQuery(
     { page: 0, size: 20 },
     {
-      pollingInterval: 3000, // Poll every 3 seconds to check for new conversations/messages
+      pollingInterval: 5000, // Poll every 5 seconds to check for new conversations/messages
       refetchOnFocus: true,
       refetchOnReconnect: true
     }
@@ -84,7 +84,7 @@ const Chat = () => {
   
   // Presence API hooks
   const { data: friendsStatusResponse } = useGetFriendsStatusQuery(undefined, {
-    pollingInterval: 30000, // Poll every 30 seconds for online status
+    pollingInterval: 120000, // Poll every 120 seconds for online status
     refetchOnFocus: true,
     refetchOnReconnect: true
   });
@@ -98,7 +98,7 @@ const Chat = () => {
   const [startConversation] = useStartConversationMutation();
 
   // Transform API response to Friend interface - filter only accepted friendships
-  const friends: Friend[] = friendsResponse?.friends
+  const friends: Friend[] = friendsResponse?.data?.friends
     ?.filter((friendship: FriendshipResponse) => friendship.status === 'ACCEPTED')
     ?.map((friendship: FriendshipResponse) => {
       // Get online status from friends status response
@@ -119,7 +119,7 @@ const Chat = () => {
 
   // Find existing conversation for selected friend
   const findConversationForFriend = (friendId: number): Conversation | undefined => {
-    return conversationsResponse?.conversations?.find(conv => conv.otherUserId === friendId);
+    return conversationsResponse?.data?.conversations?.find(conv => conv.otherUserId === friendId);
   };
 
   // Update friends with last message info from conversations and unread count
@@ -188,17 +188,17 @@ const Chat = () => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [messagesResponse?.messages]);
+  }, [messagesResponse?.data?.messages]);
 
   // Handle new message notifications and sound
   useEffect(() => {
-    if (messagesResponse?.messages && selectedConversationId) {
-      const currentMessageCount = messagesResponse.messages.length;
-      
+    if (messagesResponse?.data?.messages && selectedConversationId) {
+      const currentMessageCount = messagesResponse.data.messages.length;
+
       if (lastMessageCountRef.current > 0 && currentMessageCount > lastMessageCountRef.current) {
         // New message received
-        const lastMessage = messagesResponse.messages[messagesResponse.messages.length - 1];
-        
+        const lastMessage = messagesResponse.data.messages[messagesResponse.data.messages.length - 1];
+
         // If the message is from the friend (not from current user)
         if (lastMessage.senderId === selectedFriend?.id) {
           // Play notification sound
@@ -236,20 +236,20 @@ const Chat = () => {
       
       lastMessageCountRef.current = currentMessageCount;
     }
-  }, [messagesResponse?.messages, selectedConversationId, selectedFriend]);
+  }, [messagesResponse?.data?.messages, selectedConversationId, selectedFriend]);
 
   // Detect new messages in conversations for friends not currently selected
   useEffect(() => {
-    if (conversationsResponse?.conversations && friends.length > 0) {
+    if (conversationsResponse?.data?.conversations && friends.length > 0) {
       const newFriendsWithMessages = new Set<number>();
-      
-      conversationsResponse.conversations.forEach(conversation => {
+
+      conversationsResponse.data.conversations.forEach(conversation => {
         // Only mark as having new messages if this friend is not currently selected
         if (selectedFriend?.id !== conversation.otherUserId) {
           const lastReadMessageId = lastReadMessages.get(conversation.otherUserId);
           
           // If we haven't read this conversation yet, or if there's a newer message
-          if (!lastReadMessageId || (conversation?.lastMessageId && conversation?.lastMessageId > lastReadMessageId)) {
+          if (!lastReadMessageId || (conversation?.id && conversation?.id > lastReadMessageId)) {
             newFriendsWithMessages.add(conversation.otherUserId);
           }
         }
@@ -323,10 +323,10 @@ const Chat = () => {
 
   // Sync unreadCounts from conversations API response
   useEffect(() => {
-    if (conversationsResponse?.conversations) {
+    if (conversationsResponse?.data?.conversations) {
       setUnreadCounts(prev => {
         const newMap = new Map<number, number>();
-        conversationsResponse.conversations.forEach((conv: any) => {
+        conversationsResponse.data.conversations.forEach((conv: any) => {
           if (typeof conv.unreadCount === 'number' && conv.otherUserId) {
             newMap.set(conv.otherUserId, conv.unreadCount);
           }
@@ -363,10 +363,10 @@ const Chat = () => {
 
     // Mark conversation as read
     const conversation = findConversationForFriend(friend.id);
-    if (conversation?.lastMessageId) {
+    if (conversation?.id) {
       setLastReadMessages(prev => {
         const newMap = new Map(prev);
-        newMap.set(friend.id, conversation?.lastMessageId);
+        newMap.set(friend.id, conversation?.id);
         return newMap;
       });
     }
@@ -753,10 +753,10 @@ const Chat = () => {
                           </div>
                         ) : (
                           <div className="space-y-4">
-                            {messagesResponse?.messages?.map((message: ChatMessage, index: number) => {
+                            {messagesResponse?.data?.messages?.map((message: ChatMessage, index: number) => {
                               const isCurrentUser = message.senderId !== selectedFriend.id;
-                              const isLastMessage = index === messagesResponse.messages.length - 1;
-                              
+                              const isLastMessage = index === messagesResponse.data.messages.length - 1;
+
                               return (
                                 <div
                                   key={message.id}

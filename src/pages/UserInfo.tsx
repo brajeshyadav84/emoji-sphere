@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
   FaUserPlus, 
@@ -27,6 +27,7 @@ import Sidebar from '../components/Sidebar';
 import Header from '../components/Header';
 import { useToast } from '../hooks/use-toast';
 import { useAppSelector } from '@/store/hooks';
+import { calcAge } from '@/utils/dob';
 
 const UserInfo: React.FC = () => {
   const { userId } = useParams<{ userId: string }>();
@@ -69,6 +70,24 @@ const UserInfo: React.FC = () => {
   }, {
     skip: !userId
   });
+
+  // Listen for deletions so profile posts update immediately
+  useEffect(() => {
+    const handler = (e: any) => {
+      const deletedId = e?.detail?.postId;
+      if (!deletedId) return;
+      // If we have posts loaded, remove the deleted one locally
+      try {
+        if (userPosts && userPosts.content) {
+          userPosts.content = userPosts.content.filter((p: any) => p.id !== deletedId);
+        }
+      } catch (err) {
+        // ignore
+      }
+    };
+    window.addEventListener('postDeleted', handler as EventListener);
+    return () => window.removeEventListener('postDeleted', handler as EventListener);
+  }, [userPosts]);
 
   const { 
     data: userGroups, 
@@ -204,9 +223,9 @@ const UserInfo: React.FC = () => {
               onClick={() => navigate('/chat', { 
                 state: { 
                   selectedFriend: {
-                    id: userProfile.id,
-                    name: userProfile.fullName,
-                    gender: userProfile.gender
+                    id: userProfile.data.id,
+                    name: userProfile.data.fullName,
+                    gender: userProfile.data.gender
                   }
                 }
               })}
@@ -297,40 +316,40 @@ const UserInfo: React.FC = () => {
                 {/* Profile Picture */}
                 <div className="flex-shrink-0">
                   <div className="w-20 h-20 bg-gradient-to-br from-purple-400 to-blue-500 rounded-full flex items-center justify-center text-white text-2xl font-bold">
-                    {userProfile.fullName.charAt(0).toUpperCase()}
+                    {userProfile.data.fullName.charAt(0).toUpperCase()}
                   </div>
                 </div>
                 
                 {/* User Info */}
                 <div className="flex-1">
                   <h1 className="text-2xl font-bold text-foreground mb-2">
-                    {userProfile.fullName}
+                    {userProfile.data.fullName}
                   </h1>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
                     <div className="flex items-center text-muted-foreground text-sm">
                       <FaMapMarkerAlt className="mr-2 text-purple-500" />
-                      <span>{userProfile.country}</span>
+                      <span>{userProfile.data.country}</span>
                     </div>
                     <div className="flex items-center text-muted-foreground text-sm">
                       <FaCalendarAlt className="mr-2 text-purple-500" />
-                      <span>{userProfile.dob ? calcAge(userProfile.dob) : 0} years old</span>
+                      <span>{userProfile.data.dob}</span>
                     </div>
-                    {userProfile.schoolName && (
+                    {userProfile.data.schoolName && (
                       <div className="flex items-center text-muted-foreground text-sm">
                         <FaSchool className="mr-2 text-purple-500" />
-                        <span>{userProfile.schoolName}</span>
+                        <span>{userProfile.data.schoolName}</span>
                       </div>
                     )}
                     <div className="flex items-center text-muted-foreground text-sm">
                       <span className="mr-2">👤</span>
-                      <span className="capitalize">{userProfile.gender}</span>
+                      <span className="capitalize">{userProfile.data.gender}</span>
                     </div>
-                    {userProfile.email && (
+                    {userProfile.data.email && (
                       <div className="flex items-center text-muted-foreground text-sm">
                         <span className="mr-2">✉️</span>
-                        <span>{userProfile.email}</span>
-                        {userProfile.isVerified && (
+                        <span>{userProfile.data.email}</span>
+                        {userProfile.data.isVerified && (
                           <span className="ml-2 text-green-600 text-xs">✓</span>
                         )}
                       </div>
@@ -338,14 +357,14 @@ const UserInfo: React.FC = () => {
                   </div>
                   
                   <div className="flex items-center space-x-4">
-                    {userProfile.isVerified && (
+                    {userProfile.data.isVerified && (
                       <span className="flex items-center text-green-600 text-sm">
                         <FaCheck className="mr-1" />
                         Verified
                       </span>
                     )}
                     <span className="text-muted-foreground text-sm">
-                      Member since {new Date(userProfile.createdAt).toLocaleDateString()}
+                      Member since {new Date(userProfile.data.createdAt).toLocaleDateString()}
                     </span>
                   </div>
                 </div>
@@ -381,7 +400,7 @@ const UserInfo: React.FC = () => {
             {/* Posts Feed */}
             <div className="bg-card rounded-2xl shadow-playful border-2 border-secondary/20 p-4">
               <h3 className="font-bold text-base mb-4 flex items-center gap-2">
-                📝 {isOwnProfile ? 'My Posts' : `${userProfile.fullName}'s Posts`}
+                📝 {isOwnProfile ? 'My Posts' : `${userProfile.data.fullName}'s Posts`}
               </h3>
               
               {postsLoading ? (
@@ -429,7 +448,7 @@ const UserInfo: React.FC = () => {
                 <div className="text-center py-8 text-muted-foreground">
                   {isOwnProfile ? 
                     "You haven't shared any posts yet." : 
-                    `${userProfile.fullName} hasn't shared any posts yet.`
+                    `${userProfile.data.fullName} hasn't shared any posts yet.`
                   }
                 </div>
               )}
@@ -459,7 +478,7 @@ const UserInfo: React.FC = () => {
                   <div className="flex justify-between items-center">
                     <span className="text-muted-foreground text-sm">Member Since</span>
                     <span className="font-semibold text-foreground text-sm">
-                      {new Date(userProfile.createdAt).toLocaleDateString('en-US', { 
+                      {new Date(userProfile.data.createdAt).toLocaleDateString('en-US', { 
                         month: 'short', 
                         year: 'numeric' 
                       })}

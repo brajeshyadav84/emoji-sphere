@@ -1,4 +1,5 @@
 import { apiSlice } from './apiSlice';
+import type { ApiResponse, LikeResponse } from './commentsApi';
 
 // Types for the API
 export interface CreatePostRequest {
@@ -199,7 +200,7 @@ export const postsApi = apiSlice.injectEndpoints({
     }),
 
     // Like/Unlike a post
-    toggleLikePost: builder.mutation<void, number>({
+    toggleLikePost: builder.mutation<ApiResponse<LikeResponse>, number>({
       query: (postId) => ({
         url: `/posts/${postId}/like`,
         method: 'POST',

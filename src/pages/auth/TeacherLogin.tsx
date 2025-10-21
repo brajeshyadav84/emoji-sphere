@@ -62,8 +62,11 @@ export default function TeacherLogin() {
         password: values.password,
       }).unwrap();
 
-      // Check if user has teacher role
-      if (response.role !== 'TEACHER') {
+  const raw = response as any;
+  const data = (raw && (raw.data ?? raw)) as any;
+
+  // Check if user has teacher role
+  if (data?.role !== 'TEACHER') {
         toast({
           title: "Access Denied",
           description: "Only teachers can access this portal. Please use the regular login for users or admin login for administrators.",
@@ -73,18 +76,7 @@ export default function TeacherLogin() {
       }
 
       // Dispatch login success action
-      dispatch(loginSuccess({
-        user: {
-          id: response.id,
-          fullName: response.fullName,
-          name: response.name,
-          mobile: response.mobile,
-          email: response.email,
-          role: response.role,
-          roles: response.roles,
-        },
-        token: response.token,
-      }));
+      dispatch(loginSuccess({ ...(data || {}) }));
 
       toast({
         title: "Welcome Teacher!",

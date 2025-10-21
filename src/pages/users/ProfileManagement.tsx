@@ -30,25 +30,25 @@ const ProfileManagement: React.FC<ProfileManagementProps> = () => {
   });
   const [isEditing, setIsEditing] = useState(false);
   const dateInputRef = useRef<HTMLInputElement | null>(null);
-  const profileDobDate = profile?.dob ? parseDob(profile.dob) : null;
+  const profileDobDate = profile?.data.dob ? parseDob(profile.data.dob) : null;
   const displayAge = profileDobDate ? calcAge(profileDobDate) : 0;
 
   React.useEffect(() => {
-    if (profile) {
+    if (profile && profile.data) {
       // Normalize DOB from profile (could be ISO or DD/MM/YYYY) and derive age
-      const parsedDob = profile.dob ? parseDob(profile.dob) : null;
-      const dobFormatted = parsedDob ? formatDobToDDMMYYYY(parsedDob) : (profile.dob || '');
+      const parsedDob = profile.data.dob ? parseDob(profile.data.dob) : null;
+      const dobFormatted = parsedDob ? formatDobToDDMMYYYY(parsedDob) : (profile.data.dob || '');
       const ageFromDob = parsedDob ? calcAge(parsedDob).toString() : '';
 
       setFormData({
-        fullName: profile.fullName || '',
+        fullName: profile.data.fullName || '',
         age: ageFromDob,
         dob: dobFormatted,
-        gender: profile.gender || '',
-        country: profile.country || '',
-        mobileNumber: profile.mobileNumber || '',
-        schoolName: profile.schoolName || '',
-        email: profile.email || ''
+        gender: profile.data.gender || '',
+        country: profile.data.country || '',
+        mobileNumber: profile.data.mobileNumber || '',
+        schoolName: profile.data.schoolName || '',
+        email: profile.data.email || ''
       });
     }
   }, [profile]);
@@ -289,7 +289,7 @@ const ProfileManagement: React.FC<ProfileManagementProps> = () => {
               <div className="flex items-center gap-2">
                 <User className="h-4 w-4 text-gray-500" />
                 <span className="font-medium">Name:</span>
-                <span>{profile?.fullName || 'Not provided'}</span>
+                <span>{profile?.data.fullName || 'Not provided'}</span>
               </div>
               <div className="flex items-center gap-2">
                 <Calendar className="h-4 w-4 text-gray-500" />
@@ -299,31 +299,31 @@ const ProfileManagement: React.FC<ProfileManagementProps> = () => {
               <div className="flex items-center gap-2">
                 <User className="h-4 w-4 text-gray-500" />
                 <span className="font-medium">Gender:</span>
-                <span className="capitalize">{profile?.gender || 'Not provided'}</span>
+                <span className="capitalize">{profile?.data.gender || 'Not provided'}</span>
               </div>
               <div className="flex items-center gap-2">
                 <MapPin className="h-4 w-4 text-gray-500" />
                 <span className="font-medium">Country:</span>
-                <span>{profile?.country || 'Not provided'}</span>
+                <span>{profile?.data.country || 'Not provided'}</span>
               </div>
-              {profile?.schoolName && (
+              {profile?.data.schoolName && (
                 <div className="flex items-center gap-2">
                   <GraduationCap className="h-4 w-4 text-gray-500" />
                   <span className="font-medium">School:</span>
-                  <span>{profile.schoolName}</span>
+                  <span>{profile?.data.schoolName}</span>
                 </div>
               )}
               <div className="flex items-center gap-2">
                 <Phone className="h-4 w-4 text-gray-500" />
                 <span className="font-medium">Mobile:</span>
-                <span>{profile?.mobileNumber || 'Not provided'}</span>
+                <span>{profile?.data.mobileNumber || 'Not provided'}</span>
               </div>
-              {profile?.email && (
+              {profile?.data.email && (
                 <div className="flex items-center gap-2">
                   <span className="h-4 w-4 text-gray-500">✉</span>
                   <span className="font-medium">Email:</span>
-                  <span>{profile.email}</span>
-                  {profile?.isVerified && (
+                  <span>{profile?.data.email}</span>
+                  {profile?.data.isVerified && (
                     <span className="text-green-600 text-sm">✓ Verified</span>
                   )}
                 </div>
@@ -331,7 +331,7 @@ const ProfileManagement: React.FC<ProfileManagementProps> = () => {
               <div className="flex items-center gap-2">
                 <span className="h-4 w-4 text-gray-500">📅</span>
                 <span className="font-medium">Member since:</span>
-                <span>{profile?.createdAt ? new Date(profile.createdAt).toLocaleDateString() : 'N/A'}</span>
+                <span>{profile?.data.createdAt ? new Date(profile.data.createdAt).toLocaleDateString() : 'N/A'}</span>
               </div>
             </div>
             <Button onClick={() => setIsEditing(true)}>

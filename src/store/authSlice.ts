@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import type { AuthApiResponse, LoginResponse } from './api/authApi';
 
 export interface User {
   id: string;
@@ -31,13 +32,56 @@ const authSlice = createSlice({
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.isLoading = action.payload;
     },
-    loginSuccess: (state, action: PayloadAction<{ user: User; token: string }>) => {
-      state.user = action.payload.user;
-      state.token = action.payload.token;
-      state.isAuthenticated = true;
+    loginSuccess: (
+      state,
+      action: PayloadAction<
+        AuthApiResponse<LoginResponse> | LoginResponse | { user: User; token: string } | any
+      >,
+    ) => {
+      console.log('loginSuccess action payload:', action.payload);
+      const payload = (action.payload || {}) as any;
+      // API may return a wrapper { success, message, data }
+      // or directly the LoginResponse, or legacy { user, token }
+      const data = payload.data ?? payload;
+
+      let token: string | null = null;
+      let user: User | null = null;
+
+      // Legacy shape: { user, token }
+      if (payload.user && payload.token) {
+        user = payload.user as User;
+        token = payload.token;
+      } else if (data) {
+        // New shape: data contains token and user fields
+        token = data.token ?? null;
+
+        // If API returns a nested user object, use it; otherwise map fields from data
+        if (data.user) {
+          user = data.user as User;
+        } else {
+          user = {
+            id: data.id !== undefined && data.id !== null ? String(data.id) : '',
+            fullName: data.fullName || data.full_name || data.name || '',
+            name: data.name || data.fullName || '',
+            mobile: data.mobile || '',
+            email: data.email || '',
+            role: data.role || '',
+            roles: Array.isArray(data.roles) ? data.roles : data.roles ? [data.roles] : [],
+          };
+        }
+      }
+
+      state.user = user;
+      state.token = token;
+      state.isAuthenticated = !!token;
       state.isLoading = false;
-      localStorage.setItem('auth_token', action.payload.token);
-      localStorage.setItem('auth_user', JSON.stringify(action.payload.user));
+
+      if (token) {
+        localStorage.setItem('auth_token', token);
+      }
+      if (user) {
+        localStorage.setItem('auth_user', JSON.stringify(user));
+      }
     },
     logout: (state) => {
       state.user = null;

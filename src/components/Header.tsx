@@ -54,7 +54,7 @@ const Header = () => {
         <nav className="hidden md:flex items-center gap-1 lg:gap-2">
           <Button 
             variant={isActive("/") ? "default" : "ghost"}
-            className={`text-sm lg:text-base font-medium whitespace-nowrap min-w-fit px-2 lg:px-3 ${
+            className={`text-[1.5rem] lg:text-base font-medium whitespace-nowrap min-w-fit px-2 lg:px-3 ${
               isActive("/") 
                 ? "bg-gradient-to-r from-primary to-purple-500 text-white border-0" 
                 : "text-foreground hover:bg-accent hover:text-accent-foreground"
@@ -67,7 +67,7 @@ const Header = () => {
           </Button>
           <Button 
             variant={isActive("/groups") ? "default" : "ghost"}
-            className={`text-sm lg:text-base font-medium whitespace-nowrap min-w-fit px-2 lg:px-3 ${
+            className={`text-[1.5rem] lg:text-base font-medium whitespace-nowrap min-w-fit px-2 lg:px-3 ${
               isActive("/groups") 
                 ? "bg-gradient-to-r from-primary to-purple-500 text-white border-0" 
                 : "text-foreground hover:bg-accent hover:text-accent-foreground"
@@ -80,7 +80,7 @@ const Header = () => {
           </Button>
           <Button 
             variant={isActive("/chat") ? "default" : "ghost"}
-            className={`text-sm lg:text-base font-medium whitespace-nowrap min-w-fit px-2 lg:px-3 ${
+            className={`text-[1.5rem] lg:text-base font-medium whitespace-nowrap min-w-fit px-2 lg:px-3 ${
               isActive("/chat") 
                 ? "bg-gradient-to-r from-primary to-purple-500 text-white border-0" 
                 : "text-foreground hover:bg-accent hover:text-accent-foreground"
@@ -94,7 +94,7 @@ const Header = () => {
           
           <Button 
             variant={isActive("/games") ? "default" : "ghost"}
-            className={`text-sm lg:text-base font-medium whitespace-nowrap min-w-fit px-2 lg:px-3 ${
+            className={`text-[1.5rem] lg:text-base font-medium whitespace-nowrap min-w-fit px-2 lg:px-3 ${
               isActive("/games") 
                 ? "bg-gradient-to-r from-primary to-purple-500 text-white border-0" 
                 : "text-foreground hover:bg-accent hover:text-accent-foreground"
@@ -107,7 +107,7 @@ const Header = () => {
           </Button>
           <Button 
             variant={isActive("/knowledge/planets") ? "default" : "ghost"}
-            className={`text-sm lg:text-base font-medium whitespace-nowrap min-w-fit px-2 lg:px-3 ${
+            className={`text-[1.5rem] lg:text-base font-medium whitespace-nowrap min-w-fit px-2 lg:px-3 ${
               isActive("/knowledge/planets") 
                 ? "bg-gradient-to-r from-purple-400 to-pink-500 text-white border-0" 
                 : "text-foreground hover:bg-accent hover:text-accent-foreground"
@@ -122,7 +122,7 @@ const Header = () => {
           {isAuthenticated && user && user.role === 'ADMIN' && (
             <Button 
               variant={isActive("/admin") || location.pathname.startsWith("/admin/") ? "default" : "ghost"}
-              className={`text-sm lg:text-base font-medium whitespace-nowrap min-w-fit px-2 lg:px-3 ${
+              className={`text-[1.5rem] lg:text-base font-medium whitespace-nowrap min-w-fit px-2 lg:px-3 ${
                 isActive("/admin") || location.pathname.startsWith("/admin/") 
                   ? "bg-gradient-to-r from-orange-400 to-yellow-500 text-white border-0" 
                   : "text-foreground hover:bg-accent hover:text-accent-foreground"

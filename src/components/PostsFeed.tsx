@@ -113,6 +113,17 @@ const PostsFeed = ({ className = "", useStoredProcedure = false }: PostsFeedProp
     }
   }, [page, postsData?.content?.length]);
 
+  // Listen for postDeleted events to remove posts from local accumulated list
+  useEffect(() => {
+    const handler = (e: any) => {
+      const deletedId = e?.detail?.postId;
+      if (!deletedId) return;
+      setAllPosts((prev) => prev.filter((p) => p.id !== deletedId));
+    };
+    window.addEventListener('postDeleted', handler as EventListener);
+    return () => window.removeEventListener('postDeleted', handler as EventListener);
+  }, []);
+
   const handleRefresh = () => {
   setPage(0); // Reset to first page
   setVisiblePosts(new Set()); // Reset animations

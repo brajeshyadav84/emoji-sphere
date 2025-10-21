@@ -60,8 +60,11 @@ export default function AdminLogin() {
         password: values.password,
       }).unwrap();
 
-      // Check if user has admin role
-      if (response.role !== 'ADMIN') {
+  const raw = response as any;
+  const data = (raw && (raw.data ?? raw)) as any;
+
+  // Check if user has admin role
+  if (data?.role !== 'ADMIN') {
         toast({
           title: "Access Denied",
           description: "Only administrators can access this portal. Please use the regular login for users or teacher login for teachers.",
@@ -71,18 +74,7 @@ export default function AdminLogin() {
       }
 
       // Dispatch login success action
-      dispatch(loginSuccess({
-        user: {
-          id: response.id,
-          fullName: response.fullName,
-          name: response.name,
-          mobile: response.mobile,
-          email: response.email,
-          role: response.role,
-          roles: response.roles,
-        },
-        token: response.token,
-      }));
+      dispatch(loginSuccess({ ...(data || {}) }));
 
       toast({
         title: "Welcome Administrator!",

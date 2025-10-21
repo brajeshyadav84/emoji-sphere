@@ -41,13 +41,21 @@ export interface CommentsResponse {
 export interface LikeResponse {
   liked?: boolean;
   message?: string;
+  status?: string;
+}
+
+export interface ApiResponse<T> {
+  success: boolean;
+  message?: string;
+  data?: T;
+  status?: number;
 }
 
 // Extended API slice with comments endpoints
 export const commentsApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     // Get comments for a post
-    getCommentsByPost: builder.query<CommentsResponse, {
+    getCommentsByPost: builder.query<ApiResponse<CommentsResponse>, {
       postId: number;
       page?: number;
       size?: number;
@@ -63,7 +71,7 @@ export const commentsApi = apiSlice.injectEndpoints({
     }),
 
     // Create a comment
-    createComment: builder.mutation<CommentResponse, {
+    createComment: builder.mutation<ApiResponse<CommentResponse>, {
       postId: number;
       data: CommentRequest;
     }>({
@@ -79,7 +87,7 @@ export const commentsApi = apiSlice.injectEndpoints({
     }),
 
     // Update a comment
-    updateComment: builder.mutation<CommentResponse, {
+    updateComment: builder.mutation<ApiResponse<CommentResponse>, {
       commentId: number;
       data: CommentRequest;
     }>({
@@ -107,7 +115,7 @@ export const commentsApi = apiSlice.injectEndpoints({
     }),
 
     // Toggle like on a comment
-    toggleCommentLike: builder.mutation<{liked: boolean; status: string; message: string}, number>({
+    toggleCommentLike: builder.mutation<ApiResponse<LikeResponse>, number>({
       query: (commentId) => ({
         url: `/comments/${commentId}/like`,
         method: 'POST',
@@ -116,7 +124,7 @@ export const commentsApi = apiSlice.injectEndpoints({
     }),
 
     // Toggle like on a post (moved from postsApi for consistency)
-    togglePostLike: builder.mutation<{liked: boolean; status: string; message: string}, number>({
+    togglePostLike: builder.mutation<ApiResponse<LikeResponse>, number>({
       query: (postId) => ({
         url: `/posts/${postId}/like`,
         method: 'POST',

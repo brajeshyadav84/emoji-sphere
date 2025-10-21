@@ -1,4 +1,5 @@
 import { apiSlice } from './apiSlice';
+import type { ApiResponse, LikeResponse } from './commentsApi';
 
 export interface GroupPost {
   id: number;
@@ -69,7 +70,7 @@ export const groupPostApi = apiSlice.injectEndpoints({
       invalidatesTags: ['Post'],
     }),
     // Like/Unlike a post
-    groupToggleLikePost: builder.mutation<void, number>({
+    groupToggleLikePost: builder.mutation<ApiResponse<LikeResponse>, number>({
       query: (postId) => ({
         url: `/group-posts/${postId}/like`,
         method: 'POST',

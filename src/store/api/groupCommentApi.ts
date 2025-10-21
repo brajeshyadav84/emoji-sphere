@@ -1,4 +1,5 @@
 import { apiSlice } from './apiSlice';
+import type { ApiResponse, LikeResponse } from './commentsApi';
 
 // Types for the Group Comments API
 export interface GroupCommentRequest {
@@ -98,7 +99,7 @@ export const groupCommentsApi = apiSlice.injectEndpoints({
     }),
 
     // Toggle like on a group comment
-    toggleGroupCommentLike: builder.mutation<{liked: boolean; status: string; message: string}, number>({
+    toggleGroupCommentLike: builder.mutation<ApiResponse<LikeResponse>, number>({
       query: (commentId) => ({
         url: `/group-posts/comments/${commentId}/like`,
         method: 'POST',

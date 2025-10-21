@@ -62,10 +62,17 @@ export interface SendMessageRequest {
   messageType?: 'TEXT' | 'EMOJI' | 'IMAGE' | 'FILE';
 }
 
+export interface ApiResponse<T> {
+  success: boolean;
+  message?: string;
+  data?: T;
+  status?: number;
+}
+
 export const chatApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     // Send a message
-    sendMessage: builder.mutation<ChatMessage, SendMessageRequest>({
+    sendMessage: builder.mutation<ApiResponse<ChatMessage>, SendMessageRequest>({
       query: (message) => ({
         url: '/chat/send',
         method: 'POST',
@@ -75,13 +82,13 @@ export const chatApi = apiSlice.injectEndpoints({
     }),
 
     // Get conversations list
-    getConversations: builder.query<ConversationListResponse, { page?: number; size?: number }>({
+    getConversations: builder.query<ApiResponse<ConversationListResponse>, { page?: number; size?: number }>({
       query: ({ page = 0, size = 20 }) => `/chat/conversations?page=${page}&size=${size}`,
       providesTags: ['Conversation'],
     }),
 
     // Get messages for a conversation
-    getMessages: builder.query<MessagesResponse, { conversationId: number; page?: number; size?: number }>({
+    getMessages: builder.query<ApiResponse<MessagesResponse>, { conversationId: number; page?: number; size?: number }>({
       query: ({ conversationId, page = 0, size = 50 }) => 
         `/chat/conversation/${conversationId}/messages?page=${page}&size=${size}`,
       providesTags: (result, error, { conversationId }) => [

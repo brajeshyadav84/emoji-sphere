@@ -27,7 +27,7 @@ const FriendsManagement: React.FC<FriendsManagementProps> = () => {
   const [newFriendId, setNewFriendId] = useState('');
 
   // Extract friends from API response
-  const friends = friendsResponse?.friends || [];
+  const friends = friendsResponse?.data?.friends || [];
   const filteredFriends = friends.filter(friend =>
     friend.otherUser.fullName.toLowerCase().includes(searchQuery.toLowerCase())
   );

@@ -58,29 +58,26 @@ export default function Login() {
       }).unwrap();
       console.log("Login response:", response);
 
-      if(response?.code && response?.code !== "00") {
+      const raw = response as any;
+      const data = (raw && (raw.data ?? raw)) as any;
+
+      if (raw?.code && raw?.code !== "00") {
         toast({
           title: "Login Failed",
-          description: response?.message || "Invalid mobile number or password.",
+          description: raw?.message || "Invalid mobile number or password.",
           variant: "destructive",
         });
         navigate("/auth/verify-otp", {
-          state: { email: response?.code },
+          state: { email: raw?.code },
         });
       } else {
         // Dispatch login success action
-      dispatch(loginSuccess({
-        user: {
-          id: response.id,
-          fullName: response.fullName,
-          name: response.name,
-          mobile: response.mobile,
-          email: response.email,
-          role: response.role,
-          roles: response.roles,
-        },
-        token: response.token,
-      }));
+      dispatch(
+        loginSuccess({
+          // pass the API data object (token + user fields) so reducer can handle wrapper
+          ...(data || {}),
+        }),
+      );
 
       toast({
         title: "Welcome back!",

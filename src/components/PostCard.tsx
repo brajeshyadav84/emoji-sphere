@@ -34,6 +34,7 @@ import {
   useCreateGroupCommentMutation,
   useToggleGroupCommentLikeMutation
 } from "@/store/api/groupCommentApi";
+import { skipToken } from "@reduxjs/toolkit/query";
 
 interface PostCardProps {
   postId: number; // Changed from string to number
@@ -132,7 +133,15 @@ const PostCard = ({
   const confirmDelete = async () => {
     try {
       await deletePost(postId).unwrap();
+      // Notify local UI that a post was deleted so parent lists can remove it without a full refetch
+      try {
+        window.dispatchEvent(new CustomEvent('postDeleted', { detail: { postId } }));
+      } catch (err) {
+        // ignore - some environments may not allow dispatching
+      }
+
       toast({ title: "Post deleted", description: "Your post was deleted successfully." });
+      // keep existing callback for backwards compatibility
       onUpdate?.();
     } catch (error) {
       toast({ title: "Error", description: "Failed to delete post.", variant: "destructive" });
@@ -158,7 +167,7 @@ const PostCard = ({
   const params = useParams<{ groupId?: string }>();
   const routeGroupId = params.groupId ? Number(params.groupId) : undefined;
 
-  const { data: userGroupsData } = useGetUserGroupsQuery();
+  const { data: userGroupsData } = useGetUserGroupsQuery(fromGroup ? undefined : skipToken as any);
   const userGroups = userGroupsData?.data || [];
 
   // Determine if current user is member of the group where this post belongs.
@@ -174,6 +183,17 @@ const PostCard = ({
     : useGetCommentsByPostQuery({ postId, page: 0, size: 10 }, { skip: !showComments });
 
   const { data: commentsData, isLoading: commentsLoading, refetch: refetchComments } = commentsApi;
+
+  // Normalize comments list: commentsData may be ApiResponse<CommentsResponse> or GroupCommentsResponse
+  const commentsList = (() => {
+    if (!commentsData) return [] as any[];
+    // ApiResponse has 'data' property
+    if ((commentsData as any).data && (commentsData as any).data.content) {
+      return (commentsData as any).data.content;
+    }
+    // Otherwise assume it's already the paginated response
+    return (commentsData as any).content || [];
+  })();
 
   const [createComment] = fromGroup ? useCreateGroupCommentMutation() : useCreateCommentMutation();
   const [togglePostLike] = fromGroup ? useGroupToggleLikePostMutation() : useTogglePostLikeMutation();
@@ -230,16 +250,25 @@ const PostCard = ({
       console.log('Attempting to like post:', postId);
       const result = await togglePostLike(postId).unwrap();
       console.log('Like API result:', result);
-      
-      // The backend now returns {liked: boolean, status: string, message: string}
-      const isNowLiked = result?.liked;
-      setLiked(isNowLiked);
-      setLikeCount(prev => isNowLiked ? prev + 1 : prev - 1);
+
+      // The backend returns ApiResponse<LikeResponse>
+      let isNowLiked: boolean | undefined = undefined;
+      if (result) {
+        if ('data' in result && (result as any).data) {
+          isNowLiked = (result as any).data?.liked;
+        } else {
+          isNowLiked = (result as any).liked;
+        }
+      }
+
+      setLiked(isNowLiked ?? liked);
+      setLikeCount(prev => (isNowLiked ? prev + 1 : prev - 1));
       onUpdate?.();
-      
+
+      const postMessage = result && ('data' in result && (result as any).data ? (result as any).data?.message : (result as any).message);
       toast({
         title: "Success",
-        description: result?.message || `Post ${isNowLiked ? 'liked' : 'unliked'} successfully!`,
+        description: postMessage || `Post ${isNowLiked ? 'liked' : 'unliked'} successfully!`,
       });
     } catch (error) {
       console.error('Like API error:', error);
@@ -268,10 +297,22 @@ const PostCard = ({
       const result = await toggleCommentLike(commentId).unwrap();
       console.log('Comment like result:', result);
       refetchComments();
-      
+
+      let likedFlag: boolean | undefined = undefined;
+      let messageText: string | undefined = undefined;
+      if (result) {
+        if ('data' in result && (result as any).data) {
+          likedFlag = (result as any).data?.liked;
+          messageText = (result as any).data?.message;
+        } else {
+          likedFlag = (result as any).liked;
+          messageText = (result as any).message;
+        }
+      }
+
       toast({
         title: "Success",
-        description: result.message || `Comment ${result.liked ? 'liked' : 'unliked'} successfully!`,
+        description: messageText || `Comment ${likedFlag ? 'liked' : 'unliked'} successfully!`,
       });
     } catch (error) {
       console.error('Comment like error:', error);
@@ -506,7 +547,7 @@ const PostCard = ({
               )}
 
               <div className="space-y-3">
-                {commentsData?.content?.map((comment) => (
+                {commentsList.map((comment) => (
                   <div key={comment.id} className="bg-muted/50 rounded-lg p-3">
                     <div className="flex items-start gap-2">
                       <div 

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useAppSelector } from "@/store/hooks";
 import { useGetUserGroupsQuery } from "@/store/api/groupsApi";
+import { skipToken } from "@reduxjs/toolkit/query";
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
 import { Card } from "./ui/card";
@@ -29,7 +30,7 @@ const CreatePost = ({ fromGroup }: CreatePostProps = {}) => {
 
   // Auth and membership
   const isAuthorized = useAppSelector((state) => state.auth.isAuthenticated);
-  const { data: userGroupsData } = useGetUserGroupsQuery();
+  const { data: userGroupsData } = useGetUserGroupsQuery(fromGroup ? undefined : skipToken as any);
   const userGroups = userGroupsData?.data || [];
   const routeGroupId = groupId ? Number(groupId) : undefined;
   const isUserMember = fromGroup && routeGroupId ? userGroups.some((g: any) => g.id === routeGroupId) : false;
