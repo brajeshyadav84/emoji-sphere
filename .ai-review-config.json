@@ -1,0 +1,42 @@
+{
+  "projectType": "frontend",
+  "framework": "react",
+  "language": "javascript",
+  "rules": {
+    "react": {
+      "enabled": true,
+      "checks": [
+        "component-lifecycle",
+        "hooks-usage",
+        "prop-types",
+        "performance-optimizations"
+      ]
+    },
+    "security": {
+      "enabled": true,
+      "checks": [
+        "xss-vulnerabilities",
+        "csrf-protection",
+        "input-validation",
+        "sensitive-data-exposure"
+      ]
+    },
+    "performance": {
+      "enabled": true,
+      "checks": [
+        "bundle-size",
+        "code-splitting",
+        "lazy-loading",
+        "memory-leaks"
+      ]
+    }
+  },
+  "ignorePaths": [
+    "node_modules/",
+    "dist/",
+    "build/",
+    "coverage/",
+    "*.test.js",
+    "*.spec.js"
+  ]
+}
