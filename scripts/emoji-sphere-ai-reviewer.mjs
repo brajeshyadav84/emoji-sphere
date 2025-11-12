@@ -655,8 +655,8 @@ ${projectType === 'frontend' ? `
 `}
 
 ### 🏆 Positive Findings
-${reviews.flatMap(r => r.aiAnalysis.positives || []).length > 0 ? 
-  reviews.flatMap(r => r.aiAnalysis.positives || []).map(p => `- ${p}`).join('\n') :
+${reviews.flatMap(r => r.aiAnalysis?.positives || []).length > 0 ? 
+  reviews.flatMap(r => r.aiAnalysis?.positives || []).map(p => `- ${p}`).join('\n') :
   '- Code follows good structural patterns\n- Changes appear well-focused'}
 
 ### 🎯 Next Steps
