@@ -3,10 +3,10 @@
 // Enhanced AI Code Review Bot for Emoji Sphere Project
 // Supports both frontend (React) and backend (Node.js/Express) repositories
 
-const { OpenAI } = require('openai');
-const { Octokit } = require('@octokit/rest');
-const fs = require('fs');
-const path = require('path');
+import { OpenAI } from 'openai';
+import { Octokit } from '@octokit/rest';
+import fs from 'fs';
+import path from 'path';
 
 class EmojiSphereAIReviewer {
   constructor() {
@@ -821,10 +821,10 @@ async function main() {
 }
 
 // Export for use as module
-module.exports = EmojiSphereAIReviewer;
+export default EmojiSphereAIReviewer;
 
 // Run CLI if called directly
-if (require.main === module) {
+if (import.meta.url === `file://${process.argv[1]}`) {
   main().catch(error => {
     console.error('❌ Unhandled error:', error);
     process.exit(1);
