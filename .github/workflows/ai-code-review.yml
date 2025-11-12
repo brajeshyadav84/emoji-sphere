@@ -1,0 +1,66 @@
+name: AI Code Review
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [main, master, develop]
+
+jobs:
+  ai-review:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      checks: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install AI Review Bot Dependencies
+        run: |
+          npm install openai @octokit/rest
+          
+      - name: Download AI Review Bot
+        run: |
+          curl -o ai-review-bot.js https://raw.githubusercontent.com/your-config-repo/ai-review-bot.js
+
+      - name: Run AI Code Review
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          node ai-review-bot.js \
+            --owner="${{ github.repository_owner }}" \
+            --repo="${{ github.event.repository.name }}" \
+            --pull-number="${{ github.event.pull_request.number }}" \
+            --type="frontend"
+
+      - name: Frontend Specific Analysis
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          # React/JavaScript specific analysis
+          npx eslint src/ --ext .js,.jsx,.ts,.tsx --format json --output-file eslint-report.json || true
+          
+          # Bundle size analysis
+          npm run build 2>/dev/null || echo "Build failed - will analyze source only"
+          
+          # Run AI analysis with frontend context
+          node -e "
+          const AIReviewer = require('./ai-review-bot.js');
+          const reviewer = new AIReviewer();
+          reviewer.analyzeRepository('frontend', {
+            eslintReport: 'eslint-report.json',
+            buildOutput: 'dist/',
+            packageJson: 'package.json'
+          });
+          "
