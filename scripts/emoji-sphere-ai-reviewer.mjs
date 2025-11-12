@@ -10,9 +10,25 @@ import path from 'path';
 
 class EmojiSphereAIReviewer {
   constructor() {
-    this.openai = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY,
-    });
+    // Support both OpenAI and GitHub Copilot (via GitHub Models)
+    const useGitHubModels = process.env.USE_GITHUB_MODELS === 'true';
+    
+    if (useGitHubModels) {
+      // Use GitHub Models API (GitHub Copilot)
+      this.openai = new OpenAI({
+        apiKey: process.env.GITHUB_TOKEN,
+        baseURL: 'https://models.inference.ai.azure.com',
+      });
+      this.modelName = 'gpt-4o'; // GitHub Models supports gpt-4o, gpt-4o-mini, etc.
+      console.log('🤖 Using GitHub Copilot Models API');
+    } else {
+      // Use OpenAI directly
+      this.openai = new OpenAI({
+        apiKey: process.env.OPENAI_API_KEY,
+      });
+      this.modelName = 'gpt-4o';
+      console.log('🤖 Using OpenAI API');
+    }
     
     this.github = new Octokit({
       auth: process.env.GITHUB_TOKEN,
@@ -188,7 +204,7 @@ class EmojiSphereAIReviewer {
     
     try {
       const response = await this.openai.chat.completions.create({
-        model: 'gpt-4o',
+        model: this.modelName,
         messages: [
           {
             role: 'system',
@@ -805,14 +821,24 @@ async function main() {
     process.exit(1);
   }
 
-  if (!process.env.OPENAI_API_KEY) {
-    console.error('❌ OPENAI_API_KEY environment variable is required');
-    process.exit(1);
-  }
-
-  if (!process.env.GITHUB_TOKEN) {
-    console.error('❌ GITHUB_TOKEN environment variable is required');
-    process.exit(1);
+  const useGitHubModels = process.env.USE_GITHUB_MODELS === 'true';
+  
+  if (useGitHubModels) {
+    if (!process.env.GITHUB_TOKEN) {
+      console.error('❌ GITHUB_TOKEN environment variable is required for GitHub Models');
+      process.exit(1);
+    }
+    console.log('✅ Using GitHub Copilot Models (no OpenAI key needed)');
+  } else {
+    if (!process.env.OPENAI_API_KEY) {
+      console.error('❌ OPENAI_API_KEY environment variable is required');
+      console.log('💡 Tip: Set USE_GITHUB_MODELS=true to use GitHub Copilot instead');
+      process.exit(1);
+    }
+    if (!process.env.GITHUB_TOKEN) {
+      console.error('❌ GITHUB_TOKEN environment variable is required');
+      process.exit(1);
+    }
   }
 
   try {
