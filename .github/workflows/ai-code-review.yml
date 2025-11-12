@@ -17,7 +17,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          token: ${{ secrets.REPO_GITHUB_TOKEN }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -28,11 +27,12 @@ jobs:
         run: |
           npm install openai @octokit/rest
           
-      - name: Run AI Code Review
+      - name: Run AI Code Review with GitHub Copilot
         env:
-          GITHUB_TOKEN: ${{ secrets.REPO_GITHUB_TOKEN }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          USE_GITHUB_MODELS: 'true'
         run: |
+          echo "🤖 Using GitHub Copilot Models API for AI review"
           node scripts/emoji-sphere-ai-reviewer.mjs \
             --owner="${{ github.repository_owner }}" \
             --repo="${{ github.event.repository.name }}" \
@@ -40,9 +40,6 @@ jobs:
             --type="frontend"
 
       - name: Frontend Specific Analysis
-        env:
-          GITHUB_TOKEN: ${{ secrets.REPO_GITHUB_TOKEN }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           # React/JavaScript specific analysis
           npx eslint src/ --ext .js,.jsx,.ts,.tsx --format json --output-file eslint-report.json || true
