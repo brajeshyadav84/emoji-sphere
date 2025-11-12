@@ -188,7 +188,7 @@ class EmojiSphereAIReviewer {
     
     try {
       const response = await this.openai.chat.completions.create({
-        model: 'gpt-4-turbo-preview',
+        model: 'gpt-4o',
         messages: [
           {
             role: 'system',
@@ -228,6 +228,15 @@ class EmojiSphereAIReviewer {
       return {
         filename,
         projectType,
+        aiAnalysis: {
+          summary: 'AI analysis failed',
+          overallRisk: 'MEDIUM',
+          issues: [],
+          positives: [],
+          emojiSpecificNotes: [],
+          nextSteps: ['Manual review recommended']
+        },
+        patternIssues: [],
         issues: [{
           severity: 'LOW',
           type: 'analysis',
