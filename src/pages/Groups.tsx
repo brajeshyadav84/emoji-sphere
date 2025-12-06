@@ -1,15 +1,25 @@
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import Header from "@/components/Header";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Users, Plus, Lock, Globe, Settings, Crown, UserPlus } from "lucide-react";
+import { Users, Plus, Lock, Globe, Settings, Crown, UserPlus, UserMinus } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAppSelector } from "@/store/hooks";
 import {
   useGetUserGroupsQuery,
   useGetGroupRecommendationsQuery,
   useJoinGroupMutation,
+  useLeaveGroupMutation,
 } from "@/store/api/groupsApi";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 const Groups = () => {
   const navigate = useNavigate();
@@ -19,6 +29,8 @@ const Groups = () => {
   const { data: userGroupsData, isLoading: isLoadingUserGroups } = useGetUserGroupsQuery();
   const { data: recommendationsData, isLoading: isLoadingRecommendations } = useGetGroupRecommendationsQuery(8);
   const [joinGroup, { isLoading: isJoining }] = useJoinGroupMutation();
+  const [leaveGroup, { isLoading: isLeaving }] = useLeaveGroupMutation();
+  const [leaveGroupData, setLeaveGroupData] = useState<{ id: number; name: string } | null>(null);
 
   const myGroups = userGroupsData?.data || [];
   const suggestedGroups = recommendationsData?.data || [];
@@ -39,6 +51,28 @@ const Groups = () => {
         description: error?.data?.message || 'Failed to join group',
         variant: 'destructive',
       });
+    }
+  };
+
+  const handleLeaveGroup = async () => {
+    if (!leaveGroupData) return;
+    
+    try {
+      const result = await leaveGroup(leaveGroupData.id).unwrap();
+      if (result.success) {
+        toast({
+          title: 'Success',
+          description: result.message || 'You have successfully left the group',
+        });
+      }
+      setLeaveGroupData(null);
+    } catch (error: any) {
+      toast({
+        title: 'Error',
+        description: error?.data?.message || 'Failed to leave group',
+        variant: 'destructive',
+      });
+      setLeaveGroupData(null);
     }
   };
 
@@ -83,17 +117,31 @@ const Groups = () => {
         >
           View Group
         </Button>
-        {isMember && group.isUserAdmin ? (
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => navigate(`/groups/${group.id}/members`)}
-            title="Manage Members"
-            className="h-8 w-8 md:h-10 md:w-10"
-          >
-            <Settings className="h-3 w-3 md:h-4 md:w-4" />
-          </Button>
-        ) : !isMember ? (
+        {isMember ? (
+          <>
+            {group.isUserAdmin && (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => navigate(`/groups/${group.id}/members`)}
+                title="Manage Members"
+                className="h-8 w-8 md:h-10 md:w-10"
+              >
+                <Settings className="h-3 w-3 md:h-4 md:w-4" />
+              </Button>
+            )}
+            <Button
+              onClick={() => setLeaveGroupData({ id: group.id, name: group.name })}
+              disabled={isLeaving}
+              variant="outline"
+              size="sm"
+              className="border-red-300 text-red-600 hover:bg-red-50 hover:text-red-700 text-xs md:text-sm"
+            >
+              <UserMinus className="mr-1 h-3 w-3 md:h-4 md:w-4" />
+              Leave
+            </Button>
+          </>
+        ) : (
           <Button
             onClick={() => handleJoinGroup(group.id)}
             disabled={isJoining}
@@ -103,7 +151,7 @@ const Groups = () => {
             <UserPlus className="mr-1 h-3 w-3 md:h-4 md:w-4" />
             Join
           </Button>
-        ) : null}
+        )}
       </div>
     </Card>
   );
@@ -169,6 +217,36 @@ const Groups = () => {
           </div>
         </div>
       </main>
+
+      {/* Leave Group Confirmation Dialog */}
+      <Dialog open={!!leaveGroupData} onOpenChange={(open) => !open && setLeaveGroupData(null)}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Leave Group?</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to leave <strong>{leaveGroupData?.name}</strong>? You won't be able to see posts or participate until you join again.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="gap-2 sm:gap-0">
+            <Button
+              variant="outline"
+              onClick={() => setLeaveGroupData(null)}
+              disabled={isLeaving}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={handleLeaveGroup}
+              disabled={isLeaving}
+              className="gap-2"
+            >
+              <UserMinus className="h-4 w-4" />
+              {isLeaving ? "Leaving..." : "Leave Group"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

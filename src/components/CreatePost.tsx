@@ -16,9 +16,10 @@ import { useParams } from "react-router-dom";
 
 interface CreatePostProps {
   fromGroup?: boolean;
+  disabled?: boolean;
 }
 
-const CreatePost = ({ fromGroup }: CreatePostProps = {}) => {
+const CreatePost = ({ fromGroup, disabled = false }: CreatePostProps = {}) => {
   const { groupId } = useParams();
   const [postText, setPostText] = useState("");
   const [showMoreEmojis, setShowMoreEmojis] = useState(false);
@@ -174,18 +175,19 @@ const CreatePost = ({ fromGroup }: CreatePostProps = {}) => {
   return (
     <div className="space-y-4">
       <SecurityNotice />
-      <Card className="p-3 md:p-6 shadow-playful hover:shadow-hover transition-all duration-300 mx-0 w-full max-w-full">
+      <Card className={`p-3 md:p-6 shadow-playful hover:shadow-hover transition-all duration-300 mx-0 w-full max-w-full ${disabled ? 'opacity-50 pointer-events-none' : ''}`}>
       <div className="flex items-start gap-2 md:gap-4">
         <div className="w-10 h-10 md:w-12 md:h-12 rounded-full gradient-primary flex items-center justify-center text-xl md:text-2xl flex-shrink-0">
           😊
         </div>
         <div className="flex-1 min-w-0">
           <Textarea
-            placeholder="What's on your mind? Share something nice! 🌈"
+            placeholder={disabled ? "Join the group to share your thoughts..." : "What's on your mind? Share something nice! 🌈"}
             value={postText}
             onChange={handleTextChange}
             onPaste={handlePaste}
             onCopy={handleCopy}
+            disabled={disabled}
             className="min-h-[80px] md:min-h-[100px] border-2 border-border focus:border-primary resize-none text-sm md:text-base"
           />
           
@@ -207,7 +209,8 @@ const CreatePost = ({ fromGroup }: CreatePostProps = {}) => {
                 <button
                   key={emoji}
                   onClick={() => addEmoji(emoji)}
-                  className="text-lg md:text-2xl hover:scale-125 transition-transform duration-200 p-1"
+                  disabled={disabled}
+                  className="text-lg md:text-2xl hover:scale-125 transition-transform duration-200 p-1 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {emoji}
                 </button>
@@ -220,7 +223,8 @@ const CreatePost = ({ fromGroup }: CreatePostProps = {}) => {
                   <button
                     key={emoji}
                     onClick={() => addEmoji(emoji)}
-                    className="text-lg md:text-2xl hover:scale-125 transition-transform duration-200 p-1"
+                    disabled={disabled}
+                    className="text-lg md:text-2xl hover:scale-125 transition-transform duration-200 p-1 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {emoji}
                   </button>
@@ -236,6 +240,7 @@ const CreatePost = ({ fromGroup }: CreatePostProps = {}) => {
                 size="sm" 
                 className="gap-1 md:gap-2 text-xs md:text-sm px-2 md:px-3"
                 onClick={() => setShowMoreEmojis(!showMoreEmojis)}
+                disabled={disabled}
               >
                 <Smile className="h-3 w-3 md:h-4 md:w-4" />
                 {showMoreEmojis ? "Less Emojis" : "More Emojis"}
@@ -244,7 +249,7 @@ const CreatePost = ({ fromGroup }: CreatePostProps = {}) => {
             <Button 
               className="gradient-primary font-semibold text-xs md:text-sm px-3 md:px-4"
               onClick={handleShare}
-              disabled={isSubmitting}
+              disabled={isSubmitting || disabled}
             >
               {isSubmitting ? "Sharing..." : "Share Post 🚀"}
             </Button>
