@@ -134,6 +134,22 @@ const Header = () => {
               </span>
             </Button>
           )}
+          {/* Only show Dashboard for TEACHER users */}
+          {isAuthenticated && user && user.role === 'TEACHER' && (
+            <Button 
+              variant={isActive("/teachers") || location.pathname.startsWith("/teachers/") ? "default" : "ghost"}
+              className={`text-[1.5rem] lg:text-base font-medium whitespace-nowrap min-w-fit px-2 lg:px-3 ${
+                isActive("/teachers") || location.pathname.startsWith("/teachers/") 
+                  ? "bg-gradient-to-r from-orange-400 to-yellow-500 text-white border-0" 
+                  : "text-foreground hover:bg-accent hover:text-accent-foreground"
+              }`}
+              onClick={() => navigate("/teachers")}
+            >
+              <span className="flex items-center gap-1">
+                👨‍💼 <span className="hidden lg:inline">Dashboard</span>
+              </span>
+            </Button>
+          )}
         </nav>
 
         <div className="flex items-center gap-1 md:gap-2">
@@ -278,6 +294,25 @@ const Header = () => {
               >
                 <span className="flex items-center gap-2">
                   👨‍💼 <span>Admin</span>
+                </span>
+              </Button>
+            )}
+            {/* Only show Admin Dashboard for TEACHER users */}
+            {isAuthenticated && user && user.role === 'TEACHER' && (
+              <Button 
+                variant={isActive("/teachers") || location.pathname.startsWith("/teachers/") ? "default" : "ghost"}
+                className={`text-base font-medium justify-start w-full ${
+                  isActive("/teachers") || location.pathname.startsWith("/teachers/") 
+                    ? "bg-gradient-to-r from-orange-400 to-yellow-500 text-white border-0" 
+                    : "text-foreground hover:bg-accent hover:text-accent-foreground"
+                }`}
+                onClick={() => {
+                  navigate("/teachers");
+                  setIsMobileMenuOpen(false);
+                }}
+              >
+                <span className="flex items-center gap-2">
+                  👨‍💼 <span>Teacher</span>
                 </span>
               </Button>
             )}

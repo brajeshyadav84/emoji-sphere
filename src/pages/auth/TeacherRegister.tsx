@@ -468,12 +468,6 @@ export default function TeacherRegister() {
                   User Registration
                 </Link>
               </div>
-              <div>
-                <span className="text-muted-foreground">Administrator? </span>
-                <Link to="/auth/admin-register" className="text-red-600 hover:text-red-700 hover:underline font-medium">
-                  Admin Registration
-                </Link>
-              </div>
             </div>
           </div>
         </div>

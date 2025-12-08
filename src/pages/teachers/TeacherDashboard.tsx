@@ -1,11 +1,12 @@
 import { useAppSelector } from "@/store/hooks";
-import { Navigate } from "react-router-dom";
-import { GraduationCap, BookOpen, Users, Calendar, FileText, BarChart3 } from "lucide-react";
+import { Navigate, useNavigate } from "react-router-dom";
+import { GraduationCap, BookOpen, Users, Calendar, FileText, BarChart3, Video } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function TeacherDashboard() {
   const { user, isAuthenticated } = useAppSelector((state) => state.auth);
+  const navigate = useNavigate();
 
   // Redirect if not authenticated
   if (!isAuthenticated) {
@@ -92,6 +93,14 @@ export default function TeacherDashboard() {
                   <BookOpen className="h-6 w-6 mb-2" />
                   <span className="text-sm">Create Lesson</span>
                 </Button>
+                <Button 
+                  variant="outline" 
+                  className="h-auto flex-col p-4 border-blue-200 text-blue-700 hover:bg-blue-50"
+                  onClick={() => navigate("/teachers/meetings")}
+                >
+                  <Video className="h-6 w-6 mb-2" />
+                  <span className="text-sm">Setup Meetings</span>
+                </Button>
                 <Button variant="outline" className="h-auto flex-col p-4 border-blue-200 text-blue-700 hover:bg-blue-50">
                   <FileText className="h-6 w-6 mb-2" />
                   <span className="text-sm">Assignments</span>
@@ -99,10 +108,6 @@ export default function TeacherDashboard() {
                 <Button variant="outline" className="h-auto flex-col p-4 border-blue-200 text-blue-700 hover:bg-blue-50">
                   <BarChart3 className="h-6 w-6 mb-2" />
                   <span className="text-sm">Grade Book</span>
-                </Button>
-                <Button variant="outline" className="h-auto flex-col p-4 border-blue-200 text-blue-700 hover:bg-blue-50">
-                  <Calendar className="h-6 w-6 mb-2" />
-                  <span className="text-sm">Schedule</span>
                 </Button>
               </div>
             </CardContent>

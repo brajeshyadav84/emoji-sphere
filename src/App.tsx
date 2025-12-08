@@ -44,6 +44,7 @@ import ApiTest from "./pages/ApiTest";
 
 // Teacher imports
 import TeacherDashboard from "./pages/teachers/TeacherDashboard";
+import TeacherMeetings from "./pages/teachers/TeacherMeetings";
 
 // Knowledge imports
 import Planets from "./pages/knowledge/Planets";
@@ -127,7 +128,7 @@ const App = () => {
           {/* Auth routes */}
           <Route path="/auth/login" element={<Login />} />
           <Route path="/auth/admin-login" element={<AdminLogin />} />
-          <Route path="/auth/admin-register" element={<AdminRegister />} />
+          <Route path="/auth/emoji-register" element={<AdminRegister />} />
           <Route path="/auth/teacher-login" element={<TeacherLogin />} />
           <Route path="/auth/teacher-register" element={<TeacherRegister />} />
           <Route path="/auth/register" element={<Register />} />
@@ -140,9 +141,15 @@ const App = () => {
               <Dashboard />
             </ProtectedRoute>
           } />
-          <Route path="/teacher-dashboard" element={
+          
+          <Route path="/teachers" element={
             <ProtectedRoute>
               <TeacherDashboard />
+            </ProtectedRoute>
+          } />
+          <Route path="/teachers/meetings" element={
+            <ProtectedRoute>
+              <TeacherMeetings />
             </ProtectedRoute>
           } />
           <Route path="/user/:userId" element={<UserInfo />} />

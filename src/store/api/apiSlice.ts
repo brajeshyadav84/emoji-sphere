@@ -17,6 +17,12 @@ const baseQueryWithErrorHandling: BaseQueryFn = async (args, api, extraOptions) 
         headers.set('authorization', `Bearer ${token}`);
       }
       
+      // Add X-Teacher-Id header for teacher meetings API
+      const userId = (getState() as RootState).auth?.user?.id;
+      if (userId) {
+        headers.set('X-Teacher-Id', userId.toString());
+      }
+      
       return headers;
     },
   });
@@ -40,7 +46,7 @@ const baseQueryWithErrorHandling: BaseQueryFn = async (args, api, extraOptions) 
 export const apiSlice = createApi({
   reducerPath: 'api',
   baseQuery: baseQueryWithErrorHandling,
-  tagTypes: ['User', 'Post', 'Group', 'Zoom', 'Comment', 'Friendship', 'Chat', 'Conversation', 'Presence'],
+  tagTypes: ['User', 'Post', 'Group', 'Zoom', 'Comment', 'Friendship', 'Chat', 'Conversation', 'Presence', 'TeacherMeetings'],
   endpoints: () => ({}),
 });
 

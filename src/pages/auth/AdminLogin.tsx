@@ -188,13 +188,6 @@ export default function AdminLogin() {
           </Form>
 
           <div className="mt-6 text-center text-sm space-y-2">
-            <div>
-              <span className="text-muted-foreground">Need an admin account? </span>
-              <Link to="/auth/admin-register" className="text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 hover:underline font-medium">
-                Admin Registration
-              </Link>
-            </div>
-            
             <div className="border-t border-red-200 dark:border-red-800 pt-4 space-y-1">
               <div>
                 <span className="text-muted-foreground">Regular user? </span>
