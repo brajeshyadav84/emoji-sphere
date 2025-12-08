@@ -11,7 +11,8 @@ import {
   Lock,
   AlertCircle,
   CheckCircle,
-  Loader2
+  Loader2,
+  Globe
 } from 'lucide-react';
 import Header from '@/components/Header';
 import { useGetPublicMeetingsQuery } from '@/store/api/teacherMeetingsApi';
@@ -27,6 +28,7 @@ interface Meeting {
   scheduledDate?: string;
   scheduledTime?: string;
   isActive?: boolean;
+  timeZone?: string;
 }
 
 const OnlineMeetingSimple = () => {
@@ -53,7 +55,8 @@ const OnlineMeetingSimple = () => {
         minute: '2-digit'
       }),
       isActive: meeting.status === 'upcoming' || meeting.status === 'live',
-      status: meeting.status
+      status: meeting.status,
+      timeZone: meeting.timeZone
     }));
   }, [meetingsResponse]);
 
@@ -218,6 +221,12 @@ const OnlineMeetingSimple = () => {
                                     Time: <span className="font-semibold text-gray-800">{formatTime(meeting.scheduledTime)}</span>
                                   </p>
                                 )}
+                                {meeting.timeZone && (
+                                  <p className="flex items-center gap-2">
+                                    <Globe className="h-3 w-3 md:h-4 md:w-4" />
+                                    Time Zone: <span className="font-semibold text-gray-800">{meeting.timeZone}</span>
+                                  </p>
+                                )}
                               </div>
                             </div>
 
@@ -301,6 +310,12 @@ const OnlineMeetingSimple = () => {
                                     <p className="flex items-center gap-2">
                                       <Clock className="h-3 w-3 md:h-4 md:w-4" />
                                       Time: <span className="font-semibold text-gray-800">{formatTime(meeting.scheduledTime)}</span>
+                                    </p>
+                                  )}
+                                  {meeting.timeZone && (
+                                    <p className="flex items-center gap-2">
+                                      <Globe className="h-3 w-3 md:h-4 md:w-4" />
+                                      Time Zone: <span className="font-semibold text-gray-800">{meeting.timeZone}</span>
                                     </p>
                                   )}
                                   {/* {meeting.zoomJoinUrl && (
