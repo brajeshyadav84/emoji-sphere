@@ -17,7 +17,6 @@ export const useUserPresence = () => {
   const handleSetOnline = useCallback(async () => {
     try {
       await setUserOnline().unwrap();
-      console.log('User set online');
     } catch (error) {
       console.warn('Failed to set user online:', error);
     }
@@ -26,7 +25,6 @@ export const useUserPresence = () => {
   const handleSetOffline = useCallback(async () => {
     try {
       await setUserOffline().unwrap();
-      console.log('User set offline');
     } catch (error) {
       console.warn('Failed to set user offline:', error);
     }
@@ -35,7 +33,6 @@ export const useUserPresence = () => {
   const handleHeartbeat = useCallback(async () => {
     try {
       await sendHeartbeat().unwrap();
-      console.log('Heartbeat sent');
     } catch (error) {
       console.warn('Failed to send heartbeat:', error);
     }

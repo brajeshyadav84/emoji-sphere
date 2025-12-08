@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import type { AuthApiResponse, LoginResponse } from './api/authApi';
+import type { ApiResponse, LoginResponse } from './api/authApi';
 
 export interface User {
   id: string;
@@ -35,10 +35,9 @@ const authSlice = createSlice({
     loginSuccess: (
       state,
       action: PayloadAction<
-        AuthApiResponse<LoginResponse> | LoginResponse | { user: User; token: string } | any
+        ApiResponse<LoginResponse> | LoginResponse | { user: User; token: string } | any
       >,
     ) => {
-      console.log('loginSuccess action payload:', action.payload);
       const payload = (action.payload || {}) as any;
       // API may return a wrapper { success, message, data }
       // or directly the LoginResponse, or legacy { user, token }

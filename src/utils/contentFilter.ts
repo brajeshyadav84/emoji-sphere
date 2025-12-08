@@ -169,10 +169,8 @@ export const testContentFilter = () => {
       'intimate conversation' // Should be allowed as it can be educational
     ];
     
-    console.log('Content Filter Test Results:');
     testCases.forEach(testCase => {
       const result = validateContent(testCase);
-      console.log(`"${testCase}": ${result.isValid ? 'ALLOWED' : 'BLOCKED'} - ${result.message}`);
     });
   }
 };

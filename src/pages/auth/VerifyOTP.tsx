@@ -10,7 +10,6 @@ export default function VerifyOTP() {
   const navigate = useNavigate();
   const location = useLocation();
   const email = location.state?.email;
-  console.log("Email from state:", location.state);
   const [otp, setOtp] = useState("");
   const [verifyOtp, { isLoading }] = useVerifyOtpMutation();
   const [sendOtp, { isLoading: isResending }] = useSendOtpMutation();

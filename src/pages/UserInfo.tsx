@@ -39,8 +39,7 @@ const UserInfo: React.FC = () => {
   
 
   // Get current user from localStorage or auth state
-  const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
-  const isOwnProfile = currentUser?.id === parseInt(userId || '0');
+  const isOwnProfile = parseInt(currentUserId || '0') === parseInt(userId || '0');
 
   // API calls using RTK Query
   const { 
@@ -165,6 +164,7 @@ const UserInfo: React.FC = () => {
     }
 
     const friendship = friendshipStatus?.friendship;
+
     
     if (!friendship) {
       // No friendship exists - show Add Friend button
@@ -294,7 +294,6 @@ const UserInfo: React.FC = () => {
     );
   }
 
-  console.log('User group Data:', userGroups); // Debug log
   return (
     <div className="min-h-screen bg-background overflow-x-hidden">
       <Header />
@@ -411,7 +410,6 @@ const UserInfo: React.FC = () => {
               ) : userPosts?.content && userPosts.content.length > 0 ? (
                 <div className="space-y-4">
                   {userPosts.content.map((post) => {
-                    console.log('Post data:', post); // Debug log
                     return (
                       <PostCard 
                         key={post.id} 
@@ -471,7 +469,7 @@ const UserInfo: React.FC = () => {
                   {isOwnProfile && userGroups && (
                     <div className="flex justify-between items-center">
                       <span className="text-muted-foreground text-sm">Groups</span>
-                      <span className="font-semibold text-foreground">{userGroups.length}</span>
+                      <span className="font-semibold text-foreground">{userGroups.data?.length || 0}</span>
                     </div>
                   )}
                   <div className="flex justify-between items-center">

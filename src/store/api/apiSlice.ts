@@ -30,7 +30,6 @@ const baseQueryWithErrorHandling: BaseQueryFn = async (args, api, extraOptions) 
     // You can add global error handling here
     if (result.error.status === 401) {
       // Handle unauthorized - but don't redirect for now during development
-      console.log('Unauthorized - may need to login');
     }
   }
 

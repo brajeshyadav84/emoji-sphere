@@ -247,10 +247,8 @@ const PostCard = ({
       }
     }
     try {
-      console.log('Attempting to like post:', postId);
       const result = await togglePostLike(postId).unwrap();
-      console.log('Like API result:', result);
-
+      
       // The backend returns ApiResponse<LikeResponse>
       let isNowLiked: boolean | undefined = undefined;
       if (result) {
@@ -295,7 +293,6 @@ const PostCard = ({
     }
     try {
       const result = await toggleCommentLike(commentId).unwrap();
-      console.log('Comment like result:', result);
       refetchComments();
 
       let likedFlag: boolean | undefined = undefined;

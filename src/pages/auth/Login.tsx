@@ -56,8 +56,7 @@ export default function Login() {
         mobile: values.mobile,
         password: values.password,
       }).unwrap();
-      console.log("Login response:", response);
-
+      
       const raw = response as any;
       const data = (raw && (raw.data ?? raw)) as any;
 
@@ -89,7 +88,6 @@ export default function Login() {
 
       
     } catch (error: any) {
-      console.log("Login error:", error);
       toast({
         title: "Login Failed",
         description: error?.data?.message || "Invalid mobile number or password.",

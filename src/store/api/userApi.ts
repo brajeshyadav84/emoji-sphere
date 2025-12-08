@@ -189,8 +189,8 @@ export const userApi = apiSlice.injectEndpoints({
       providesTags: ['Friendship'],
       transformResponse: (response: any) => {
         // Handle backend response format
-        if (response?.areFriends !== undefined) {
-          return response;
+        if (response?.data?.areFriends !== undefined) {
+          return response.data;
         }
         return { areFriends: false, friendshipExists: false };
       },

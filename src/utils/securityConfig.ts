@@ -45,8 +45,6 @@ export const applySecurityMeasures = () => {
   setInterval(() => {
     if (process.env.NODE_ENV === 'production') {
       console.clear();
-      console.log('%cStop!', 'color: red; font-size: 50px; font-weight: bold;');
-      console.log('%cThis is a browser feature intended for developers. Please do not enter any code here as it may compromise your account security.', 'color: red; font-size: 16px;');
     }
   }, 10000);
 };
