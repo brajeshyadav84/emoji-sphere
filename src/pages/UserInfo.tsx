@@ -16,8 +16,7 @@ import {
   useGetFriendshipStatusQuery,
   useSendFriendRequestByIdMutation,
   useRespondToFriendRequestMutation,
-  useCancelFriendRequestMutation,
-  useGetUserGroupsQuery
+  useCancelFriendRequestMutation
 } from '../store/api/userApi';
 import { useGetUserPostsByIdQuery } from '../store/api/postsApi';
 import { getAvatarByGender } from '../utils/avatarUtils';
@@ -28,6 +27,7 @@ import Header from '../components/Header';
 import { useToast } from '../hooks/use-toast';
 import { useAppSelector } from '@/store/hooks';
 import { calcAge } from '@/utils/dob';
+import { useGetUserGroupsQuery } from '@/store/api/groupsApi';
 
 const UserInfo: React.FC = () => {
   const { userId } = useParams<{ userId: string }>();
@@ -92,9 +92,7 @@ const UserInfo: React.FC = () => {
   const { 
     data: userGroups, 
     isLoading: groupsLoading 
-  } = useGetUserGroupsQuery(userId || '', {
-    skip: !userId || !isOwnProfile // Only show groups for own profile for now
-  });
+  } = useGetUserGroupsQuery()
 
   // Mutations
   const [sendFriendRequest] = useSendFriendRequestByIdMutation();
@@ -296,6 +294,7 @@ const UserInfo: React.FC = () => {
     );
   }
 
+  console.log('User group Data:', userGroups); // Debug log
   return (
     <div className="min-h-screen bg-background overflow-x-hidden">
       <Header />
@@ -496,9 +495,9 @@ const UserInfo: React.FC = () => {
                 
                 {groupsLoading ? (
                   <div className="text-center py-4 text-muted-foreground text-sm">Loading groups...</div>
-                ) : userGroups && userGroups.length > 0 ? (
+                ) : userGroups && userGroups.data.length > 0 ? (
                   <div className="space-y-2">
-                    {userGroups.map((group) => (
+                    {userGroups?.data.map((group) => (
                       <div 
                         key={group.id}
                         className="p-3 bg-secondary/10 rounded-lg hover:bg-secondary/20 transition-colors cursor-pointer"
@@ -506,11 +505,11 @@ const UserInfo: React.FC = () => {
                       >
                         <h4 className="font-semibold text-foreground text-sm">{group.name}</h4>
                         <p className="text-xs text-muted-foreground">{group.memberCount} members</p>
-                        {group.description && (
+                        {/* {group.description && (
                           <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
                             {group.description}
                           </p>
-                        )}
+                        )} */}
                       </div>
                     ))}
                   </div>
