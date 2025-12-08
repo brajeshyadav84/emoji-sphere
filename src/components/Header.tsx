@@ -43,7 +43,7 @@ const Header = () => {
           >
             {isMobileMenuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
           </Button>
-          <div className="flex items-center gap-1 md:gap-2">
+          <div className="flex items-center gap-1 md:gap-2 cursor-pointer" onClick={() => navigate("/")}>
             <div className="text-xl md:text-3xl">🌈</div>
             <h1 className="text-lg md:text-xl font-bold gradient-text-primary">
               KidSpace

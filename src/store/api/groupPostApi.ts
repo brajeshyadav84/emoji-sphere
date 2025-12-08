@@ -52,6 +52,7 @@ export const groupPostApi = apiSlice.injectEndpoints({
         url: `/group-posts/group/${groupId}`,
         params: { page, size },
       }),
+      providesTags: ['Post'],
     }),
     shareGroupPost: builder.mutation<GroupPost, CreateGroupPostRequest>({
       query: (body) => ({

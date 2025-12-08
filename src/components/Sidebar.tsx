@@ -12,8 +12,8 @@ const Sidebar = () => {
     { icon: "👥", label: "Groups", path: "/groups" },
     { icon: "💬", label: "Messages", path: "/chat" },
     { icon: "🎮", label: "Fun Games", path: "/games" },
-    { icon: "�", label: "Exams", path: "/exams" },
-    { icon: "�📹", label: "Online Classes", path: "/onlineclasses" },
+    { icon: "📝", label: "Exams", path: "/exams" },
+    { icon: "📹", label: "Online Classes", path: "/onlineclasses" },
     { icon: "🤔", label: "Homework Help", path: "/ask-me" },
   ];
 
