@@ -46,6 +46,14 @@ class WebSocketService {
 
   constructor() {
     // Get userId from Redux store
+    this.updateUserId();
+  }
+
+  /**
+   * Update userId from Redux store
+   * Call this method when user authentication state changes
+   */
+  private updateUserId(): void {
     const state = store.getState();
     const userIdStr = state.auth?.user?.id;
     this.userId = userIdStr ? parseInt(userIdStr.toString(), 10) : null;
@@ -55,6 +63,8 @@ class WebSocketService {
    * Initialize WebSocket connection with SockJS and STOMP
    */
   connect(): Promise<void> {
+    // Ensure we have the latest userId
+    this.updateUserId();
     return new Promise((resolve, reject) => {
       if (this.connected) {
         resolve();
