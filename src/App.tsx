@@ -91,6 +91,12 @@ const App = () => {
       cleanupBodyMarginFix();
     };
   }, []);
+
+  const testFunction = () => {
+    console.log("Testing AI review bot"); // This will trigger AI feedback
+    eval("alert('test')"); // This will trigger security warning
+    document.getElementById("test").innerHTML = userInput; // XSS risk
+  };
   
   return (
     <QueryClientProvider client={queryClient}>
