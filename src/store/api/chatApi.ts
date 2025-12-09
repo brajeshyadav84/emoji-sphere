@@ -78,13 +78,34 @@ export const chatApi = apiSlice.injectEndpoints({
         method: 'POST',
         body: message,
       }),
-      invalidatesTags: ['Chat', 'Conversation'],
+      // Invalidate all chat-related caches to force refetch
+      invalidatesTags: (result, error, arg) => [
+        'Chat',
+        { type: 'Chat', id: 'LIST' },
+        'Conversation',
+        { type: 'Conversation', id: 'LIST' },
+      ],
+      // Optimistically update the UI
+      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          console.log('✅ Message sent successfully:', data);
+        } catch (error) {
+          console.error('❌ Failed to send message:', error);
+        }
+      },
     }),
 
     // Get conversations list
     getConversations: builder.query<ApiResponse<ConversationListResponse>, { page?: number; size?: number }>({
       query: ({ page = 0, size = 20 }) => `/chat/conversations?page=${page}&size=${size}`,
-      providesTags: ['Conversation'],
+      providesTags: (result) => 
+        result?.data?.conversations
+          ? [
+              ...result.data.conversations.map(({ id }) => ({ type: 'Conversation' as const, id })),
+              { type: 'Conversation', id: 'LIST' },
+            ]
+          : [{ type: 'Conversation', id: 'LIST' }],
     }),
 
     // Get messages for a conversation
@@ -93,6 +114,7 @@ export const chatApi = apiSlice.injectEndpoints({
         `/chat/conversation/${conversationId}/messages?page=${page}&size=${size}`,
       providesTags: (result, error, { conversationId }) => [
         { type: 'Chat', id: conversationId },
+        { type: 'Chat', id: 'LIST' },
       ],
     }),
 
