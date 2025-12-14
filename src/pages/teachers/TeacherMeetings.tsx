@@ -17,7 +17,6 @@ import {
   type TeacherMeetingRequest
 } from "@/store/api/teacherMeetingsApi";
 import { toast } from "sonner";
-import { formatInLocalTimezone } from "@/utils/timezoneUtils";
 
 const TIME_ZONES = [
   // Americas
@@ -273,8 +272,15 @@ export default function TeacherMeetings() {
 
   // Memoized helper functions to prevent unnecessary recalculations
   const formatDateTime = useCallback((dateTimeString: string) => {
-    // Use timezone utility to format in user's local timezone
-    return formatInLocalTimezone(dateTimeString);
+    const date = new Date(dateTimeString);
+    return date.toLocaleString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true
+    });
   }, []);
 
   const getMeetingStatus = useCallback((startTime: string, endTime: string) => {

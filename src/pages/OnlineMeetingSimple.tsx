@@ -17,14 +17,6 @@ import {
 import Header from '@/components/Header';
 import { useGetPublicMeetingsQuery } from '@/store/api/teacherMeetingsApi';
 import { useAppSelector } from '@/store/hooks';
-import {
-  formatInLocalTimezone,
-  formatDateInLocalTimezone,
-  formatTimeInLocalTimezone,
-  getUserTimezone,
-  isTodayInLocalTimezone,
-  isFutureInLocalTimezone
-} from '@/utils/timezoneUtils';
 
 interface Meeting {
   meetingId: string;
@@ -35,7 +27,6 @@ interface Meeting {
   password?: string;
   scheduledDate?: string;
   scheduledTime?: string;
-  endTime?: string;
   isActive?: boolean;
   timeZone?: string;
 }
@@ -47,56 +38,46 @@ const OnlineMeetingSimple = () => {
   // Fetch public meetings from API - available to all users
   const { data: meetingsResponse, isLoading, error } = useGetPublicMeetingsQuery();
 
-  // Transform API data to Meeting format and filter out past meetings
+  // Transform API data to Meeting format
   const meetings = useMemo(() => {
     if (!meetingsResponse?.data) return [];
 
-    // Get current time in user's system timezone
-    const now = new Date();
-
-    return meetingsResponse.data
-      .filter((meeting) => {
-        // Parse the endTime which comes from backend in ISO format with timezone info
-        // The meeting.endTime is already in the original timezone (e.g., America/New_York)
-        // When we create a Date object, JavaScript automatically converts it to local system time
-        const meetingEndTime = new Date(meeting.endTime);
-        
-        // Compare: if meeting end time (in user's local timezone) is still in the future
-        // This properly handles the timezone conversion automatically
-        return meetingEndTime > now;
-      })
-      .map((meeting) => ({
-        meetingId: meeting.meetingId,
-        meetingName: meeting.subjectTitle,
-        subjectDescription: meeting.subjectDescription,
-        zoomJoinUrl: meeting.meetingUrl,
-        password: meeting.passcode,
-        // Keep the full startTime for accurate timezone conversion
-        scheduledDate: meeting.startTime,
-        scheduledTime: new Date(meeting.startTime).toLocaleTimeString('en-US', {
-          hour12: false,
-          hour: '2-digit',
-          minute: '2-digit'
-        }),
-        endTime: meeting.endTime, // Keep the full endTime ISO string
-        isActive: meeting.status === 'upcoming' || meeting.status === 'live',
-        status: meeting.status,
-        timeZone: meeting.timeZone
-      }));
+    return meetingsResponse.data.map((meeting) => ({
+      meetingId: meeting.meetingId,
+      meetingName: meeting.subjectTitle,
+      subjectDescription: meeting.subjectDescription,
+      zoomJoinUrl: meeting.meetingUrl,
+      password: meeting.passcode,
+      scheduledDate: new Date(meeting.startTime).toISOString().split('T')[0],
+      scheduledTime: new Date(meeting.startTime).toLocaleTimeString('en-US', {
+        hour12: false,
+        hour: '2-digit',
+        minute: '2-digit'
+      }),
+      isActive: meeting.status === 'upcoming' || meeting.status === 'live',
+      status: meeting.status,
+      timeZone: meeting.timeZone
+    }));
   }, [meetingsResponse]);
-
-  // Get user's current timezone
-  const userTimezone = useMemo(() => getUserTimezone(), []);
 
   const isToday = (dateString: string) => {
     if (!dateString) return false;
-    // Use timezone-aware check based on startTime
-    return isTodayInLocalTimezone(dateString);
+    const today = new Date();
+    const meetingDate = new Date(dateString);
+
+    // Compare year, month, and day
+    return today.getFullYear() === meetingDate.getFullYear() &&
+      today.getMonth() === meetingDate.getMonth() &&
+      today.getDate() === meetingDate.getDate();
   };
 
   const isFutureDate = (dateString: string) => {
     if (!dateString) return false;
-    return isFutureInLocalTimezone(dateString);
+    const meetingDate = new Date(dateString);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    meetingDate.setHours(0, 0, 0, 0);
+    return meetingDate >= today;
   };
 
   const isUpcoming = (dateString: string) => {
@@ -105,7 +86,11 @@ const OnlineMeetingSimple = () => {
     // Don't show today's classes in upcoming - only future dates
     if (isToday(dateString)) return false;
 
-    return isFutureInLocalTimezone(dateString);
+    const meetingDate = new Date(dateString);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    meetingDate.setHours(0, 0, 0, 0);
+    return meetingDate > today;
   };
 
   const isMeetingAvailable = (meeting: Meeting) => {
@@ -227,23 +212,19 @@ const OnlineMeetingSimple = () => {
                                 {meeting.scheduledDate && (
                                   <p className="flex items-center gap-2">
                                     <Calendar className="h-3 w-3 md:h-4 md:w-4" />
-                                    Date: <span className="font-semibold text-gray-800">{formatDateInLocalTimezone(meeting.scheduledDate)}</span>
+                                    Date: <span className="font-semibold text-gray-800">{new Date(meeting.scheduledDate).toLocaleDateString()}</span>
                                   </p>
                                 )}
-                                {meeting.scheduledTime && meeting.scheduledDate && (
+                                {meeting.scheduledTime && (
                                   <p className="flex items-center gap-2">
                                     <Clock className="h-3 w-3 md:h-4 md:w-4" />
-                                    Time: <span className="font-semibold text-gray-800">{formatTimeInLocalTimezone(meeting.scheduledDate)}</span>
+                                    Time: <span className="font-semibold text-gray-800">{formatTime(meeting.scheduledTime)}</span>
                                   </p>
                                 )}
-                                <p className="flex items-center gap-2">
-                                  <Globe className="h-3 w-3 md:h-4 md:w-4" />
-                                  Your Timezone: <span className="font-semibold text-gray-800">{userTimezone}</span>
-                                </p>
-                                {meeting.timeZone && meeting.timeZone !== userTimezone && (
-                                  <p className="flex items-center gap-2 text-xs text-gray-500">
-                                    <Globe className="h-3 w-3" />
-                                    Original: <span className="font-medium">{meeting.timeZone}</span>
+                                {meeting.timeZone && (
+                                  <p className="flex items-center gap-2">
+                                    <Globe className="h-3 w-3 md:h-4 md:w-4" />
+                                    Time Zone: <span className="font-semibold text-gray-800">{meeting.timeZone}</span>
                                   </p>
                                 )}
                               </div>
@@ -322,23 +303,19 @@ const OnlineMeetingSimple = () => {
                                   {meeting.scheduledDate && (
                                     <p className="flex items-center gap-2">
                                       <Calendar className="h-3 w-3 md:h-4 md:w-4" />
-                                      Date: <span className="font-semibold text-gray-800">{formatDateInLocalTimezone(meeting.scheduledDate)}</span>
+                                      Date: <span className="font-semibold text-gray-800">{new Date(meeting.scheduledDate).toLocaleDateString()}</span>
                                     </p>
                                   )}
-                                  {meeting.scheduledTime && meeting.scheduledDate && (
+                                  {meeting.scheduledTime && (
                                     <p className="flex items-center gap-2">
                                       <Clock className="h-3 w-3 md:h-4 md:w-4" />
-                                      Time: <span className="font-semibold text-gray-800">{formatTimeInLocalTimezone(meeting.scheduledDate)}</span>
+                                      Time: <span className="font-semibold text-gray-800">{formatTime(meeting.scheduledTime)}</span>
                                     </p>
                                   )}
-                                  <p className="flex items-center gap-2">
-                                    <Globe className="h-3 w-3 md:h-4 md:w-4" />
-                                    Your Timezone: <span className="font-semibold text-gray-800">{userTimezone}</span>
-                                  </p>
-                                  {meeting.timeZone && meeting.timeZone !== userTimezone && (
-                                    <p className="flex items-center gap-2 text-xs text-gray-500">
-                                      <Globe className="h-3 w-3" />
-                                      Original: <span className="font-medium">{meeting.timeZone}</span>
+                                  {meeting.timeZone && (
+                                    <p className="flex items-center gap-2">
+                                      <Globe className="h-3 w-3 md:h-4 md:w-4" />
+                                      Time Zone: <span className="font-semibold text-gray-800">{meeting.timeZone}</span>
                                     </p>
                                   )}
                                   {/* {meeting.zoomJoinUrl && (
@@ -387,7 +364,6 @@ const OnlineMeetingSimple = () => {
                   <div className="bg-blue-50 p-3 md:p-4 rounded-lg">
                     <h4 className="font-semibold text-blue-900 mb-2 text-sm md:text-base">For Students:</h4>
                     <ul className="list-disc list-inside text-blue-800 space-y-1 text-xs md:text-sm">
-                      <li>All times are automatically converted to your local timezone ({userTimezone})</li>
                       <li>Only today's classes are available to join immediately</li>
                       <li>Future classes are shown in "Upcoming Classes" section</li>
                       <li>Click "Join Class" button when today's class is available</li>

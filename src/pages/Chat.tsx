@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect } from "react";
 import { ChevronRight, ChevronLeft } from "lucide-react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 import Header from "@/components/Header";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -27,6 +29,7 @@ import { useUserPresence } from "@/hooks/useUserPresence";
 import { getAvatarByGender } from "@/utils/avatarUtils";
 import { FriendshipResponse } from "@/store/api/userApi";
 import OnlineStatusIndicator from "@/components/OnlineStatusIndicator";
+import websocketService, { ChatMessage as WsChatMessage } from "@/services/websocketService";
 
 interface Friend {
   id: number;
@@ -42,6 +45,8 @@ interface Friend {
 
 const Chat = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { isAuthenticated, user } = useSelector((state: RootState) => state.auth);
   const [selectedFriend, setSelectedFriend] = useState<Friend | null>(null);
   const [selectedConversationId, setSelectedConversationId] = useState<number | null>(null);
   const [messageText, setMessageText] = useState("");
@@ -55,35 +60,62 @@ const Chat = () => {
   const [friendsWithNewMessages, setFriendsWithNewMessages] = useState<Set<number>>(new Set());
   const [lastReadMessages, setLastReadMessages] = useState<Map<number, number>>(new Map());
   const [unreadCounts, setUnreadCounts] = useState<Map<number, number>>(new Map());
+  const [wsConnected, setWsConnected] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const lastMessageCountRef = useRef<number>(0);
+  const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Helper function to play notification sound
+  const playNotificationSound = () => {
+    try {
+      const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+      
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+      
+      oscillator.frequency.value = 800;
+      oscillator.type = 'sine';
+      gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+      
+      oscillator.start(audioContext.currentTime);
+      oscillator.stop(audioContext.currentTime + 0.1);
+    } catch (error) {
+      console.log('Audio notification not available');
+    }
+  };
 
   // Get selected friend from navigation state
   const routeSelectedFriend = location.state?.selectedFriend;
 
-  // API hooks
-  const { data: friendsResponse, isLoading: friendsLoading, error: friendsError } = useGetFriendsQuery({ page: 0, size: 50 });
+  // API hooks - skip if not authenticated
+  const { data: friendsResponse, isLoading: friendsLoading, error: friendsError } = useGetFriendsQuery(
+    { page: 0, size: 50 },
+    { skip: !isAuthenticated }
+  );
   const { data: conversationsResponse, refetch: refetchConversations } = useGetConversationsQuery(
     { page: 0, size: 20 },
     {
-      pollingInterval: 5000, // Poll every 5 seconds to check for new conversations/messages
+      skip: !isAuthenticated,
       refetchOnFocus: true,
       refetchOnReconnect: true
     }
   );
-  const { data: messagesResponse, isLoading: messagesLoading } = useGetMessagesQuery(
-    selectedConversationId ? { conversationId: selectedConversationId, page: 0, size: 50 } : { conversationId: 0 },
+  const { data: messagesResponse, isLoading: messagesLoading, refetch: refetchMessages } = useGetMessagesQuery(
+    selectedConversationId ? { conversationId: selectedConversationId, page: 0, size: 500 } : { conversationId: 0 },
     { 
-      skip: !selectedConversationId,
-      pollingInterval: 2000, // Poll every 2 seconds for new messages
+      skip: !selectedConversationId || !isAuthenticated,
       refetchOnFocus: true,
-      refetchOnReconnect: true
+      refetchOnReconnect: true,
     }
   );
   
-  // Presence API hooks
+  // Presence API hooks - skip if not authenticated
   const { data: friendsStatusResponse } = useGetFriendsStatusQuery(undefined, {
+    skip: !isAuthenticated,
     pollingInterval: 120000, // Poll every 120 seconds for online status
     refetchOnFocus: true,
     refetchOnReconnect: true
@@ -96,6 +128,115 @@ const Chat = () => {
   const [sendMessage] = useSendMessageMutation();
   const [markAsRead] = useMarkMessagesAsReadMutation();
   const [startConversation] = useStartConversationMutation();
+
+  // Initialize WebSocket connection only if authenticated
+  useEffect(() => {
+    if (!isAuthenticated || !user) {
+      console.warn('⚠️ User not authenticated, skipping WebSocket connection');
+      return;
+    }
+
+    const initWebSocket = async () => {
+      try {
+        await websocketService.connect();
+        console.log('✅ WebSocket connected successfully');
+      } catch (error) {
+        console.error('❌ Failed to connect WebSocket:', error);
+      }
+    };
+
+    initWebSocket();
+
+    // Setup connection status listener
+    const unsubscribe = websocketService.onConnectionChange((connected) => {
+      setWsConnected(connected);
+      console.log(`WebSocket ${connected ? 'connected' : 'disconnected'}`);
+      
+      // When WebSocket reconnects, refetch messages to catch any missed during disconnect
+      if (connected && selectedConversationId) {
+        console.log('🔄 WebSocket reconnected, refetching messages');
+        refetchMessages();
+        refetchConversations();
+      }
+    });
+
+    // Cleanup on unmount
+    return () => {
+      unsubscribe();
+      websocketService.disconnect();
+    };
+  }, [isAuthenticated, user, selectedConversationId, refetchMessages, refetchConversations]);
+
+  // Subscribe to selected conversation's messages
+  useEffect(() => {
+    if (!selectedConversationId) return;
+
+    // Only subscribe via WebSocket if connected
+    if (wsConnected) {
+      console.log(`📡 Subscribing to conversation ${selectedConversationId} via WebSocket`);
+      websocketService.subscribeToConversation(selectedConversationId);
+    } else {
+      console.log(`⚠️ WebSocket not connected, will refetch on reconnect`);
+    }
+
+    // Listen for new messages in this conversation
+    const unsubscribeMessages = websocketService.onMessage(
+      selectedConversationId,
+      (message) => {
+        console.log('📨 Received real-time message via WebSocket:', message);
+        
+        // Immediately refetch to get the complete message data from API
+        refetchMessages();
+        refetchConversations();
+        console.log('🔄 Refetched messages and conversations after WebSocket message');
+
+        // Play notification sound if message is from friend
+        if (message.senderId === selectedFriend?.id) {
+          playNotificationSound();
+        }
+
+        // Mark as read automatically if message is from friend
+        if (message.senderId === selectedFriend?.id && message.id) {
+          websocketService.sendReadReceipt(selectedConversationId, [message.id]);
+          markAsRead(selectedConversationId);
+        }
+      }
+    );
+
+    // Listen for typing indicators
+    const unsubscribeTyping = websocketService.onTyping(
+      selectedConversationId,
+      (typing) => {
+        console.log('⌨️ Typing indicator:', typing);
+        if (typing.userId === selectedFriend?.id) {
+          setFriendTyping(typing.isTyping ? typing.userId : null);
+        }
+      }
+    );
+
+    return () => {
+      unsubscribeMessages();
+      unsubscribeTyping();
+      if (wsConnected) {
+        websocketService.unsubscribeFromConversation(selectedConversationId);
+      }
+    };
+  }, [selectedConversationId, wsConnected, selectedFriend, refetchMessages, refetchConversations, markAsRead]);
+
+  // Listen for read receipts
+  useEffect(() => {
+    if (!wsConnected) return;
+
+    const unsubscribe = websocketService.onReadReceipt((receipt) => {
+      console.log('✓✓ Read receipt received:', receipt);
+      // Refetch messages to update read status
+      if (receipt.conversationId === selectedConversationId) {
+        refetchMessages();
+      }
+    });
+
+    return () => unsubscribe();
+  }, [wsConnected, selectedConversationId, refetchMessages]);
 
   // Transform API response to Friend interface - filter only accepted friendships
   const friends: Friend[] = friendsResponse?.data?.friends
@@ -188,7 +329,13 @@ const Chat = () => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [messagesResponse?.data?.messages]);
+    
+    // Log messages for debugging
+    if (messagesResponse?.data?.messages) {
+      console.log(`💬 Messages count for conversation ${selectedConversationId}:`, messagesResponse.data.messages.length);
+      console.log('💬 Latest messages:', messagesResponse.data.messages.slice(-3));
+    }
+  }, [messagesResponse?.data?.messages, selectedConversationId]);
 
   // Handle new message notifications and sound
   useEffect(() => {
@@ -305,21 +452,37 @@ const Chat = () => {
     }
   }, [friends, selectedFriend]);
 
-  // Simulate typing indicator (in a real app, this would come from WebSocket)
+  // Send typing indicator via WebSocket
   useEffect(() => {
-    let typingTimeout: NodeJS.Timeout;
+    if (!selectedConversationId || !wsConnected) return;
+    
+    // Clear previous timeout
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
+    }
     
     if (messageText.length > 0) {
       setIsTyping(true);
-      typingTimeout = setTimeout(() => setIsTyping(false), 1000);
+      
+      // Send typing indicator
+      websocketService.sendTyping(selectedConversationId, true);
+      
+      // Stop typing after 1 second of inactivity
+      typingTimeoutRef.current = setTimeout(() => {
+        setIsTyping(false);
+        websocketService.sendTyping(selectedConversationId, false);
+      }, 1000);
     } else {
       setIsTyping(false);
+      websocketService.sendTyping(selectedConversationId, false);
     }
     
     return () => {
-      if (typingTimeout) clearTimeout(typingTimeout);
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current);
+      }
     };
-  }, [messageText]);
+  }, [messageText, selectedConversationId, wsConnected]);
 
   // Sync unreadCounts from conversations API response
   useEffect(() => {
@@ -389,9 +552,8 @@ const Chat = () => {
   };
 
   const handleSendMessage = async () => {
-    if (messageText.trim() && selectedFriend) {
+    if (messageText.trim() && selectedFriend && selectedConversationId) {
       const messageToSend = messageText.trim();
-      const tempId = Date.now(); // Temporary ID for optimistic update
       
       // Clear input immediately for better UX
       setMessageText("");
@@ -400,19 +562,35 @@ const Chat = () => {
         // Determine message type
         const isEmojiOnly = /^[\p{Emoji}\p{Emoji_Modifier}\p{Emoji_Component}\p{Emoji_Modifier_Base}\p{Emoji_Presentation}]+$/u.test(messageToSend);
         
-        // Send message with optimistic update
-        await sendMessage({
-          receiverId: selectedFriend.id,
-          messageText: messageToSend,
-          messageType: isEmojiOnly ? 'EMOJI' : 'TEXT'
-        }).unwrap();
-        
-        // // Show success animation
-        // const successIndicator = document.createElement('div');
-        // successIndicator.innerHTML = '✓';
-        // successIndicator.className = 'fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-green-500 text-2xl font-bold z-50 animate-ping';
-        // document.body.appendChild(successIndicator);
-        // setTimeout(() => document.body.removeChild(successIndicator), 1000);
+        // Send via WebSocket if connected for instant delivery
+        if (wsConnected) {
+          const wsMessage: WsChatMessage = {
+            conversationId: selectedConversationId,
+            senderId: websocketService.getUserId() || 0,
+            receiverId: selectedFriend.id,
+            messageText: messageToSend,
+            messageType: isEmojiOnly ? 'EMOJI' : 'TEXT'
+          };
+          
+          websocketService.sendMessage(wsMessage);
+          console.log('📤 Message sent via WebSocket');
+          
+          // WebSocket will trigger refetch via onMessage callback
+          // No need for manual refetch here
+        } else {
+          // Fallback to HTTP API if WebSocket is not connected
+          await sendMessage({
+            receiverId: selectedFriend.id,
+            messageText: messageToSend,
+            messageType: isEmojiOnly ? 'EMOJI' : 'TEXT'
+          }).unwrap();
+          
+          console.log('📤 Message sent via HTTP API (WebSocket unavailable)');
+          
+          // Manual refetch only when using HTTP fallback
+          refetchMessages();
+          refetchConversations();
+        }
         
       } catch (error) {
         console.error('Failed to send message:', error);
@@ -487,7 +665,25 @@ const Chat = () => {
           <span className="gradient-text-primary">Messages</span> 💬
         </h1>
 
-        {friendsLoading && (
+        {!isAuthenticated && (
+          <div className="flex-1 flex items-center justify-center">
+            <Card className="p-8 max-w-md text-center shadow-playful">
+              <div className="text-6xl mb-4">🔒</div>
+              <h2 className="text-2xl font-bold mb-4">Authentication Required</h2>
+              <p className="text-muted-foreground mb-6">
+                Please log in to access chat and messaging features.
+              </p>
+              <Button 
+                onClick={() => navigate('/login')}
+                className="w-full"
+              >
+                Go to Login
+              </Button>
+            </Card>
+          </div>
+        )}
+
+        {isAuthenticated && friendsLoading && (
           <div className="flex-1 flex items-center justify-center">
             <div className="text-center">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
@@ -496,7 +692,7 @@ const Chat = () => {
           </div>
         )}
 
-        {friendsError && (
+        {isAuthenticated && friendsError && (
           <div className="flex-1 flex items-center justify-center">
             <div className="text-center">
               <div className="text-4xl mb-4">❌</div>
@@ -505,7 +701,7 @@ const Chat = () => {
           </div>
         )}
 
-        {!friendsLoading && !friendsError && friends.length === 0 && (
+        {isAuthenticated && !friendsLoading && !friendsError && friends.length === 0 && (
           <div className="flex-1 flex items-center justify-center">
             <div className="text-center">
               <div className="text-6xl mb-4">👥</div>
@@ -517,7 +713,7 @@ const Chat = () => {
           </div>
         )}
 
-        {!friendsLoading && !friendsError && friends.length > 0 && (
+        {isAuthenticated && !friendsLoading && !friendsError && friends.length > 0 && (
           <div className="flex flex-1 min-h-0 gap-2 h-full">
             {/* Mobile Sidebar */}
             <div className="relative h-full flex flex-col z-20 md:hidden">
@@ -715,6 +911,18 @@ const Chat = () => {
                       <div className="flex-1">
                         <div className="flex items-center gap-2">
                           <h2 className="font-bold text-lg">{selectedFriend.name}</h2>
+                          {wsConnected && (
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 text-xs font-medium text-green-700 bg-green-100 rounded-full" title="Real-time connected">
+                              <span className="w-1.5 h-1.5 bg-green-600 rounded-full animate-pulse"></span>
+                              Live
+                            </span>
+                          )}
+                          {/* {!wsConnected && (
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 text-xs font-medium text-orange-700 bg-orange-100 rounded-full" title="WebSocket disconnected - using HTTP fallback">
+                              <span className="w-1.5 h-1.5 bg-orange-600 rounded-full"></span>
+                              Offline
+                            </span>
+                          )} */}
                           {newMessageNotification?.friendId === selectedFriend.id && (
                             <div className="animate-bounce">
                               <span className="inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full">
@@ -723,6 +931,19 @@ const Chat = () => {
                             </div>
                           )}
                         </div>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => {
+                            refetchMessages();
+                            refetchConversations();
+                            console.log('🔄 Manual refresh triggered');
+                          }}
+                          className="absolute right-4 top-4 h-8 w-8 p-0"
+                          title="Refresh messages"
+                        >
+                          🔄
+                        </Button>
                         <div className="flex items-center gap-2">
                           <OnlineStatusIndicator 
                             isOnline={selectedFriend.online}

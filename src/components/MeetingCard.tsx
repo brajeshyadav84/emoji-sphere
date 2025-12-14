@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { type TeacherMeeting } from "@/store/api/teacherMeetingsApi";
-import { getUserTimezone } from "@/utils/timezoneUtils";
 
 interface MeetingCardProps {
   meeting: TeacherMeeting;
@@ -15,8 +14,6 @@ interface MeetingCardProps {
 }
 
 const MeetingCard = memo(({ meeting, status, formatDateTime, onEdit, onDelete }: MeetingCardProps) => {
-  const userTimezone = getUserTimezone();
-  
   return (
     <Card className="bg-white dark:bg-gray-900 border-blue-200 dark:border-blue-800 hover:shadow-lg transition-shadow">
       <CardHeader>
@@ -104,13 +101,8 @@ const MeetingCard = memo(({ meeting, status, formatDateTime, onEdit, onDelete }:
             <div className="flex items-start gap-2">
               <Globe className="h-4 w-4 text-blue-600 mt-1" />
               <div>
-                <p className="text-xs font-medium text-blue-900 dark:text-blue-100">Your Time Zone</p>
-                <p className="text-sm text-blue-700 dark:text-blue-300 font-semibold">{userTimezone}</p>
-                {meeting.timeZone && meeting.timeZone !== userTimezone && (
-                  <p className="text-xs text-blue-500 dark:text-blue-400 mt-1">
-                    Original: {meeting.timeZone}
-                  </p>
-                )}
+                <p className="text-xs font-medium text-blue-900 dark:text-blue-100">Time Zone</p>
+                <p className="text-sm text-blue-700 dark:text-blue-300">{meeting.timeZone}</p>
               </div>
             </div>
           </div>

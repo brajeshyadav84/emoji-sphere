@@ -1,4 +1,6 @@
 import { useEffect, useCallback } from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store';
 import { 
   useSetUserOnlineMutation,
   useSetUserOfflineMutation, 
@@ -8,37 +10,51 @@ import {
 /**
  * Custom hook to manage user presence/online status
  * Automatically sets user online on mount, sends heartbeats, and handles cleanup
+ * Only works when user is authenticated
  */
 export const useUserPresence = () => {
+  const { isAuthenticated, user } = useSelector((state: RootState) => state.auth);
   const [setUserOnline] = useSetUserOnlineMutation();
   const [setUserOffline] = useSetUserOfflineMutation();
   const [sendHeartbeat] = useSendHeartbeatMutation();
 
   const handleSetOnline = useCallback(async () => {
+    if (!isAuthenticated || !user) return;
+    
     try {
       await setUserOnline().unwrap();
     } catch (error) {
       console.warn('Failed to set user online:', error);
     }
-  }, [setUserOnline]);
+  }, [setUserOnline, isAuthenticated, user]);
 
   const handleSetOffline = useCallback(async () => {
+    if (!isAuthenticated || !user) return;
+    
     try {
       await setUserOffline().unwrap();
     } catch (error) {
       console.warn('Failed to set user offline:', error);
     }
-  }, [setUserOffline]);
+  }, [setUserOffline, isAuthenticated, user]);
 
   const handleHeartbeat = useCallback(async () => {
+    if (!isAuthenticated || !user) return;
+    
     try {
       await sendHeartbeat().unwrap();
     } catch (error) {
       console.warn('Failed to send heartbeat:', error);
     }
-  }, [sendHeartbeat]);
+  }, [sendHeartbeat, isAuthenticated, user]);
 
   useEffect(() => {
+    // Skip presence management if not authenticated
+    if (!isAuthenticated || !user) {
+      console.warn('⚠️ User not authenticated, skipping presence management');
+      return;
+    }
+
     let heartbeatInterval: NodeJS.Timeout;
 
     // Set user online when component mounts

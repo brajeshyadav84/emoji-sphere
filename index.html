@@ -14,6 +14,12 @@
 
   <body>
     <div id="root"></div>
+    <!-- Polyfill for SockJS compatibility -->
+    <script>
+      if (typeof global === 'undefined') {
+        window.global = window;
+      }
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

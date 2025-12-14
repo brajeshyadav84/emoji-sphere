@@ -5,6 +5,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { loadUserFromStorage } from "@/store/authSlice";
 import useSecurity from "@/hooks/useSecurity";
 import { initBodyMarginFix, cleanupBodyMarginFix } from "@/utils/bodyMarginFix";
 import ProtectedRoute from "@/components/ProtectedRoute";
@@ -80,8 +82,15 @@ import MeetingRoom from "./pages/MeetingRoom";
 const queryClient = new QueryClient();
 
 const App = () => {
+  const dispatch = useDispatch();
+  
   // Apply security features globally
   useSecurity();
+  
+  // Load user from localStorage on app startup
+  useEffect(() => {
+    dispatch(loadUserFromStorage());
+  }, [dispatch]);
   
   // Initialize body margin fix to prevent dropdown/modal scroll issues
   useEffect(() => {
