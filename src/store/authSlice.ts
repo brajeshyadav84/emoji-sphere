@@ -7,6 +7,8 @@ export interface User {
   name: string;
   mobile: string;
   email: string;
+  schoolName: string;
+  country: string;
   role: string;
   roles: string[];
 }
@@ -64,6 +66,8 @@ const authSlice = createSlice({
             name: data.name || data.fullName || '',
             mobile: data.mobile || '',
             email: data.email || '',
+            schoolName: data.schoolName || '',
+            country: data.country || '',
             role: data.role || '',
             roles: Array.isArray(data.roles) ? data.roles : data.roles ? [data.roles] : [],
           };

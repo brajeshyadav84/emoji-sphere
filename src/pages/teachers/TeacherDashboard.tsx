@@ -101,9 +101,13 @@ export default function TeacherDashboard() {
                   <Video className="h-6 w-6 mb-2" />
                   <span className="text-sm">Setup Meetings</span>
                 </Button>
-                <Button variant="outline" className="h-auto flex-col p-4 border-blue-200 text-blue-700 hover:bg-blue-50">
+                <Button 
+                  variant="outline" 
+                  className="h-auto flex-col p-4 border-blue-200 text-blue-700 hover:bg-blue-50"
+                  onClick={() => navigate("/teachers/details")}
+                >
                   <FileText className="h-6 w-6 mb-2" />
-                  <span className="text-sm">Assignments</span>
+                  <span className="text-sm">Teacher Details</span>
                 </Button>
                 <Button variant="outline" className="h-auto flex-col p-4 border-blue-200 text-blue-700 hover:bg-blue-50">
                   <BarChart3 className="h-6 w-6 mb-2" />
