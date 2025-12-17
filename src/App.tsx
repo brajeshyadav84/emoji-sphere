@@ -47,6 +47,8 @@ import ApiTest from "./pages/ApiTest";
 // Teacher imports
 import TeacherDashboard from "./pages/teachers/TeacherDashboard";
 import TeacherMeetings from "./pages/teachers/TeacherMeetings";
+import TeachersDetails from "./pages/teachers/TeachersDetails";
+import Tutors from "./pages/Tutors";
 
 // Knowledge imports
 import Planets from "./pages/knowledge/Planets";
@@ -161,6 +163,12 @@ const App = () => {
               <TeacherMeetings />
             </ProtectedRoute>
           } />
+          <Route path="/teachers/details" element={
+            <ProtectedRoute>
+              <TeachersDetails />
+            </ProtectedRoute>
+          } />
+          <Route path="/tutors" element={<Tutors />} />
           <Route path="/user/:userId" element={<UserInfo />} />
           <Route path="/api-test" element={<ApiTest />} />
           

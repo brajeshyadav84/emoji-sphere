@@ -6,8 +6,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { ArrowLeft, Send, Sparkles, Camera, Image, X } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { useAskQuestionMutation } from "@/store/api/askMeApi";
 
 interface Message {
   role: "user" | "assistant";
@@ -23,6 +23,7 @@ const AskMe = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const cameraInputRef = useRef<HTMLInputElement>(null);
+  const [askQuestion] = useAskQuestionMutation();
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -61,7 +62,7 @@ const AskMe = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!message.trim() && !selectedImage) {
       toast.error("Please enter a question or upload an image!");
       return;
@@ -71,33 +72,29 @@ const AskMe = () => {
     const userMessageObj: Message = {
       role: "user",
       content: userMessage || "Please help me with this homework image:",
-      image: selectedImage || undefined
+      image: selectedImage || undefined,
     };
 
     setMessage("");
     setSelectedImage(null);
     if (fileInputRef.current) fileInputRef.current.value = "";
     if (cameraInputRef.current) cameraInputRef.current.value = "";
-    
-    setMessages(prev => [...prev, userMessageObj]);
+
+    setMessages((prev) => [...prev, userMessageObj]);
     setIsLoading(true);
 
     try {
-      const requestBody: { message: string; image?: string } = { 
-        message: userMessage || "Please help me with this homework image:" 
+      const requestBody: { question: string; images?: string } = {
+        question: userMessage || "Please help me with this homework image:",
       };
       if (selectedImage) {
-        requestBody.image = selectedImage;
+        requestBody.images = selectedImage;
       }
 
-      const { data, error } = await supabase.functions.invoke("ask-me", {
-        body: requestBody,
-      });
+      const response = await askQuestion(requestBody).unwrap();
 
-      if (error) throw error;
-
-      if (data?.answer) {
-        setMessages(prev => [...prev, { role: "assistant", content: data.answer }]);
+      if (response?.answer) {
+        setMessages((prev) => [...prev, { role: "assistant", content: response.answer }]);
       } else {
         throw new Error("No answer received");
       }
@@ -105,7 +102,7 @@ const AskMe = () => {
       console.error("Error asking question:", error);
       toast.error("Failed to get an answer. Please try again!");
       // Remove the user message if we failed to get a response
-      setMessages(prev => prev.slice(0, -1));
+      setMessages((prev) => prev.slice(0, -1));
     } finally {
       setIsLoading(false);
     }
