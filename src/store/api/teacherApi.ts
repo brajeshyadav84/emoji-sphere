@@ -13,9 +13,9 @@ export interface TeacherDetails {
 export const teacherApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     // Get list of teachers
-    getTeacherList: builder.query<TeacherDetails[], void>({
-      query: () => ({
-        url: '/teachers/details',
+    getTeacherList: builder.query<TeacherDetails[], { page?: number; size?: number }>({
+      query: ({ page = 0, size = 10 }) => ({
+        url: '/teachers/allDetails',
         method: 'GET',
       })
     }),

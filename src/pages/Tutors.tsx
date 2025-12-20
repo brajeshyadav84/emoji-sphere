@@ -13,7 +13,7 @@ import { useState } from "react";
 import { useGetTeacherListQuery } from "@/store/api/teacherApi";
 
 const Tutors = () => {
-  const { data: teachersData, isLoading, isError } = useGetTeacherListQuery();
+  const { data: teachersData, isLoading, isError } = useGetTeacherListQuery({ page: 0, size: 10 });
   const teachers = teachersData?.data ?? [];
   const [selected, setSelected] = useState<any | null>(null);
 
@@ -23,6 +23,22 @@ const Tutors = () => {
     if (g.includes("female") || g === "female" || g === "f") return "👩‍🏫";
     if (g.includes("male") || g === "male" || g === "m") return "👨‍🏫";
     return "🧑‍🏫";
+  };
+
+  console.log("Teachers data:", teachers);
+
+  // Fixed age calculation for DD/MM/YYYY format
+  const calculateAge = (dob) => {
+    if (!dob) return 'N/A';
+    const [day, month, year] = dob.split('/').map(Number);
+    const birthDate = new Date(year, month - 1, day);
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    return age;
   };
 
   return (
@@ -50,14 +66,17 @@ const Tutors = () => {
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
                 {teachers.map((t) => (
-                  <Card key={t.id} className="p-4 md:p-6 shadow-playful hover:shadow-hover transition-all duration-300 w-full max-w-full">
+                  <Card key={t.userId} className="p-4 md:p-6 shadow-playful hover:shadow-hover transition-all duration-300 w-full max-w-full">
                     <div className="flex items-start justify-between mb-3 md:mb-4">
                       <div className="text-3xl md:text-5xl">{getAvatar(t.gender)}</div>
                     </div>
 
-                    <h3 className="text-lg md:text-xl font-bold mb-2">{t.name || `Tutor ${t.id}`}</h3>
+                    <h3 className="text-lg md:text-xl font-bold mb-2">{t.fullName || `Tutor ${t.userId}`}</h3>
                     <p className="text-xs md:text-sm text-muted-foreground mb-3 md:mb-4">
-                      Age: <strong>{t.age ?? 'N/A'}</strong> • Experience: <strong>{t.teachingExperience ?? 0} years</strong>
+                      Age: <strong>{calculateAge(t.dob)}</strong> • Experience: <strong>{t.teachingExperience ?? 0} years</strong>
+                    </p>
+                    <p className="text-xs md:text-sm text-muted-foreground mb-3 md:mb-4">
+                      Country: <strong>{t.country || 'N/A'}</strong> • School: <strong>{t.schoolName || 'N/A'}</strong>
                     </p>
 
                     <div className="flex gap-2">
@@ -78,30 +97,62 @@ const Tutors = () => {
       </main>
 
       <Dialog open={!!selected} onOpenChange={(open) => !open && setSelected(null)}>
-        <DialogContent className="sm:max-w-[600px]">
+        <DialogContent className="sm:max-w-[600px] px-4">
           <DialogHeader>
-            <DialogTitle>{selected?.name || 'Tutor Details'}</DialogTitle>
+            <DialogTitle className="text-lg font-bold">{selected?.name || 'Tutor Details'}</DialogTitle>
             <DialogDescription>
               {selected && (
                 <div className="space-y-2 text-sm text-muted-foreground mt-2">
                   <div>Gender: {selected.gender || 'N/A'}</div>
-                  <div>Age: {selected.age ?? 'N/A'}</div>
+                  <div>Age: {calculateAge(selected.dob)}</div>
+                  <div>Country: {selected.country || 'N/A'}</div>
+                  <div>Date of Birth: {selected.dob || 'N/A'}</div>
+                  <div>Email: {selected.email || 'N/A'}</div>
                   <div>Experience: {selected.teachingExperience ?? 0} years</div>
-                  <div>Subjects: {selected.subjects || 'N/A'}</div>
-                  <div>Grades: {selected.grades || 'N/A'}</div>
-                  <div>Availability: {selected.availability || 'N/A'}</div>
-                  <div>Current School: {selected.currentSchool || 'N/A'}</div>
-                  <div>Location: {selected.location || 'N/A'}</div>
-                  <div>Pricing: {selected.pricing ? `₹${selected.pricing}` : 'N/A'}</div>
-                  <div>Primary Contact: {selected.primaryContact || 'N/A'}</div>
-                  <div>Secondary Contact: {selected.secondaryContact || 'N/A'}</div>
+                  <div>School: {selected.schoolName || 'N/A'}</div>
+                  <div>Online Status: {selected.onlineStatus || 'N/A'}</div>
+                  <div>Mobile: {selected.mobileNumber || 'N/A'}</div>
+                  {selected.gradesSubjects && selected.gradesSubjects.length > 0 && (
+                    <div>
+                      <h3 className="text-base font-semibold mb-2">Subjects and Pricing</h3>
+                      <table className="table-auto w-full text-left border-collapse border border-gray-300">
+                        <thead>
+                          <tr>
+                            <th className="border border-gray-300 px-2 py-1 text-xs">Grade</th>
+                            <th className="border border-gray-300 px-2 py-1 text-xs">Subject</th>
+                            <th className="border border-gray-300 px-2 py-1 text-xs">Pricing</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {selected.gradesSubjects.map((item, index) => (
+                            <tr key={index}>
+                              <td className="border border-gray-300 px-2 py-1 text-xs">{item.grade}</td>
+                              <td className="border border-gray-300 px-2 py-1 text-xs">{item.subject}</td>
+                              <td className="border border-gray-300 px-2 py-1 text-xs">{item.pricing}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
                 </div>
               )}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="gap-2 sm:gap-0">
-            <Button variant="outline" onClick={() => setSelected(null)}>Close</Button>
-            <Button className="gradient-primary font-semibold">Contact</Button>
+            <Button variant="outline" size="sm" onClick={() => setSelected(null)}>Close</Button>
+            <Button
+              size="sm"
+              className="gradient-primary font-semibold"
+              onClick={() => {
+                if (selected?.mobileNumber) {
+                  const whatsappUrl = `https://wa.me/${selected.mobileNumber}`;
+                  window.open(whatsappUrl, '_blank');
+                }
+              }}
+            >
+              Contact
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
