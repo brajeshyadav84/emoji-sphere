@@ -114,7 +114,7 @@ const Tutors = () => {
                   <div>Mobile: {selected.mobileNumber || 'N/A'}</div>
                   {selected.gradesSubjects && selected.gradesSubjects.length > 0 && (
                     <div>
-                      <h3 className="text-base font-semibold mb-2">Subjects and Pricing</h3>
+                      <h3 className="text-base font-semibold mb-2">Subjects and Pricing (per hour)</h3>
                       <table className="table-auto w-full text-left border-collapse border border-gray-300">
                         <thead>
                           <tr>
