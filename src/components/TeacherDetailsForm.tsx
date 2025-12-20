@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
 import { Trash2 } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
+import { subjects, grades } from '@/data/common/collections';
 
 const TeacherDetailsForm = () => {
   // Fetch user data from the auth store
@@ -46,8 +47,8 @@ const TeacherDetailsForm = () => {
     defaultValues,
   });
 
-  const subjects = watch('subjects') || [];
-  const grades = watch('grades') || [];
+  const subjectsWatch = watch('subjects') || [];
+  const gradesWatch = watch('grades') || [];
 
   const [subjectInput, setSubjectInput] = useState('');
   const [gradeInput, setGradeInput] = useState('');
@@ -222,8 +223,8 @@ const TeacherDetailsForm = () => {
             className="w-full border border-gray-200 bg-gray-50 px-4 py-3 rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-400"
           >
             <option value="">Select Grade</option>
-            {Array.from({ length: 10 }, (_, i) => (
-              <option key={i} value={`Grade ${i + 1}`}>{`Grade ${i + 1}`}</option>
+            {grades.map((grade) => (
+              <option key={grade} value={grade}>{grade}</option>
             ))}
           </select>
         </div>
@@ -236,10 +237,9 @@ const TeacherDetailsForm = () => {
             className="w-full border border-gray-200 bg-gray-50 px-4 py-3 rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-400"
           >
             <option value="--">Select</option>
-            <option value="Math">Math</option>
-            <option value="English">English</option>
-            <option value="Science">Science</option>
-            <option value="Art">Art</option>
+            {subjects.map((subject) => (
+              <option key={subject} value={subject}>{subject}</option>
+            ))}
           </select>
         </div>
 

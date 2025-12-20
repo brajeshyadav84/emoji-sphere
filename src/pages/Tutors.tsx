@@ -9,13 +9,27 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { useGetTeacherListQuery } from "@/store/api/teacherApi";
+import { grades, subjects } from '@/data/common/collections';
 
 const Tutors = () => {
   const { data: teachersData, isLoading, isError } = useGetTeacherListQuery({ page: 0, size: 10 });
   const teachers = teachersData?.data ?? [];
   const [selected, setSelected] = useState<any | null>(null);
+  const [filters, setFilters] = useState({
+    grade: "",
+    subject: "",
+    price: "",
+  });
 
   const getAvatar = (gender?: string) => {
     if (!gender) return "🧑‍🏫";
@@ -24,8 +38,6 @@ const Tutors = () => {
     if (g.includes("male") || g === "male" || g === "m") return "👨‍🏫";
     return "🧑‍🏫";
   };
-
-  console.log("Teachers data:", teachers);
 
   // Fixed age calculation for DD/MM/YYYY format
   const calculateAge = (dob) => {
@@ -41,6 +53,19 @@ const Tutors = () => {
     return age;
   };
 
+  const handleFilterChange = (e) => {
+    const { name, value } = e.target;
+    setFilters((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const filteredTeachers = teachers.filter((t) => {
+    return (
+      (filters.grade ? t.gradesSubjects?.some((gs) => gs.grade === filters.grade) : true) &&
+      (filters.subject ? t.gradesSubjects?.some((gs) => gs.subject === filters.subject) : true) &&
+      (filters.price ? t.gradesSubjects?.some((gs) => gs.pricing <= Number(filters.price)) : true)
+    );
+  });
+
   return (
     <div className="min-h-screen bg-background overflow-x-hidden">
       <Header />
@@ -51,27 +76,60 @@ const Tutors = () => {
             <h1 className="text-2xl md:text-4xl font-bold mb-2">
               <span className="gradient-text-primary">Tutors</span> 🧑‍🏫
             </h1>
-            <p className="text-base md:text-lg text-muted-foreground">
-              Browse tutors and view their details. Click "View more" to see availability, grades and contact numbers.
-            </p>
           </div>
+
+          <section className="mb-6">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <Select
+                value={filters.grade}
+                onValueChange={(value) => setFilters((prev) => ({ ...prev, grade: value }))}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select Grade" />
+                </SelectTrigger>
+                
+                <SelectContent>
+                  {grades.map((grade) => (
+                    <SelectItem key={grade} value={grade}>{grade}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Select
+                value={filters.subject}
+                onValueChange={(value) => setFilters((prev) => ({ ...prev, subject: value }))}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select Subject" />
+                </SelectTrigger>
+                <SelectContent>
+                  {subjects.map((subject) => (
+                    <SelectItem key={subject} value={subject}>{subject}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </section>
+
+          <section>
+          </section>
 
           <section>
             {isLoading ? (
               <div className="text-center py-8 text-muted-foreground">Loading tutors...</div>
             ) : isError ? (
               <div className="text-center py-8 text-destructive">Failed to load tutors.</div>
-            ) : teachers.length === 0 ? (
+            ) : filteredTeachers.length === 0 ? (
               <div className="text-center py-8 text-muted-foreground">No tutors found.</div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
-                {teachers.map((t) => (
+                {filteredTeachers.map((t) => (
                   <Card key={t.userId} className="p-4 md:p-6 shadow-playful hover:shadow-hover transition-all duration-300 w-full max-w-full">
-                    <div className="flex items-start justify-between mb-3 md:mb-4">
+                    <div className="flex items-baseline mb-3 md:mb-4">
                       <div className="text-3xl md:text-5xl">{getAvatar(t.gender)}</div>
+                      <h3 className="text-lg md:text-xl font-bold mb-2 capitalize">{t.fullName?.toLowerCase() || `Tutor ${t.userId}`}</h3>
+                      (<strong>{t.country || ''}</strong>)
                     </div>
 
-                    <h3 className="text-lg md:text-xl font-bold mb-2">{t.fullName || `Tutor ${t.userId}`}</h3>
                     <p className="text-xs md:text-sm text-muted-foreground mb-3 md:mb-4">
                       Age: <strong>{calculateAge(t.dob)}</strong> • Experience: <strong>{t.teachingExperience ?? 0} years</strong>
                     </p>
@@ -120,7 +178,7 @@ const Tutors = () => {
                           <tr>
                             <th className="border border-gray-300 px-2 py-1 text-xs">Grade</th>
                             <th className="border border-gray-300 px-2 py-1 text-xs">Subject</th>
-                            <th className="border border-gray-300 px-2 py-1 text-xs">Pricing</th>
+                            <th className="border border-gray-300 px-2 py-1 text-xs">Pricing ({selected?.currency || 'INR'})</th>
                           </tr>
                         </thead>
                         <tbody>

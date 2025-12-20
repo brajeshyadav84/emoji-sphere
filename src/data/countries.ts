@@ -50,3 +50,10 @@ export const countries = [
   { value: "HU", label: "Hungary" },
   { value: "RO", label: "Romania" },
 ];
+
+// Adding a utility function to get flag emojis based on country code
+export function getFlagEmoji(countryCode: string): string {
+  return countryCode
+    .toUpperCase()
+    .replace(/./g, char => String.fromCodePoint(127397 + char.charCodeAt(0)));
+}
